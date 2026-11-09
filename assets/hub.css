@@ -154,31 +154,174 @@ body.hub-home {
 
 @media (prefers-reduced-motion: reduce) { .tile, .hub-link { transition: none; } }
 
-/* ---------- 4. ADATTAMENTI PER SEZIONE ---------- */
-/* larghezza e margini comuni */
-body[data-app="astrofoto"] .header-inner,
-body[data-app="attivita"] .nav-inner,
-body[data-app="budget"] .wrap,
-body[data-app="running"] .app { max-width: var(--hub-maxw); }
-body[data-app="attivita"] .nav-inner { padding-left: var(--hub-pad); padding-right: var(--hub-pad); }
+/* ---------- 4. LINGUAGGIO COMUNE ----------
+   Ogni sezione riceve gli stessi componenti: intestazione chiara, schede
+   sottolineate, pulsanti primario/secondario, riquadri e campi uguali.
+   Le regole sono scritte sui selettori di ciascuna app. */
 
-/* ASTROFOTO: palette fredda e accento comune; la landing resta sotto la barra */
+/* 4.1 token delle singole app ricondotti ai token comuni */
+body[data-app="budget"] {
+  --bg: var(--hub-paper); --surface: var(--hub-surface); --surface-2: #eceff3;
+  --ink: var(--hub-text); --ink-soft: var(--hub-soft); --border: var(--hub-line);
+  --accent: var(--hub-c-budget); --accent-soft: #e4f2ee;
+  --grad-brand: var(--hub-c-budget);
+  --r-lg: var(--hub-radius); --r-md: var(--hub-radius); --r-sm: var(--hub-radius-sm);
+  --shadow-sm: none; --shadow-lg: none;
+}
+body[data-app="running"] {
+  --bg: var(--hub-paper); --surface: var(--hub-paper); --surface2: var(--hub-surface);
+  --border: var(--hub-line); --border2: #cdd3db;
+  --text: var(--hub-text); --text2: #3d4756; --muted: var(--hub-faint);
+  --accent: var(--hub-c-running); --radius: var(--hub-radius); --shadow-sm: none;
+}
+body[data-app="attivita"] {
+  --bg: var(--hub-paper); --surface: var(--hub-surface);
+  --ink: var(--hub-text); --ink-soft: var(--hub-soft); --border: var(--hub-line);
+  --radius-sm: var(--hub-radius-sm);
+}
 body[data-app="astrofoto"] {
   --ink: #12161c; --ink2: #2f3742; --ink3: #5b6573; --ink4: #8a93a1;
   --bg: #ffffff; --bg2: #f5f7f9; --bg3: #eceff3;
   --border: #e2e6eb; --border2: #cdd3db;
   --blue: #3730a3; --blue2: #4f46e5; --blue3: #e0e7ff; --blue4: #eef2ff;
 }
+body[data-app] { font-family: var(--hub-body); color: var(--hub-text); }
+
+/* 4.2 larghezza e margini uguali */
+body[data-app="astrofoto"] .header-inner, body[data-app="astrofoto"] .ctrl-inner,
+body[data-app="astrofoto"] main,
+body[data-app="attivita"] .nav-inner, body[data-app="attivita"] .hero,
+body[data-app="attivita"] .section-header, body[data-app="attivita"] .section-cards,
+body[data-app="attivita"] .map-wrap, body[data-app="attivita"] .controls, body[data-app="attivita"] .list,
+body[data-app="attivita"] .gallery-upload, body[data-app="attivita"] .gallery-grid, body[data-app="attivita"] footer,
+body[data-app="attivita"] .wrap,
+body[data-app="budget"] .wrap, body[data-app="running"] .app { max-width: var(--hub-maxw); }
+body[data-app="astrofoto"] main { padding-left: var(--hub-pad); padding-right: var(--hub-pad); }
+body[data-app="astrofoto"] header { padding-left: 0; padding-right: 0; }
+body[data-app="astrofoto"] .header-inner { padding: 0 var(--hub-pad); }
+body[data-app="attivita"] .nav-inner, body[data-app="attivita"] .hero,
+body[data-app="attivita"] .section-header, body[data-app="attivita"] .section-cards { padding-left: var(--hub-pad); padding-right: var(--hub-pad); }
+body[data-app="budget"] .wrap { padding: 0 var(--hub-pad) 90px; }
+body[data-app="running"] .app { padding: 0 var(--hub-pad) 80px; }
+
+/* 4.3 intestazione di pagina: chiara, bordo sottile, titolo in serif */
 body[data-app="astrofoto"] #landing { top: var(--hub-shell-h); }
-body[data-app="astrofoto"] header { background-color: #1e1b4b; }
+body[data-app="astrofoto"] header {
+  background: var(--hub-paper); color: var(--hub-text);
+  border-bottom: 1px solid var(--hub-line); padding-top: 22px; padding-bottom: 20px;
+}
+body[data-app="astrofoto"] header::after { display: none; }
+body[data-app="astrofoto"] .brand-eye { display: none; }
+body[data-app="astrofoto"] .brand-title { color: var(--hub-text); font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+body[data-app="astrofoto"] .brand-title em { color: var(--hub-soft); }
+body[data-app="astrofoto"] #btnBackHome {
+  background: var(--hub-paper) !important; border: 1px solid var(--hub-line) !important; color: var(--hub-soft) !important;
+  border-radius: var(--hub-radius-sm) !important; font-family: var(--hub-body) !important; font-size: 13px !important;
+  font-weight: 500; letter-spacing: 0 !important; text-transform: none !important; padding: 8px 12px !important;
+}
+body[data-app="astrofoto"] #btnBackHome:hover { background: var(--hub-surface) !important; color: var(--hub-text) !important; }
+body[data-app="astrofoto"] .chip { background: var(--hub-surface); border: 1px solid var(--hub-line); border-radius: var(--hub-radius-sm); }
+body[data-app="astrofoto"] .chip.interactive:hover { background: var(--hub-paper); border-color: var(--hub-c-astrofoto); }
+body[data-app="astrofoto"] .chip-lbl { color: var(--hub-faint); }
+body[data-app="astrofoto"] .chip-val, body[data-app="astrofoto"] .chip-val select { color: var(--hub-text); }
+body[data-app="astrofoto"] .chip-val select option { background: #fff; color: var(--hub-text); }
 
-/* BUDGET: intestazione a tinta unita con l'accento della sezione */
-body[data-app="budget"] header { background: var(--hub-c-budget) !important; }
+body[data-app="budget"] header {
+  background: transparent !important; color: var(--hub-text); box-shadow: none; border-radius: 0;
+  border-bottom: 1px solid var(--hub-line); padding: 22px 0 20px; margin-bottom: 0;
+}
 body[data-app="budget"] header::before { display: none; }
+body[data-app="budget"] header h1 { color: var(--hub-text); font-size: clamp(28px, 3.4vw, 40px); font-weight: 600; letter-spacing: -.02em; }
+body[data-app="budget"] { background: var(--hub-paper) !important; }
+body[data-app="budget"] header .eyebrow, body[data-app="budget"] header .lbl { color: var(--hub-faint) !important; }
+body[data-app="budget"] header .val { color: var(--hub-text) !important; }
+body[data-app="budget"] .sparkline .bar { background: var(--hub-accent) !important; opacity: .75; }
+body[data-app="budget"] .sparkline .bar[style*="--red"] { background: #e08a7d !important; }
+body[data-app="budget"] .gh-status { background: var(--hub-surface); border: 1px solid var(--hub-line); color: var(--hub-soft); backdrop-filter: none; }
+body[data-app="budget"] .gh-status:hover { background: var(--hub-paper); border-color: var(--hub-accent); transform: none; }
+body[data-app="budget"] .gh-status .dot { background: #b6bdc8; }
+body[data-app="budget"] .gh-status.ok .dot { background: #1b8a57; }
+body[data-app="budget"] .gh-status.err .dot { background: #c13a2e; }
+body[data-app="budget"] .gh-status.busy .dot { background: #b4842a; }
+body[data-app="budget"] #data-banner { background: var(--hub-surface); border: 1px solid var(--hub-line); }
 
-/* ATTIVITÀ: voce attiva e pulsante principale con l'accento comune */
-body[data-app="attivita"] .btn-add { background: var(--hub-c-attivita); }
-body[data-app="attivita"] .site-nav a.active,
-body[data-app="attivita"] .site-nav .active { color: var(--hub-c-attivita); border-color: var(--hub-c-attivita); }
-/* le mappe non devono finire sopra altri elementi */
+body[data-app="running"] header { border-bottom: 1px solid var(--hub-line); padding: 18px 0 16px; }
+
+body[data-app="attivita"] .site-nav { background: var(--hub-paper); backdrop-filter: none; border-bottom: 1px solid var(--hub-line); }
+
+/* 4.4 schede di navigazione: tutte sottolineate con l'accento della sezione */
+body[data-app="budget"] nav.tabs {
+  background: transparent; border: 0; border-bottom: 1px solid var(--hub-line); border-radius: 0;
+  box-shadow: none; padding: 0; gap: 2px; margin: 0 0 24px; top: 0;
+}
+body[data-app="budget"] nav.tabs button {
+  border-radius: 0; border: 0; border-bottom: 2px solid transparent; background: transparent;
+  color: var(--hub-soft); padding: 14px 14px 12px; font-size: 14px; font-weight: 500; box-shadow: none; margin-bottom: -1px;
+}
+body[data-app="budget"] nav.tabs button::before { display: none; }
+body[data-app="budget"] nav.tabs button:hover { color: var(--hub-text); background: transparent; }
+body[data-app="budget"] nav.tabs button.active { background: transparent; color: var(--hub-text); border-bottom-color: var(--hub-accent); box-shadow: none; font-weight: 600; }
+
+body[data-app="running"] .tab { font-size: 14px; font-weight: 500; padding: 13px 16px 11px; }
+body[data-app="running"] .tab.active, body[data-app="running"] .tab[class*="active"] { font-weight: 600; }
+
+body[data-app="attivita"] .nav-links a { font-size: 14px; font-weight: 500; }
+body[data-app="attivita"] .nav-links a.active { color: var(--hub-text); border-color: var(--hub-accent); font-weight: 600; }
+body[data-app="attivita"] .nav-links a.active[class*="t-"] { color: var(--hub-text); border-color: var(--hub-accent); }
+
+body[data-app="astrofoto"] .mnav-btn { font-family: var(--hub-body); font-size: 14px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+body[data-app="astrofoto"] .mnav-btn.active { color: var(--hub-text); border-bottom-color: var(--hub-accent); font-weight: 600; }
+
+/* 4.5 pulsanti */
+body[data-app="budget"] button.primary, body[data-app="running"] .btn-primary,
+body[data-app="attivita"] .btn-add, body[data-app="attivita"] .btn-list-view {
+  background: var(--hub-accent); color: #fff; border: 0; border-radius: var(--hub-radius-sm);
+  font-family: var(--hub-body); font-weight: 600; font-size: 14px; box-shadow: none; filter: none;
+}
+body[data-app="budget"] button.primary:hover, body[data-app="running"] .btn-primary:hover,
+body[data-app="attivita"] .btn-add:hover, body[data-app="attivita"] .btn-list-view:hover {
+  background: color-mix(in srgb, var(--hub-accent) 86%, #000); transform: none; box-shadow: none; filter: none;
+}
+body[data-app="budget"] button.ghost, body[data-app="running"] .btn-secondary, body[data-app="attivita"] .btn-add-distanza {
+  background: var(--hub-paper); color: var(--hub-text); border: 1px solid var(--hub-line); border-radius: var(--hub-radius-sm);
+  font-family: var(--hub-body); font-weight: 600; font-size: 14px; box-shadow: none;
+}
+body[data-app="budget"] button.ghost:hover, body[data-app="running"] .btn-secondary:hover {
+  background: var(--hub-surface); border-color: #cdd3db;
+}
+body[data-app="running"] .btn { border-radius: var(--hub-radius-sm); font-family: var(--hub-body); }
+body[data-app="running"] .btn-hike { box-shadow: none; }
+
+/* 4.6 riquadri */
+body[data-app="budget"] .card, body[data-app="running"] .card, body[data-app="running"] .stat-card,
+body[data-app="attivita"] .card, body[data-app="attivita"] .section-card {
+  background: var(--hub-paper); border: 1px solid var(--hub-line); border-radius: var(--hub-radius); box-shadow: none;
+}
+body[data-app="budget"] .card::before, body[data-app="running"] .stat-card::before { display: none; }
+body[data-app="budget"] .card:hover { transform: none; box-shadow: none; }
+body[data-app="attivita"] .section-card:hover { transform: none; border-color: var(--hub-accent); box-shadow: none; }
+
+/* 4.7 campi */
+body[data-app="budget"] select, body[data-app="budget"] input[type=text], body[data-app="budget"] input[type=number],
+body[data-app="budget"] input[type=date], body[data-app="budget"] input[type=password],
+body[data-app="running"] .form-input, body[data-app="attivita"] .field input, body[data-app="attivita"] .field select,
+body[data-app="attivita"] .field textarea {
+  border: 1px solid var(--hub-line); border-radius: var(--hub-radius-sm); background: var(--hub-paper); color: var(--hub-text);
+  font-family: var(--hub-body); box-shadow: none;
+}
+body[data-app] select:focus, body[data-app] input:focus, body[data-app] textarea:focus, body[data-app="running"] .form-input:focus {
+  outline: none; border-color: var(--hub-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--hub-accent) 18%, transparent);
+}
+
+/* 4.8 finestre */
+body[data-app="budget"] .modal, body[data-app="running"] .modal, body[data-app="attivita"] .modal-box,
+body[data-app="astrofoto"] .modal { border-radius: 14px; }
+
+/* 4.9 titoli di sezione */
+body[data-app="budget"] .section-title, body[data-app="running"] .sec-title,
+body[data-app="attivita"] .section-header h1 { font-family: var(--hub-display); font-weight: 600; letter-spacing: -.01em; }
+body[data-app="budget"] .section-title::before { background: var(--hub-accent); }
+body[data-app="attivita"] .hero h1 { font-weight: 600; letter-spacing: -.02em; }
+
+/* mappe sotto la barra */
 .leaflet-container { isolation: isolate; }
