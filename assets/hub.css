@@ -1,0 +1,184 @@
+/* ==========================================================================
+   hub.css — stile condiviso.
+   1. Token (colori, caratteri, misure) e accento di ogni sezione
+   2. Barra di navigazione comune
+   3. Home
+   4. Adattamenti per sezione (in fondo: uniformano le app esistenti)
+   ========================================================================== */
+
+/* ---------- 1. TOKEN ---------- */
+:root {
+  --hub-ink: #12161c;
+  --hub-text: #1a1f27;
+  --hub-soft: #5b6573;
+  --hub-faint: #8a93a1;
+  --hub-line: #e2e6eb;
+  --hub-surface: #f5f7f9;
+  --hub-paper: #ffffff;
+
+  --hub-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --hub-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --hub-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --hub-radius: 12px;
+  --hub-radius-sm: 8px;
+  --hub-maxw: 1200px;
+  --hub-pad: 24px;
+  --hub-bar-h: 46px;
+  --hub-shell-h: calc(var(--hub-bar-h) + env(safe-area-inset-top, 0px));
+  --hub-shadow: 0 1px 2px rgba(18, 22, 28, .05), 0 6px 20px rgba(18, 22, 28, .06);
+
+  /* accento di ogni sezione */
+  --hub-c-astrofoto: #4f46e5;
+  --hub-c-attivita: #c2410c;
+  --hub-c-budget: #0e6e5c;
+  --hub-c-running: #1f8fc7;
+  --hub-accent: var(--hub-ink);
+}
+body[data-app="astrofoto"] { --hub-accent: var(--hub-c-astrofoto); }
+body[data-app="attivita"]  { --hub-accent: var(--hub-c-attivita); }
+body[data-app="budget"]    { --hub-accent: var(--hub-c-budget); }
+body[data-app="running"]   { --hub-accent: var(--hub-c-running); }
+
+@media (max-width: 640px) { :root { --hub-pad: 16px; } }
+
+/* ---------- 2. BARRA COMUNE ---------- */
+.hub-bar {
+  background: var(--hub-ink);
+  color: #fff;
+  padding-top: env(safe-area-inset-top, 0px);
+  font-family: var(--hub-body);
+  position: relative;
+  z-index: 10;
+}
+.hub-bar-in {
+  max-width: var(--hub-maxw);
+  margin: 0 auto;
+  padding: 0 var(--hub-pad);
+  height: var(--hub-bar-h);
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.hub-brand {
+  display: flex; align-items: center; gap: 9px;
+  color: #fff; text-decoration: none;
+  font-weight: 650; font-size: 15px; letter-spacing: -.01em;
+  padding-right: 14px; margin-right: 6px;
+  border-right: 1px solid rgba(255, 255, 255, .14);
+  flex-shrink: 0;
+}
+.hub-mark { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5px; width: 17px; height: 17px; }
+.hub-mark i { border-radius: 2.5px; display: block; }
+.hub-mark i:nth-child(1) { background: var(--hub-c-astrofoto); }
+.hub-mark i:nth-child(2) { background: var(--hub-c-attivita); }
+.hub-mark i:nth-child(3) { background: var(--hub-c-budget); }
+.hub-mark i:nth-child(4) { background: var(--hub-c-running); }
+
+.hub-links { display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.hub-links::-webkit-scrollbar { display: none; }
+.hub-link {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 12px;
+  color: rgba(255, 255, 255, .62);
+  text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap;
+  position: relative;
+  transition: color .15s;
+}
+.hub-link:hover { color: #fff; }
+.hub-link[aria-current="page"] { color: #fff; }
+.hub-link[aria-current="page"]::after {
+  content: ''; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px;
+  background: var(--hub-accent); border-radius: 2px 2px 0 0;
+}
+.hub-dot { width: 7px; height: 7px; border-radius: 50%; display: block; flex-shrink: 0; }
+.hub-link[data-s="astrofoto"] .hub-dot { background: var(--hub-c-astrofoto); }
+.hub-link[data-s="attivita"]  .hub-dot { background: var(--hub-c-attivita); }
+.hub-link[data-s="budget"]    .hub-dot { background: var(--hub-c-budget); }
+.hub-link[data-s="running"]   .hub-dot { background: var(--hub-c-running); }
+/* il pallino di Astrofoto su sfondo scuro ha bisogno di più luce */
+.hub-link[data-s="astrofoto"] .hub-dot { background: #7a73f0; }
+.hub-link:focus-visible, .hub-brand:focus-visible { outline: 2px solid #fff; outline-offset: -3px; border-radius: 4px; }
+
+@media (max-width: 560px) {
+  .hub-bar-in { gap: 0; }
+  .hub-brand { padding-right: 10px; margin-right: 2px; }
+  .hub-brand-name { display: none; }
+  .hub-link { padding: 0 9px; font-size: 13px; gap: 6px; }
+  .hub-link[aria-current="page"]::after { left: 9px; right: 9px; }
+}
+
+/* ---------- 3. HOME ---------- */
+body.hub-home {
+  margin: 0; background: var(--hub-paper); color: var(--hub-text);
+  font-family: var(--hub-body); -webkit-font-smoothing: antialiased; line-height: 1.5;
+}
+.home-wrap { max-width: var(--hub-maxw); margin: 0 auto; padding: 56px var(--hub-pad) 72px; }
+.home-head { max-width: 640px; margin-bottom: 40px; }
+.home-title {
+  font-family: var(--hub-display); font-weight: 600; letter-spacing: -.02em;
+  font-size: clamp(34px, 5vw, 52px); line-height: 1.06; margin: 0 0 12px;
+}
+.home-lead { margin: 0; font-size: 17px; color: var(--hub-soft); max-width: 46ch; }
+
+.home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; gap: 14px; } .home-wrap { padding-top: 36px; } }
+
+.tile {
+  --c: var(--hub-ink);
+  display: flex; flex-direction: column;
+  text-decoration: none; color: inherit;
+  background: var(--hub-paper);
+  border: 1px solid var(--hub-line);
+  border-radius: 16px; overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+}
+.tile[data-app="astrofoto"] { --c: var(--hub-c-astrofoto); }
+.tile[data-app="attivita"]  { --c: var(--hub-c-attivita); }
+.tile[data-app="budget"]    { --c: var(--hub-c-budget); }
+.tile[data-app="running"]   { --c: var(--hub-c-running); }
+.tile:hover, .tile:focus-visible { border-color: var(--c); box-shadow: var(--hub-shadow); outline: none; }
+.tile:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 28%, transparent); }
+
+.tile-art {
+  height: 148px; color: var(--c);
+  background: color-mix(in srgb, var(--c) 7%, #fff);
+  border-bottom: 1px solid color-mix(in srgb, var(--c) 14%, #fff);
+  display: block;
+}
+.tile-art svg { display: block; width: 100%; height: 100%; }
+.tile-body { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.tile-name { font-family: var(--hub-display); font-weight: 600; font-size: 26px; letter-spacing: -.01em; line-height: 1.15; margin: 0; }
+.tile-desc { margin: 0; color: var(--hub-soft); font-size: 15px; max-width: 44ch; }
+.tile:hover 
+
+@media (prefers-reduced-motion: reduce) { .tile, .hub-link { transition: none; } }
+
+/* ---------- 4. ADATTAMENTI PER SEZIONE ---------- */
+/* larghezza e margini comuni */
+body[data-app="astrofoto"] .header-inner,
+body[data-app="attivita"] .nav-inner,
+body[data-app="budget"] .wrap,
+body[data-app="running"] .app { max-width: var(--hub-maxw); }
+body[data-app="attivita"] .nav-inner { padding-left: var(--hub-pad); padding-right: var(--hub-pad); }
+
+/* ASTROFOTO: palette fredda e accento comune; la landing resta sotto la barra */
+body[data-app="astrofoto"] {
+  --ink: #12161c; --ink2: #2f3742; --ink3: #5b6573; --ink4: #8a93a1;
+  --bg: #ffffff; --bg2: #f5f7f9; --bg3: #eceff3;
+  --border: #e2e6eb; --border2: #cdd3db;
+  --blue: #3730a3; --blue2: #4f46e5; --blue3: #e0e7ff; --blue4: #eef2ff;
+}
+body[data-app="astrofoto"] #landing { top: var(--hub-shell-h); }
+body[data-app="astrofoto"] header { background-color: #1e1b4b; }
+
+/* BUDGET: intestazione a tinta unita con l'accento della sezione */
+body[data-app="budget"] header { background: var(--hub-c-budget) !important; }
+body[data-app="budget"] header::before { display: none; }
+
+/* ATTIVITÀ: voce attiva e pulsante principale con l'accento comune */
+body[data-app="attivita"] .btn-add { background: var(--hub-c-attivita); }
+body[data-app="attivita"] .site-nav a.active,
+body[data-app="attivita"] .site-nav .active { color: var(--hub-c-attivita); border-color: var(--hub-c-attivita); }
+/* le mappe non devono finire sopra altri elementi */
+.leaflet-container { isolation: isolate; }

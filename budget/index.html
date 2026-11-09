@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#12161c">
+<title>Le Tue Finanze</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="../assets/config.js"></script>
+<link rel="stylesheet" href="../assets/hub.css">
+</head>
+<body>
+<script src="../assets/hub.js" data-app="budget"></script>
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="eyebrow">Gestione finanziaria personale</p>
+      <h1>Le Tue Finanze</h1>
+    </div>
+    <div class="hdr-right">
+      <div class="lbl">Patrimonio totale</div>
+      <div class="val" id="hdr-patrimonio"></div>
+      <div class="sparkline" id="hdr-spark"></div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="dashboard" class="active">Sommario</button>
+    <button data-tab="pervoce">Dettaglio per voce</button>
+    <button data-tab="transazioni">Transazioni</button>
+    <button data-tab="budget">Budget</button>
+    <button data-tab="analisi">Analisi</button>
+    <button data-tab="patrimonio">Patrimonio</button>
+    <button data-tab="portafoglio">Portafoglio Titoli</button>
+    <button data-tab="profitloss">Profit &amp; Loss</button>
+    <button data-tab="importa">Importa</button>
+  </nav>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section id="tab-dashboard">
+    <div class="data-banner" id="data-banner"></div>
+
+    <div class="section-title" id="dash-cards-title">Sintesi anno corrente</div>
+    <div class="chart-flags">
+      <label><input type="checkbox" id="summary-flag-titoli" autocomplete="off"> Includi gestione titoli <span class="flag-hint">(Acquisto/Vendita Titoli)</span></label>
+      <label><input type="checkbox" id="summary-flag-progetti" autocomplete="off"> Includi gestione progetti <span class="flag-hint">(Progetti/Spese Straordinarie)</span></label>
+    </div>
+    <div class="grid" id="dash-cards"></div>
+
+    <div class="section-title">Entrate e uscite &mdash; tutti gli anni caricati</div>
+    <div class="section-sub" id="chart-sub"></div>
+    <div class="chart-panel">
+      <div class="chart-flags">
+        <label><input type="checkbox" id="flag-titoli" autocomplete="off"> Includi gestione titoli <span class="flag-hint">(Acquisto/Vendita Titoli)</span></label>
+        <label><input type="checkbox" id="flag-progetti" autocomplete="off"> Includi gestione progetti <span class="flag-hint">(Progetti/Spese Straordinarie)</span></label>
+      </div>
+      <div id="dash-chart"></div>
+      <div class="chart-note" id="chart-note"></div>
+    </div>
+
+    <div class="section-title">Ultime registrazioni</div>
+    <div class="table-scroll"><table class="ledger" id="dash-recent">
+      <thead><tr><th>Data</th><th>Descrizione</th><th>Categoria</th><th class="num">Importo</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <!-- ================= DETTAGLIO PER VOCE ================= -->
+  <section id="tab-pervoce" style="display:none;">
+    <div class="section-title">Dettaglio per voce</div>
+    <div class="section-sub">Confronto anno su anno di entrate e uscite per singola categoria (l'anno corrente è parziale, in base ai mesi con transazioni disponibili).</div>
+
+    <div class="voce-block">
+      <div class="voce-block-title">Entrate per voce</div>
+      <div class="voce-controls">
+        <select id="voce-cat-entrate"></select>
+      </div>
+      <div class="voce-chart" id="voce-chart-entrate"></div>
+      <div class="table-scroll"><table class="ledger" id="voce-table-entrate">
+        <thead><tr><th>Anno</th><th class="num">Totale</th><th class="num">Media/mese</th><th class="num">Variazione vs anno prec.</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+
+    <div class="voce-block">
+      <div class="voce-block-title">Uscite per voce</div>
+      <div class="voce-controls">
+        <select id="voce-cat-uscite"></select>
+      </div>
+      <div class="voce-chart" id="voce-chart-uscite"></div>
+      <div class="table-scroll"><table class="ledger" id="voce-table-uscite">
+        <thead><tr><th>Anno</th><th class="num">Totale</th><th class="num">Media/mese</th><th class="num">Variazione vs anno prec.</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ================= TRANSAZIONI ================= -->
+  <section id="tab-transazioni" style="display:none;">
+    <div class="toolbar">
+      <select id="filter-anno"></select>
+      <select id="filter-mese"></select>
+      <select id="filter-cat"></select>
+      <div class="date-range">
+        Dal <input type="date" id="filter-da">
+        al <input type="date" id="filter-a">
+      </div>
+      <button class="ghost" id="btn-clear-filters">Azzera filtri</button>
+      <div style="flex:1"></div>
+      <button class="primary" id="btn-new-tx">+ Nuova registrazione</button>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:22px;" id="tx-summary"></div>
+
+    <div class="form-panel" id="tx-form">
+      <div class="form-panel-title" id="tx-form-title">Nuova registrazione</div>
+      <div class="form-grid">
+        <div><label>Data</label><input type="date" id="f-data"></div>
+        <div><label>Descrizione</label><input type="text" id="f-desc" placeholder="es. Esselunga"></div>
+        <div><label>Importo (&euro;)</label><input type="number" step="0.01" id="f-importo" placeholder="-23.27"></div>
+        <div><label>Categoria</label><select id="f-cat"></select></div>
+        <div><label>Istituto (liquidit&agrave;)</label><select id="f-istituto"><option value="">&mdash; nessuno &mdash;</option><option value="Fineco">Fineco</option><option value="Illimity">Illimity</option></select></div>
+        <div style="display:flex; align-items:flex-end; gap:8px;">
+          <button class="primary" id="btn-save-tx">Salva</button>
+          <button class="ghost" id="btn-cancel-tx">Annulla</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar" style="margin-bottom:10px;">
+      <label style="display:flex; align-items:center; gap:6px; font-family:'Inter',sans-serif; font-size:12.5px; color:var(--ink-soft);">
+        <input type="checkbox" id="tx-select-all"> Seleziona tutte le righe visibili
+      </label>
+      <span class="tag" id="tx-select-count" style="display:none;"></span>
+      <div style="flex:1"></div>
+      <button class="ghost" id="btn-export-tx">Esporta selezionate (.xlsx)</button>
+    </div>
+
+    <div class="table-scroll"><table class="ledger" id="tx-table">
+      <thead><tr><th style="width:34px;"></th><th>Data</th><th>Descrizione</th><th>Categoria</th><th>Istituto</th><th class="num">Importo</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <!-- ================= BUDGET ================= -->
+  <section id="tab-budget" style="display:none;">
+    <div class="toolbar">
+      <select id="budget-anno"></select>
+      <label style="display:flex; align-items:center; gap:8px; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600; color:var(--ink);">
+        % Flusso Teorico sullo stipendio
+        <input type="number" id="budget-teorico-pct" min="0" max="100" step="1" style="width:70px;">
+      </label>
+    </div>
+    <div class="budget-flags">
+      <label><input type="checkbox" id="budget-flag-titoli" autocomplete="off"> Includi gestione titoli <span class="flag-hint">(Acquisto/Vendita Titoli)</span></label>
+      <label><input type="checkbox" id="budget-flag-progetti" autocomplete="off"> Includi gestione progetti <span class="flag-hint">(Progetti/Spese Straordinarie)</span></label>
+    </div>
+
+    <div class="section-title">Totali per anno</div>
+    <div class="table-scroll"><table class="ledger" id="budget-years-table">
+      <thead><tr>
+        <th>Anno</th>
+        <th class="num">Entrate</th>
+        <th class="num">Uscite</th>
+        <th class="num">Saldo</th>
+        <th class="num">Flusso Teorico</th>
+        <th class="num">Flusso Effettivo</th>
+        <th class="num">Delta</th>
+        <th class="num">% Risparmio effettivo</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+
+    <div class="section-title" id="budget-title">Budget mensile</div>
+    <div class="table-scroll"><table class="ledger" id="budget-table">
+      <thead><tr>
+        <th>Mese</th>
+        <th class="num">Entrate</th>
+        <th class="num">Uscite</th>
+        <th class="num">Saldo</th>
+        <th class="num">Flusso Teorico</th>
+        <th class="num">Flusso Effettivo</th>
+        <th class="num">Delta</th>
+        <th class="num">% Risparmio effettivo</th>
+      </tr></thead>
+      <tbody></tbody>
+      <tfoot></tfoot>
+    </table></div>
+    <div class="budget-note" id="budget-note"></div>
+  </section>
+
+  <!-- ================= ANALISI ================= -->
+  <section id="tab-analisi" style="display:none;">
+    <div class="chart-flags">
+      <label><input type="checkbox" id="analisi-flag-titoli" autocomplete="off"> Includi gestione titoli <span class="flag-hint">(Acquisto/Vendita Titoli)</span></label>
+      <label><input type="checkbox" id="analisi-flag-progetti" autocomplete="off"> Includi gestione progetti <span class="flag-hint">(Progetti/Spese Straordinarie)</span></label>
+    </div>
+
+    <div class="section-title">Entrate vs Uscite per anno</div>
+    <div class="section-sub">Confronto diretto tra i totali annuali, prima di derivarne il tasso di risparmio.</div>
+    <div class="chart-panel">
+      <div id="analisi-flussi-chart"></div>
+      <div class="chart-note" id="analisi-flussi-note"></div>
+    </div>
+
+    <div class="section-title">Tasso di risparmio</div>
+    <div class="section-sub">Quota delle entrate annuali non spesa: (Entrate &minus; Uscite) / Entrate.</div>
+    <div class="chart-panel">
+      <div id="analisi-risparmio-chart"></div>
+      <div class="chart-note" id="analisi-risparmio-note"></div>
+    </div>
+
+    <div class="section-title">Trend &mdash; media mobile 12 mesi</div>
+    <div class="section-sub">Somma mobile degli ultimi 12 mesi, calcolata mese per mese: smussa la stagionalità e mostra la direzione di fondo di uscite ed entrate.</div>
+    <div class="chart-panel">
+      <div id="analisi-trend-chart"></div>
+      <div class="chart-note" id="analisi-trend-note"></div>
+    </div>
+
+    <div class="toolbar">
+      <select id="analisi-anno"></select>
+    </div>
+
+    <div class="section-title">Andamento mensile &mdash; anno selezionato</div>
+    <div class="section-sub">Entrate e uscite mese per mese, per individuare la stagionalità entro l'anno.</div>
+    <div class="chart-panel">
+      <div id="analisi-mensile-chart"></div>
+      <div class="chart-note" id="analisi-mensile-note"></div>
+    </div>
+
+    <div class="section-title">Composizione per categoria</div>
+    <div class="section-sub" id="analisi-composizione-sub">Le voci che pesano di più sul totale dell'anno selezionato.</div>
+
+    <div class="voce-block">
+      <div class="voce-block-title">Uscite per categoria</div>
+      <div class="chart-panel">
+        <div id="analisi-usc-donut"></div>
+        <div class="ck-sep">Elenco completo &mdash; tocca una voce per il dettaglio</div>
+        <div id="analisi-usc-hbar" class="hbars"></div>
+      </div>
+      <div class="table-scroll"><table class="ledger" id="analisi-uscite-table">
+        <thead><tr><th>Categoria</th><th class="num" id="analisi-uscite-th-anno">Anno selezionato</th><th class="num">% sul totale</th><th class="num" id="analisi-uscite-th-prec">Anno precedente</th><th class="num">Variazione</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+
+    <div class="voce-block">
+      <div class="voce-block-title">Entrate per categoria</div>
+      <div class="chart-panel">
+        <div id="analisi-ent-donut"></div>
+        <div class="ck-sep">Elenco completo &mdash; tocca una voce per il dettaglio</div>
+        <div id="analisi-ent-hbar" class="hbars"></div>
+      </div>
+      <div class="table-scroll"><table class="ledger" id="analisi-entrate-table">
+        <thead><tr><th>Categoria</th><th class="num" id="analisi-entrate-th-anno">Anno selezionato</th><th class="num">% sul totale</th><th class="num" id="analisi-entrate-th-prec">Anno precedente</th><th class="num">Variazione</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+
+  </section>
+
+  <!-- ================= PATRIMONIO ================= -->
+  <section id="tab-patrimonio" style="display:none;">
+    <div class="section-title">Patrimonio per istituto</div>
+    <div class="section-sub">Fineco e Illimity sono istituti fissi (nome non modificabile): la liquidit&agrave; si aggiorna da sola in base alle transazioni a cui assegni un istituto, e per Fineco il Portafoglio Titoli riprende automaticamente il valore di mercato dal tab Portafoglio Titoli. Puoi comunque correggere manualmente qualsiasi importo, e aggiungere altri istituti liberi.</div>
+    <div class="table-scroll"><table class="ledger" id="patrimonio-table">
+      <thead><tr><th>Istituto</th><th class="num">Liquidit&agrave;</th><th class="num">Portafoglio Titoli</th><th class="num">Deposito</th><th class="num">Totale</th><th></th></tr></thead>
+      <tbody></tbody>
+      <tfoot></tfoot>
+    </table></div>
+    <div class="patr-actions">
+      <button class="ghost" id="btn-add-istituto">+ Aggiungi istituto</button>
+    </div>
+  </section>
+
+  <!-- ================= PORTAFOGLIO ================= -->
+  <section id="tab-portafoglio" style="display:none;">
+    <div class="toolbar">
+      <input type="file" id="ptf-file-input" accept=".xls,.xlsx" style="display:none;">
+      <button class="primary" id="btn-import-ptf">Importa / sostituisci portafoglio</button>
+      <span class="section-sub" style="margin:0;" id="ptf-updated"></span>
+    </div>
+    <div id="ptf-import-status" class="import-status"></div>
+
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);" id="ptf-cards"></div>
+    <div class="section-title">Titoli in portafoglio</div>
+    <div class="table-scroll"><table class="ledger" id="ptf-table">
+      <thead><tr>
+        <th>Titolo</th><th>ISIN</th><th>Mercato</th><th>Strumento</th>
+        <th class="num">Quantit&agrave;</th>
+        <th class="num">P.zo carico</th><th class="num">Valore carico</th>
+        <th class="num">P.zo mercato</th><th class="num">Valore mercato</th>
+        <th class="num">Var%</th><th class="num">Var &euro;</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <!-- ================= PROFIT & LOSS ================= -->
+  <section id="tab-profitloss" style="display:none;">
+    <div class="section-title">Profit &amp; Loss realizzati</div>
+    <div class="section-sub">Importa gli export "Dettaglio P&amp;L" di Fineco (foglio "Dettagli"): ogni chiusura di posizione viene aggiunta all'archivio, senza sovrascrivere quelle già caricate. Puoi ricaricare periodicamente lo stesso export: le operazioni già presenti vengono riconosciute e non duplicate.</div>
+
+    <div class="toolbar">
+      <input type="file" id="pl-file-input" accept=".xls,.xlsx" style="display:none;">
+      <button class="primary" id="btn-import-pl">Importa file P&amp;L</button>
+      <span class="section-sub" style="margin:0;" id="pl-updated"></span>
+    </div>
+    <div id="pl-import-status" class="import-status"></div>
+
+    <div class="toolbar" style="margin-top:26px;">
+      <select id="pl-filter-anno"></select>
+      <div class="date-range">
+        Dal <input type="date" id="pl-filter-da">
+        al <input type="date" id="pl-filter-a">
+      </div>
+      <button class="ghost" id="btn-pl-clear-filters">Azzera filtri</button>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);" id="pl-cards"></div>
+
+    <div class="section-title">Sintesi per anno</div>
+    <div class="table-scroll"><table class="ledger" id="pl-years-table">
+      <thead><tr>
+        <th>Anno</th>
+        <th class="num">N. operazioni</th>
+        <th class="num">P&amp;L</th>
+        <th class="num">P&amp;L medio</th>
+        <th class="num">Operazioni in utile</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+
+    <div class="section-title">Sintesi per titolo <span class="tag" style="font-family:'Inter',sans-serif; font-weight:600;">periodo filtrato</span></div>
+    <div class="table-scroll"><table class="ledger" id="pl-titoli-table">
+      <thead><tr><th>Titolo</th><th>Simbolo</th><th class="num">N. operazioni</th><th class="num">P&amp;L</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+
+    <div class="section-title">Operazioni chiuse <span class="tag" style="font-family:'Inter',sans-serif; font-weight:600;">periodo filtrato</span></div>
+    <div class="table-scroll"><table class="ledger" id="pl-table">
+      <thead><tr>
+        <th>Data</th><th>Titolo</th><th>Simbolo</th><th>Mercato</th>
+        <th class="num">Quantit&agrave;</th>
+        <th class="num">P.zo apertura</th><th class="num">P.zo chiusura</th>
+        <th class="num">P&amp;L</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+
+  <!-- ================= IMPORTA ================= -->
+  <section id="tab-importa" style="display:none;">
+    <div class="section-title">Importa movimenti da file bancari</div>
+    <div class="section-sub">Riconosce automaticamente gli estratti di Fineco e Illimity (conto corrente e carta di credito), oltre ai file generati dal pulsante "Esporta selezionate (.xlsx)" di questa stessa app (utile per re-importare dati esportati in precedenza), e propone una categoria per ogni movimento, che puoi correggere prima di confermare. Dopo la conferma, tutte le altre sezioni (Sommario, Dettaglio per voce, Budget, Ultime registrazioni) si aggiornano automaticamente.</div>
+
+    <div class="import-drop" id="import-drop">
+      <input type="file" id="import-file-input" accept=".xlsx" multiple style="display:none;">
+      <div class="import-drop-inner">
+        <div class="import-drop-title">Trascina qui i file .xlsx oppure</div>
+        <button class="primary" id="btn-choose-files">Scegli file</button>
+      </div>
+    </div>
+    <div id="import-status" class="import-status"></div>
+
+    <div id="import-review" style="display:none;">
+      <div class="toolbar" style="margin-top:22px;">
+        <label style="display:flex; align-items:center; gap:8px; font-family:'Inter',sans-serif; font-size:13px; font-weight:600;">
+          Applica a istituto:
+          <select id="import-istituto"><option value="">&mdash; nessuno &mdash;</option><option value="Fineco">Fineco</option><option value="Illimity">Illimity</option></select>
+        </label>
+        <button class="ghost" id="btn-select-all-new">Seleziona tutti i nuovi</button>
+        <button class="ghost" id="btn-select-none">Deseleziona tutti</button>
+        <div style="flex:1"></div>
+        <span class="section-sub" style="margin:0;" id="import-count"></span>
+        <button class="primary" id="btn-confirm-import">Importa selezionati</button>
+      </div>
+      <div class="section-sub" style="margin-top:6px;">Se selezioni un istituto, la sua liquidit&agrave; nel tab Patrimonio verr&agrave; aggiornata della somma netta dei movimenti importati e confermati.</div>
+      <div class="table-scroll"><table class="ledger" id="import-table">
+        <thead><tr><th></th><th>Data</th><th>Descrizione</th><th class="num">Importo</th><th>Fonte</th><th>Istituto</th><th>Categoria proposta</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <footer class="note">
+    <b>Nota:</b> le modifiche apportate in ogni sezione (transazioni, importazioni, patrimonio) vengono salvate automaticamente nel repository GitHub collegato. Clicca sull'indicatore in alto a destra per configurare la sincronizzazione.
+  </footer>
+
+</div>
+
+<script src="data.js"></script>
+<script src="github-sync.js"></script>
+<script src="chart.umd.js"></script>
+<script src="charts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

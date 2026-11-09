@@ -1,0 +1,21 @@
+name: Download Astro Images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run download script
+        run: cd astrofoto && python3 download_astro.py
+
+      - name: Commit images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add astrofoto/img/
+          git diff --staged --quiet || git commit -m "Astro images [automated]"
+          git push

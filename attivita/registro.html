@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Registro attività — Attività Mauro</title>
+<meta name="theme-color" content="#12161c">
+<style>
+:root{
+  --bg:#fff;--surface:#f7f8fa;--ink:#13151a;--ink-soft:#6b7280;--border:#e6e8eb;
+  --green:#15803d;--green-soft:#eafbf1;--red:#dc2626;--red-soft:#fff0f0;--blue:#1d4ed8;--blue-soft:#eef3ff;--orange:#c2410c;
+  --radius:14px;--radius-sm:8px;
+  --shadow:0 1px 2px rgba(16,24,32,.04),0 10px 28px rgba(16,24,32,.06);
+  --display:"Source Serif 4",system-ui,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"IBM Plex Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.site-nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1080px;margin:0 auto;padding:.9rem 1.5rem;display:flex;align-items:center;gap:1.8rem}
+.logo{font-family:var(--display);font-weight:800;font-size:1.05rem;text-decoration:none;white-space:nowrap}
+.nav-links{display:flex;gap:1.4rem;flex:1;font-size:.92rem;font-weight:600;overflow-x:auto}
+.nav-links a{text-decoration:none;color:var(--ink-soft);padding:.3rem 0;border-bottom:2px solid transparent;white-space:nowrap}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.active{color:var(--blue);border-color:var(--blue)}
+.wrap{max-width:1080px;margin:0 auto;padding:1.6rem 1.5rem 4rem}
+.eyebrow{font-family:var(--mono);font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--blue);margin:0 0 .3rem}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,4vw,2.5rem);margin:0 0 .3rem;letter-spacing:-.02em}
+.lead{color:var(--ink-soft);margin:0 0 1.3rem;max-width:62ch}
+h2{font-family:var(--display);font-weight:800;font-size:1.05rem;margin:0 0 .8rem}
+.card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.2rem}
+
+/* filtri */
+details.filters{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.2rem 1.1rem;margin-bottom:1.1rem}
+details.filters>summary{cursor:pointer;font-weight:600;padding:.8rem 0;list-style:none;display:flex;align-items:center;gap:.6rem}
+details.filters>summary::-webkit-details-marker{display:none}
+details.filters>summary::before{content:"▸";transition:transform .15s}
+details.filters[open]>summary::before{transform:rotate(90deg)}
+.badge-n{font-family:var(--mono);font-size:.75rem;background:var(--ink);color:#fff;border-radius:999px;padding:.05rem .55rem}
+.f-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;padding-bottom:.9rem}
+.field label{display:block;font-size:.72rem;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+select,input[type=search],input[type=number]{width:100%;font:inherit;font-size:.9rem;padding:.5rem .6rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;color:var(--ink)}
+.range{display:flex;gap:.4rem}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chip{font:inherit;font-size:.82rem;font-weight:600;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--ink-soft);cursor:pointer}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.f-actions{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;padding-bottom:1rem}
+.btn{font:inherit;font-size:.85rem;font-weight:600;padding:.5rem 1rem;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer}
+.btn:hover{border-color:var(--ink)}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.count-label{font-size:.85rem;color:var(--ink-soft);margin-left:auto}
+
+/* kpi */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin-bottom:1.3rem}
+.kpi{border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;background:var(--bg)}
+.kpi .v{font-family:var(--display);font-weight:800;font-size:1.55rem;line-height:1.1}
+.kpi .l{font-size:.75rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem}
+.kpi .s{font-size:.78rem;color:var(--ink-soft)}
+
+/* tab */
+.tabs{display:flex;gap:.3rem;border-bottom:1px solid var(--border);margin-bottom:1.2rem;overflow-x:auto}
+.tab-btn{font:inherit;font-weight:600;font-size:.92rem;background:none;border:0;border-bottom:2px solid transparent;padding:.6rem .9rem;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+.tab-btn.on{color:var(--blue);border-color:var(--blue)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:1rem}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}.nav-inner{padding:.8rem 1rem;gap:1rem}.wrap{padding:1.2rem 1rem 3rem}}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;margin-bottom:1rem}
+.seg button{font:inherit;font-size:.82rem;font-weight:600;border:0;background:#fff;padding:.35rem .9rem;cursor:pointer;color:var(--ink-soft)}
+.seg button.on{background:var(--ink);color:#fff}
+.legend{display:flex;gap:1rem;font-size:.78rem;color:var(--ink-soft);margin-bottom:.4rem}
+.legend i{display:inline-block;width:.7rem;height:.7rem;border-radius:3px;margin-right:.3rem;vertical-align:-1px}
+svg.chart{width:100%;height:auto;display:block;overflow:visible}
+svg.chart text{font-family:var(--body);font-size:11px;fill:var(--ink-soft)}
+svg.chart .grid{stroke:var(--border);stroke-width:1}
+svg.chart rect.bar:hover,svg.chart circle:hover{opacity:.7}
+.hb{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:.6rem;align-items:center;font-size:.85rem;padding:.2rem 0;cursor:pointer;border-radius:6px}
+.hb:hover{background:var(--surface)}
+.hb .bar{height:.7rem;background:var(--surface);border-radius:4px;overflow:hidden}
+.hb .bar b{display:block;height:100%;background:var(--green);border-radius:4px}
+.hb .lab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hb .val{font-family:var(--mono);font-size:.78rem;color:var(--ink-soft)}
+ul.facts{list-style:none;padding:0;margin:0;display:grid;gap:.55rem;font-size:.9rem}
+ul.facts li{padding-left:1.2rem;position:relative}
+ul.facts li::before{content:"▲";position:absolute;left:0;color:var(--green);font-size:.65rem;top:.35rem}
+ul.facts b{font-weight:600}
+
+/* province */
+.stato-head{font-family:var(--display);font-weight:800;margin:1.2rem 0 .4rem;display:flex;gap:.8rem;align-items:baseline;flex-wrap:wrap}
+.stato-head small{font-family:var(--body);font-weight:400;color:var(--ink-soft);font-size:.82rem}
+.reg-head{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin:.7rem 0 .2rem;font-weight:600}
+details.prov{border-bottom:1px solid var(--border)}
+details.prov>summary{display:grid;grid-template-columns:minmax(120px,1.3fr) 2fr repeat(3,minmax(54px,.6fr));gap:.6rem;align-items:center;cursor:pointer;padding:.55rem .2rem;list-style:none;font-size:.88rem}
+details.prov>summary::-webkit-details-marker{display:none}
+details.prov>summary:hover{background:var(--surface)}
+details.prov .pn{font-weight:600}
+details.prov .num{font-family:var(--mono);font-size:.8rem;text-align:right}
+details.prov .bar{height:.55rem;background:var(--surface);border-radius:4px;overflow:hidden}
+details.prov .bar b{display:block;height:100%;background:var(--green)}
+.prov-body{padding:.2rem .2rem .9rem}
+@media(max-width:560px){details.prov>summary{grid-template-columns:1fr repeat(3,auto)}details.prov .bar{display:none}}
+
+/* tabelle */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius)}
+table.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+.tbl th,.tbl td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl td.t{white-space:normal;min-width:200px;max-width:360px}
+.tbl td.n,.tbl th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tbl thead th{position:sticky;top:0;background:var(--surface);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);cursor:pointer;user-select:none}
+.tbl thead th.asc::after{content:" ▲"}.tbl thead th.desc::after{content:" ▼"}
+.tbl tbody tr{cursor:pointer}.tbl tbody tr:hover{background:var(--surface)}
+.tag{font-size:.7rem;font-weight:600;padding:.1rem .5rem;border-radius:999px}
+.tag.esc{background:var(--green-soft);color:var(--green)}.tag.trail{background:var(--red-soft);color:var(--red)}
+.more{text-align:center;padding:1rem}
+.rank{display:grid;grid-template-columns:2rem 1fr auto;gap:.7rem;align-items:center;padding:.6rem .3rem;border-bottom:1px solid var(--border);cursor:pointer}
+.rank:hover{background:var(--surface)}
+.rank .p{font-family:var(--display);font-weight:800;color:var(--ink-soft)}
+.rank .v{font-family:var(--mono);font-weight:600}
+.rank small{display:block;color:var(--ink-soft)}
+.empty{padding:2rem;text-align:center;color:var(--ink-soft)}
+
+/* modale */
+.modal{position:fixed;inset:0;background:rgba(19,21,26,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-box{background:#fff;border-radius:var(--radius);max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:1.4rem;position:relative;box-shadow:var(--shadow)}
+.modal-box h3{font-family:var(--display);margin:.4rem 2rem .2rem 0;font-size:1.3rem}
+.modal-x{position:absolute;top:.8rem;right:.9rem;border:0;background:var(--surface);width:2rem;height:2rem;border-radius:50%;cursor:pointer;font-size:1rem}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem;margin-top:1rem}
+.dgrid div{background:var(--surface);border-radius:var(--radius-sm);padding:.55rem .7rem}
+.dgrid span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft)}
+.dgrid b{font-weight:600}
+.note{font-size:.82rem;color:var(--orange);margin-top:.9rem}
+@media(max-width:560px){
+  svg.chart:not(.cal) text{font-size:19px}
+  .card{padding:.85rem .8rem}
+  h2{font-size:1rem}
+  .kpi .v{font-size:1.3rem}
+  .legend{flex-wrap:wrap;gap:.3rem .9rem}
+  .hb{grid-template-columns:minmax(80px,120px) 1fr auto;gap:.4rem}
+  details.prov>summary{font-size:.82rem;gap:.4rem}
+  details.prov .num{font-size:.72rem}
+  .tbl th,.tbl td{padding:.5rem .55rem;font-size:.8rem}
+  .modal-box{padding:1.1rem}
+  .seg button{padding:.35rem .65rem}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="../assets/config.js"></script>
+<link rel="stylesheet" href="../assets/hub.css">
+</head>
+<body>
+<script src="../assets/hub.js" data-app="attivita"></script>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Attività Mauro</a>
+    <div class="nav-links">
+      <a href="index.html">← Torna al sito</a>
+      <a href="registro.html" class="active">Registro attività</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+  <p class="eyebrow">Archivio personale</p>
+  <h1>Registro attività</h1>
+  <p class="lead" id="lead">Caricamento…</p>
+
+  <details class="filters" open id="filters">
+    <summary>Filtri <span class="badge-n" id="active-n" hidden>0</span><span class="count-label" id="count-label"></span></summary>
+    <div class="f-grid">
+      <div class="field" style="grid-column:1/-1"><label>Anno</label><div class="chips" id="f-anni"></div></div>
+      <div class="field"><label for="f-tipo">Tipo</label><select id="f-tipo"><option value="">Tutti</option><option>Escursione</option><option>Trail Running</option></select></div>
+      <div class="field"><label for="f-stato">Stato</label><select id="f-stato"></select></div>
+      <div class="field"><label for="f-reg">Regione</label><select id="f-reg"></select></div>
+      <div class="field"><label for="f-loc">Provincia / zona</label><select id="f-loc"></select></div>
+      <div class="field"><label for="f-mese">Mese</label><select id="f-mese"></select></div>
+      <div class="field"><label for="f-q">Cerca</label><input type="search" id="f-q" placeholder="Titolo, rifugio, vetta…"></div>
+      <div class="field"><label>Distanza (km)</label><div class="range"><input type="number" id="f-kmmin" placeholder="min" min="0"><input type="number" id="f-kmmax" placeholder="max" min="0"></div></div>
+      <div class="field"><label>Dislivello + (m)</label><div class="range"><input type="number" id="f-dpmin" placeholder="min" min="0"><input type="number" id="f-dpmax" placeholder="max" min="0"></div></div>
+      <div class="field"><label>Quota max (m)</label><div class="range"><input type="number" id="f-qmin" placeholder="min"><input type="number" id="f-qmax" placeholder="max"></div></div>
+    </div>
+    <div class="f-actions">
+      <button class="btn" id="btn-reset">Azzera filtri</button>
+      <button class="btn dark" id="btn-csv">Esporta CSV (risultati filtrati)</button>
+    </div>
+  </details>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab-btn on" data-tab="panoramica">Panoramica</button>
+    <button class="tab-btn" data-tab="province">Per provincia</button>
+    <button class="tab-btn" data-tab="elenco">Elenco</button>
+    <button class="tab-btn" data-tab="record">Record</button>
+  </div>
+
+  <section id="tab-panoramica" class="tab">
+    <div class="seg" id="metric-seg">
+      <button data-m="n" class="on">Attività</button><button data-m="km">Km</button><button data-m="dp">Dislivello +</button><button data-m="ore">Ore</button>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>Per anno</h2><div class="legend"><span><i style="background:var(--green)"></i>Escursione</span><span><i style="background:var(--red)"></i>Trail Running</span></div><div id="ch-anno"></div></div>
+      <div class="card"><h2>Stagionalità (per mese)</h2><div class="legend"><span><i style="background:var(--green)"></i>Escursione</span><span><i style="background:var(--red)"></i>Trail Running</span></div><div id="ch-mese"></div></div>
+      <div class="card"><h2>Top 10 province / zone <small style="font-weight:400;color:var(--ink-soft)">· clic per filtrare</small></h2><div id="ch-top"></div></div>
+      <div class="card"><h2>Curiosità</h2><ul class="facts" id="facts"></ul></div>
+      <div class="card"><h2>Distribuzione per distanza (km)</h2><div id="ch-hist"></div></div>
+      <div class="card"><h2>Distanza vs dislivello</h2><div class="legend"><span><i style="background:var(--green)"></i>Escursione</span><span><i style="background:var(--red)"></i>Trail Running</span></div><div id="ch-scatter"></div></div>
+      <div class="card" style="grid-column:1/-1"><h2>Quando hai fatto le uscite</h2><div class="legend"><span><i style="background:var(--green)"></i>Escursione</span><span><i style="background:var(--red)"></i>Trail Running</span><span><i style="background:var(--blue)"></i>Entrambe nello stesso giorno</span><span>Colore più intenso = più dislivello · clic su un giorno per il dettaglio</span></div><div id="ch-cum"></div></div>
+    </div>
+  </section>
+
+  <section id="tab-province" class="tab" hidden><div id="prov-list"></div></section>
+
+  <section id="tab-elenco" class="tab" hidden>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table></div>
+    <div class="more" id="more" hidden><button class="btn" id="btn-more">Mostra tutte</button></div>
+  </section>
+
+  <section id="tab-record" class="tab" hidden>
+    <div class="field" style="max-width:300px;margin-bottom:1rem"><label for="rec-m">Classifica per</label><select id="rec-m"></select></div>
+    <div id="rec-list"></div>
+  </section>
+</main>
+
+<div class="modal" id="modal" hidden><div class="modal-box" id="modal-box"></div></div>
+
+<script src="data/attivita.js"></script>
+<script>
+const MESI=["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+const MESI_L=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+const GIORNI=["lunedì","martedì","mercoledì","giovedì","venerdì","sabato","domenica"];
+const COL={"Escursione":"var(--green)","Trail Running":"var(--red)"};
+const TIPI=["Escursione","Trail Running"];
+const EVEREST=8849;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fN=(n,d=0)=>n==null?"—":Number(n).toLocaleString("it-IT",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fT=s=>{if(s==null)return"—";const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h+"h "+String(m).padStart(2,"0")+"m"};
+const fD=iso=>{const[y,m,d]=iso.split("-");return d+"/"+m+"/"+y};
+const compact=n=>n>=10000?Math.round(n/1000)+"k":n>=1000?(n/1000).toFixed(1).replace(".",",")+"k":String(Math.round(n*10)/10).replace(".",",");
+
+let DATA=[],F=[];
+const S={tab:"panoramica",metric:"n",anni:new Set(),sort:{k:"d",dir:-1},limit:100,
+  f:{tipo:"",stato:"",reg:"",loc:"",mese:"",q:"",kmmin:"",kmmax:"",dpmin:"",dpmax:"",qmin:"",qmax:""}};
+
+const METRICS={
+  n:{label:"Attività",get:()=>1,fmt:v=>fN(v)},
+  km:{label:"Km",get:x=>x.km||0,fmt:v=>fN(v,0)+" km"},
+  dp:{label:"Dislivello +",get:x=>x.dp||0,fmt:v=>fN(v)+" m"},
+  ore:{label:"Ore",get:x=>x.ore||0,fmt:v=>fN(v,0)+" h"}
+};
+
+/* ---------- caricamento ---------- */
+document.addEventListener("DOMContentLoaded",()=>{
+  bind();
+  if(window.ATTIVITA){init(window.ATTIVITA);return}
+  fetch("data/attivita.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("file non trovato");return r.json()}).then(init).catch(e=>{
+    $("lead").innerHTML="⚠ Dati non caricati ("+esc(e.message)+"). Controlla che esista <b>data/attivita.js</b> (o <b>data/attivita.json</b>) accanto a registro.html.";
+  });
+});
+
+function init(rows){
+  DATA=rows.map(x=>{
+    const[y,m,d]=x.d.split("-").map(Number);
+    x.y=y;x.m=m-1;
+    x.loc=x.sg?x.prov+" ("+x.sg+")":x.prov;
+    x.ore=x.mov!=null?x.mov/3600:null;
+    x.v=x.mov&&x.km?x.km/(x.mov/3600):null;
+    x.pend=x.km>=2&&x.dp!=null?x.dp/(x.km*10):null;
+    const days=Date.UTC(y,m-1,d)/864e5;
+    x.ts=days*864e5;x.wk=Math.floor((days+3)/7);x.dow=(Math.floor(days)+3)%7;
+    return x;
+  });
+  const ys=[...new Set(DATA.map(x=>x.y))].sort();
+  $("f-anni").innerHTML=ys.map(y=>`<button class="chip" data-y="${y}">${y}</button>`).join("");
+  $("f-mese").innerHTML='<option value="">Tutti i mesi</option>'+MESI_L.map((m,i)=>`<option value="${i}">${m}</option>`).join("");
+  $("rec-m").innerHTML=RECORDS.map((r,i)=>`<option value="${i}">${r.label}</option>`).join("");
+  if(innerWidth<700)$("filters").open=false;
+  refreshOptions();update();
+}
+
+/* ---------- filtri ---------- */
+const num=v=>v===""?null:Number(v);
+function pass(x){
+  const f=S.f;
+  if(S.anni.size&&!S.anni.has(x.y))return false;
+  if(f.tipo&&x.tipo!==f.tipo)return false;
+  if(f.stato&&x.stato!==f.stato)return false;
+  if(f.reg&&x.reg!==f.reg)return false;
+  if(f.loc&&x.loc!==f.loc)return false;
+  if(f.mese!==""&&x.m!==+f.mese)return false;
+  if(f.q){const q=f.q.toLowerCase();if(!(x.t+" "+x.loc+" "+x.reg+" "+x.stato).toLowerCase().includes(q))return false}
+  const a=(v,mn,mx)=>(mn==null||(v!=null&&v>=mn))&&(mx==null||(v!=null&&v<=mx));
+  return a(x.km,num(f.kmmin),num(f.kmmax))&&a(x.dp,num(f.dpmin),num(f.dpmax))&&a(x.qmax,num(f.qmin),num(f.qmax));
+}
+function countBy(arr,key){const m=new Map();arr.forEach(x=>m.set(x[key],(m.get(x[key])||0)+1));return[...m].sort((a,b)=>b[1]-a[1])}
+function fillSel(id,pairs,all,cur){
+  const el=$(id);const ok=pairs.some(p=>p[0]===cur);
+  el.innerHTML=`<option value="">${all}</option>`+pairs.map(([v,n])=>`<option value="${esc(v)}">${esc(v)} · ${n}</option>`).join("");
+  el.value=ok?cur:"";return el.value;
+}
+function refreshOptions(){
+  S.f.stato=fillSel("f-stato",countBy(DATA,"stato"),"Tutti gli stati",S.f.stato);
+  const d1=DATA.filter(x=>!S.f.stato||x.stato===S.f.stato);
+  S.f.reg=fillSel("f-reg",countBy(d1,"reg"),"Tutte le regioni",S.f.reg);
+  const d2=d1.filter(x=>!S.f.reg||x.reg===S.f.reg);
+  S.f.loc=fillSel("f-loc",countBy(d2,"loc"),"Tutte le province / zone",S.f.loc);
+}
+let _rz;window.addEventListener("resize",()=>{clearTimeout(_rz);_rz=setTimeout(()=>{if(DATA.length&&F.length&&S.tab==="panoramica")calHeat($("ch-cum"))},150)});
+function bind(){
+  $("f-anni").addEventListener("click",e=>{const b=e.target.closest("[data-y]");if(!b)return;const y=+b.dataset.y;S.anni.has(y)?S.anni.delete(y):S.anni.add(y);b.classList.toggle("on");update()});
+  ["tipo","stato","reg","loc","mese"].forEach(k=>$("f-"+k).addEventListener("change",e=>{S.f[k]=e.target.value;if(["stato","reg"].includes(k))refreshOptions();update()}));
+  ["q","kmmin","kmmax","dpmin","dpmax","qmin","qmax"].forEach(k=>$("f-"+k).addEventListener("input",e=>{S.f[k]=e.target.value.trim();update()}));
+  $("btn-reset").onclick=()=>{S.anni.clear();Object.keys(S.f).forEach(k=>S.f[k]="");document.querySelectorAll("#filters input").forEach(i=>i.value="");document.querySelectorAll("#f-anni .chip").forEach(c=>c.classList.remove("on"));$("f-tipo").value="";$("f-mese").value="";refreshOptions();update()};
+  $("btn-csv").onclick=exportCsv;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;document.querySelectorAll(".tab-btn").forEach(x=>x.classList.toggle("on",x===b));document.querySelectorAll(".tab").forEach(t=>t.hidden=t.id!=="tab-"+S.tab);update()});
+  $("metric-seg").addEventListener("click",e=>{const b=e.target.closest("[data-m]");if(!b)return;S.metric=b.dataset.m;document.querySelectorAll("#metric-seg button").forEach(x=>x.classList.toggle("on",x===b));update()});
+  $("rec-m").onchange=renderRecords;
+  $("btn-more").onclick=()=>{S.limit=1e9;renderTable()};
+  $("modal").addEventListener("click",e=>{if(e.target.id==="modal"||e.target.closest(".modal-x"))$("modal").hidden=true});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")$("modal").hidden=true});
+  document.addEventListener("click",e=>{const r=e.target.closest("[data-id]");if(r)showDetail(+r.dataset.id)});
+  document.addEventListener("click",e=>{const r=e.target.closest("[data-loc]");if(r){S.f.loc=r.dataset.loc;refreshOptions();$("f-loc").value=S.f.loc;update();scrollTo({top:0,behavior:"smooth"})}});
+}
+
+/* ---------- aggiornamento ---------- */
+function update(){
+  if(!DATA.length)return;
+  F=DATA.filter(pass);
+  S.limit=Math.min(S.limit,100)||100;
+  const nAct=Object.values(S.f).filter(v=>v!=="").length+(S.anni.size?1:0);
+  $("active-n").hidden=!nAct;$("active-n").textContent=nAct;
+  $("count-label").textContent=F.length+" di "+DATA.length+" attività";
+  const first=DATA[0].d,last=DATA[DATA.length-1].d;
+  $("lead").textContent=`${DATA.length} attività registrate dal ${fD(first)} al ${fD(last)}: escursioni e trail running, filtrabili per luogo, periodo e caratteristiche.`;
+  renderKpis();
+  ({panoramica:renderOverview,province:renderProvince,elenco:renderTable,record:renderRecords})[S.tab]();
+}
+const sum=(a,f)=>a.reduce((s,x)=>s+(f(x)||0),0);
+
+function renderKpis(){
+  const km=sum(F,x=>x.km),dp=sum(F,x=>x.dp),ore=sum(F,x=>x.ore);
+  const qmax=F.length?Math.max(...F.map(x=>x.qmax||0)):0;
+  const k=[
+    [fN(F.length),"Attività",F.length?fN(new Set(F.map(x=>x.d)).size)+" giorni diversi":""],
+    [fN(km,0),"Km totali",F.length?"media "+fN(km/F.length,1)+" km":""],
+    [fN(dp),"Dislivello + (m)",F.length?"≈ "+fN(dp/EVEREST,1)+" volte l'Everest":""],
+    [fN(ore,0),"Ore in movimento",F.length?"media "+fT(ore*3600/F.length):""],
+    [fN(new Set(F.map(x=>x.loc)).size),"Province / zone",fN(new Set(F.map(x=>x.stato)).size)+" stati"],
+    [fN(qmax),"Quota max (m)",F.length?esc((F.find(x=>x.qmax===qmax)||{}).t||""):""]
+  ];
+  $("kpis").innerHTML=k.map(([v,l,s])=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div><div class="s">${s}</div></div>`).join("");
+}
+
+/* ---------- grafici ---------- */
+function niceMax(m){const p=Math.pow(10,Math.floor(Math.log10(m)));for(const c of[1,2,2.5,5,10])if(c*p>=m)return c*p;return 10*p}
+function vbars(el,cats,series,fmt){
+  const W=640,H=250,pl=50,pr=6,pt=24,pb=26,iw=W-pl-pr,ih=H-pt-pb;
+  const tot=cats.map((_,i)=>series.reduce((a,s)=>a+s.v[i],0));
+  const max=niceMax(Math.max(...tot,1)),slot=iw/cats.length,bw=Math.min(slot*.7,46);
+  let g="";
+  for(let i=0;i<=4;i++){const y=pt+ih-ih*i/4;g+=`<line class="grid" x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}"/><text x="${pl-6}" y="${y+4}" text-anchor="end">${compact(max*i/4)}</text>`}
+  cats.forEach((c,i)=>{
+    const x=pl+slot*i+(slot-bw)/2;let acc=0;
+    series.forEach(s=>{const h=ih*s.v[i]/max;if(h>0){g+=`<rect class="bar" x="${x}" y="${pt+ih-acc-h}" width="${bw}" height="${h}" rx="2" fill="${s.c}"><title>${esc(c)} · ${s.n}: ${fmt(s.v[i])}</title></rect>`}acc+=h});
+    if(cats.length<=12&&tot[i]>0)g+=`<text x="${x+bw/2}" y="${pt+ih-acc-4}" text-anchor="middle">${compact(tot[i])}</text>`;
+    g+=`<text x="${pl+slot*i+slot/2}" y="${H-8}" text-anchor="middle">${esc(c)}</text>`;
+  });
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+function stackByTipo(cats,keyFn){
+  const M=METRICS[S.metric];
+  return TIPI.map(t=>({n:t,c:COL[t],v:cats.map(c=>sum(F.filter(x=>x.tipo===t&&keyFn(x)===c),M.get))}));
+}
+function xyChart(el,pts,{xl,yl,line}){
+  const W=640,H=260,pl=54,pr=12,pt=10,pb=40,iw=W-pl-pr,ih=H-pt-pb;
+  if(!pts.length){el.innerHTML='<div class="empty">Nessun dato</div>';return}
+  const mxX=Math.max(...pts.map(p=>p.x)),mnX=line?Math.min(...pts.map(p=>p.x)):0,mxY=niceMax(Math.max(...pts.map(p=>p.y),1)),X=niceMax(mxX||1);
+  const sx=v=>pl+iw*(line?(v-mnX)/Math.max(mxX-mnX,1):v/X),sy=v=>pt+ih-ih*v/mxY;
+  let g="";
+  for(let i=0;i<=4;i++){const y=pt+ih-ih*i/4;g+=`<line class="grid" x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}"/><text x="${pl-6}" y="${y+4}" text-anchor="end">${compact(mxY*i/4)}</text>`}
+  if(line){
+    const y0=new Date(mnX).getUTCFullYear(),y1=new Date(mxX).getUTCFullYear();
+    for(let y=y0+1;y<=y1;y++){const x=sx(Date.UTC(y,0,1));g+=`<line class="grid" x1="${x}" x2="${x}" y1="${pt}" y2="${pt+ih}"/><text x="${x}" y="${H-14}" text-anchor="middle">${y}</text>`}
+    g+=`<polyline fill="none" stroke="var(--green)" stroke-width="2.2" points="${pts.map(p=>sx(p.x).toFixed(1)+","+sy(p.y).toFixed(1)).join(" ")}"/>`;
+  }else{
+    for(let i=0;i<=5;i++){const x=pl+iw*i/5;g+=`<text x="${x}" y="${H-14}" text-anchor="middle">${compact(X*i/5)}</text>`}
+    pts.forEach(p=>g+=`<circle cx="${sx(p.x).toFixed(1)}" cy="${sy(p.y).toFixed(1)}" r="3.6" fill="${p.c}" fill-opacity=".5" data-id="${p.id}"><title>${esc(p.t)}</title></circle>`);
+  }
+  g+=`<text x="${pl+iw/2}" y="${H-1}" text-anchor="middle">${xl}</text><text x="10" y="${pt+ih/2}" transform="rotate(-90 10 ${pt+ih/2})" text-anchor="middle">${yl}</text>`;
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}">${g}</svg>`;
+}
+function calHeat(el){
+  const byDay=new Map();F.forEach(x=>{(byDay.get(x.d)||byDay.set(x.d,[]).get(x.d)).push(x)});
+  const y0=Math.min(...F.map(x=>x.y)),y1=Math.max(...F.map(x=>x.y));
+  const W=Math.max(300,el.clientWidth||320),B=W>=700?1:2,C=B===1?54:27;
+  const gap=B===1?2:1.5,pl=B===1?30:20;
+  const cs=Math.max(7,Math.min(16,Math.floor((W-pl-4)/C-gap))),st=cs+gap;
+  const yh=B===1?0:16,top=14,band=top+7*st+8,blockH=yh+B*band+(B===1?0:6);
+  let g="";
+  for(let y=y1,k=0;y>=y0;y--,k++){
+    const oy=k*blockH;
+    const off=(new Date(Date.UTC(y,0,1)).getUTCDay()+6)%7;
+    const nd=(Date.UTC(y+1,0,1)-Date.UTC(y,0,1))/864e5;
+    if(B===1)g+=`<text x="0" y="${oy+top+3*st+9}" style="font-weight:700;fill:var(--ink)">${y}</text>`;
+    else g+=`<text x="0" y="${oy+12}" style="font-size:13px;font-weight:700;fill:var(--ink)">${y}</text>`;
+    for(let bd=0;bd<B;bd++){
+      const by=oy+yh+bd*band;
+      ["L","M","V"].forEach((l,j)=>g+=`<text x="${pl-4}" y="${by+top+j*2*st+cs-1}" text-anchor="end" style="font-size:9px">${l}</text>`);
+      for(let m=0;m<12;m++){const i=(Date.UTC(y,m,1)-Date.UTC(y,0,1))/864e5,c=Math.floor((i+off)/7);if(c>=bd*C&&c<(bd+1)*C)g+=`<text x="${pl+(c-bd*C)*st}" y="${by+10}" style="font-size:9px">${MESI[m]}</text>`}
+    }
+    for(let i=0;i<nd;i++){
+      const iso=new Date(Date.UTC(y,0,1+i)).toISOString().slice(0,10);
+      const c=Math.floor((i+off)/7),row=(i+off)%7,bd=B===1?0:(c>=C?1:0);
+      const x=pl+(c-bd*C)*st,yy=oy+yh+bd*band+top+row*st;
+      const a=byDay.get(iso);
+      if(!a){g+=`<rect x="${x}" y="${yy}" width="${cs}" height="${cs}" rx="2" fill="var(--border)" fill-opacity=".55"/>`;continue}
+      const tipi=new Set(a.map(z=>z.tipo)),dp=sum(a,z=>z.dp);
+      const colr=tipi.size>1?"var(--blue)":COL[a[0].tipo];
+      const op=(.4+.6*Math.min(1,dp/1500)).toFixed(2);
+      g+=`<rect x="${x}" y="${yy}" width="${cs}" height="${cs}" rx="2" fill="${colr}" fill-opacity="${op}" data-id="${a[0].id}" style="cursor:pointer"><title>${fD(iso)} — ${esc(a.map(z=>z.t).join(" + "))} (${fN(sum(a,z=>z.km),1)} km, ${fN(dp)} m D+)</title></rect>`;
+    }
+  }
+  const H=(y1-y0+1)*blockH;
+  el.innerHTML=`<svg class="chart cal" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="width:100%;height:auto">${g}</svg>`;
+}
+function hbars(el,items,fmt,attr){
+  const max=Math.max(...items.map(i=>i.v),1);
+  el.innerHTML=items.length?items.map(i=>`<div class="hb" ${attr?attr(i):""}><span class="lab" title="${esc(i.l)}">${esc(i.l)}</span><span class="bar"><b style="width:${i.v/max*100}%"></b></span><span class="val">${fmt(i.v)}</span></div>`).join(""):'<div class="empty">Nessun dato</div>';
+}
+
+function renderOverview(){
+  const M=METRICS[S.metric];
+  if(!F.length){["ch-anno","ch-mese","ch-top","ch-hist","ch-scatter","ch-cum"].forEach(i=>$(i).innerHTML='<div class="empty">Nessuna attività con questi filtri</div>');$("facts").innerHTML="";return}
+  const y0=Math.min(...F.map(x=>x.y)),y1=Math.max(...F.map(x=>x.y));
+  const anni=[];for(let y=y0;y<=y1;y++)anni.push(y);
+  vbars($("ch-anno"),anni.map(String),stackByTipo(anni,x=>x.y),M.fmt);
+  const mesi=[...Array(12).keys()];
+  vbars($("ch-mese"),MESI,stackByTipo(mesi,x=>x.m),M.fmt);
+  const byLoc=new Map();F.forEach(x=>byLoc.set(x.loc,(byLoc.get(x.loc)||0)+M.get(x)));
+  hbars($("ch-top"),[...byLoc].sort((a,b)=>b[1]-a[1]).slice(0,10).map(([l,v])=>({l,v})),M.fmt,i=>`data-loc="${esc(i.l)}"`);
+  // istogramma distanze
+  const edges=[0,5,10,15,20,25,30],labs=["<5","5–10","10–15","15–20","20–25","25–30","30+"];
+  const hv=labs.map((_,i)=>F.filter(x=>x.km!=null&&(i===6?x.km>=30:x.km>=edges[i]&&x.km<edges[i+1])));
+  vbars($("ch-hist"),labs,[{n:"Attività",c:"var(--blue)",v:hv.map(a=>a.length)}],v=>v+" attività");
+  xyChart($("ch-scatter"),F.filter(x=>x.km!=null&&x.dp!=null).map(x=>({x:x.km,y:x.dp,c:COL[x.tipo],id:x.id,t:`${x.t} — ${fN(x.km,1)} km, ${fN(x.dp)} m D+`})),{xl:"Distanza (km)",yl:"Dislivello + (m)"});
+  calHeat($("ch-cum"));
+  renderFacts();
+}
+
+function renderFacts(){
+  const li=[];
+  const best=(arr,f)=>arr.reduce((a,b)=>f(b)>f(a)?b:a);
+  const dpT=sum(F,x=>x.dp),kmT=sum(F,x=>x.km);
+  li.push(`Hai percorso <b>${fN(kmT,0)} km</b>: ${fN(kmT/40075,2)} volte la circonferenza della Terra.`);
+  li.push(`Dislivello totale: <b>${fN(dpT)} m</b>, cioè ${fN(dpT/EVEREST,1)} volte l'Everest dal livello del mare.`);
+  const perY=new Map();F.forEach(x=>perY.set(x.y,(perY.get(x.y)||0)+1));
+  const by=[...perY].sort((a,b)=>b[1]-a[1])[0];if(perY.size>1)li.push(`Anno più attivo: <b>${by[0]}</b> con ${by[1]} uscite.`);
+  const perM=Array(12).fill(0);F.forEach(x=>perM[x.m]++);const bm=perM.indexOf(Math.max(...perM));
+  li.push(`Mese preferito: <b>${MESI_L[bm].toLowerCase()}</b> (${perM[bm]} uscite).`);
+  const perD=Array(7).fill(0);F.forEach(x=>perD[x.dow]++);const bd=perD.indexOf(Math.max(...perD));
+  li.push(`Giorno più usato: <b>${GIORNI[bd]}</b> (${fN(perD[bd]/F.length*100,0)}% delle uscite).`);
+  const wk=[...new Set(F.map(x=>x.wk))].sort((a,b)=>a-b);let bestS=1,cur=1;
+  for(let i=1;i<wk.length;i++){cur=wk[i]===wk[i-1]+1?cur+1:1;bestS=Math.max(bestS,cur)}
+  li.push(`Serie più lunga di settimane consecutive con almeno un'uscita: <b>${bestS}</b>.`);
+  const n3=F.filter(x=>x.qmax>=3000).length;if(n3)li.push(`Uscite che hanno toccato quota <b>3000 m</b> o più: ${n3}.`);
+  const early=best(F.filter(x=>x.h),x=>-(+x.h.slice(0,2)*60+ +x.h.slice(3)));
+  if(early)li.push(`Partenza più mattiniera: <b>${early.h}</b> (${esc(early.t)}).`);
+  const rate=dpT/Math.max(kmT,1);li.push(`Pendenza media complessiva: <b>${fN(rate,0)} m di D+ ogni km</b>.`);
+  $("facts").innerHTML=li.map(t=>`<li>${t}</li>`).join("");
+}
+
+/* ---------- per provincia ---------- */
+function renderProvince(){
+  const el=$("prov-list");
+  if(!F.length){el.innerHTML='<div class="empty">Nessuna attività con questi filtri</div>';return}
+  const maxN=Math.max(...countBy(F,"loc").map(c=>c[1]));
+  const stati=countBy(F,"stato");
+  el.innerHTML=stati.map(([st])=>{
+    const a=F.filter(x=>x.stato===st);
+    const regs=countBy(a,"reg");
+    const body=regs.map(([rg])=>{
+      const b=a.filter(x=>x.reg===rg);
+      const locs=countBy(b,"loc");
+      const head=(regs.length>1||rg!==st)&&rg!==locs[0][0]?`<div class="reg-head">${esc(rg)} · ${b.length}</div>`:"";
+      return head+locs.map(([lc,n])=>{
+        const c=b.filter(x=>x.loc===lc).sort((p,q)=>q.d.localeCompare(p.d));
+        return `<details class="prov"><summary><span class="pn">${esc(lc)}</span><span class="bar"><b style="width:${n/maxN*100}%"></b></span><span class="num">${n} att.</span><span class="num">${fN(sum(c,x=>x.km),0)} km</span><span class="num">${fN(sum(c,x=>x.dp))} m</span></summary>
+          <div class="prov-body"><div class="tbl-wrap"><table class="tbl"><tbody>${c.map(x=>`<tr data-id="${x.id}"><td>${fD(x.d)}</td><td class="t">${esc(x.t)}</td><td class="n">${fN(x.km,1)} km</td><td class="n">${fN(x.dp)} m</td><td class="n">${fT(x.mov)}</td></tr>`).join("")}</tbody></table></div></div></details>`;
+      }).join("");
+    }).join("");
+    return `<div class="stato-head">${esc(st)} <small>${a.length} attività · ${fN(sum(a,x=>x.km),0)} km · ${fN(sum(a,x=>x.dp))} m D+</small></div>${body}`;
+  }).join("");
+}
+
+/* ---------- elenco ---------- */
+const COLS=[
+  {k:"d",l:"Data",f:x=>fD(x.d)},
+  {k:"t",l:"Titolo",cls:"t",f:x=>esc(x.t)},
+  {k:"tipo",l:"Tipo",f:x=>`<span class="tag ${x.tipo==="Escursione"?"esc":"trail"}">${x.tipo}</span>`},
+  {k:"loc",l:"Provincia / zona",f:x=>esc(x.loc)},
+  {k:"km",l:"Km",n:1,f:x=>fN(x.km,1)},
+  {k:"dp",l:"D+ (m)",n:1,f:x=>fN(x.dp)},
+  {k:"mov",l:"Tempo mov.",n:1,f:x=>fT(x.mov)},
+  {k:"v",l:"Km/h",n:1,f:x=>fN(x.v,1)},
+  {k:"qmax",l:"Quota max",n:1,f:x=>fN(x.qmax)}
+];
+function renderTable(){
+  $("thead").innerHTML=COLS.map(c=>`<th data-k="${c.k}" class="${c.n?"n":""} ${S.sort.k===c.k?(S.sort.dir>0?"asc":"desc"):""}">${c.l}</th>`).join("");
+  $("thead").onclick=e=>{const th=e.target.closest("th");if(!th)return;const k=th.dataset.k;S.sort=S.sort.k===k?{k,dir:-S.sort.dir}:{k,dir:["t","tipo","loc"].includes(k)?1:-1};renderTable()};
+  const {k,dir}=S.sort;
+  const rows=[...F].sort((a,b)=>{let p=a[k],q=b[k];if(p==null)return 1;if(q==null)return-1;return(typeof p==="string"?p.localeCompare(q,"it"):p-q)*dir||a.id-b.id});
+  const shown=rows.slice(0,S.limit);
+  $("tbody").innerHTML=shown.length?shown.map(x=>`<tr data-id="${x.id}">${COLS.map(c=>`<td class="${c.cls||""} ${c.n?"n":""}">${c.f(x)}</td>`).join("")}</tr>`).join(""):`<tr><td colspan="${COLS.length}" class="empty">Nessuna attività con questi filtri</td></tr>`;
+  $("more").hidden=rows.length<=S.limit;
+  if(rows.length>S.limit)$("btn-more").textContent=`Mostra tutte (${rows.length})`;
+}
+
+/* ---------- record ---------- */
+const RECORDS=[
+  {label:"Distanza più lunga",get:x=>x.km,fmt:v=>fN(v,1)+" km"},
+  {label:"Dislivello positivo maggiore",get:x=>x.dp,fmt:v=>fN(v)+" m"},
+  {label:"Quota massima raggiunta",get:x=>x.qmax,fmt:v=>fN(v)+" m"},
+  {label:"Durata in movimento",get:x=>x.mov,fmt:fT},
+  {label:"Velocità media più alta",get:x=>x.v,fmt:v=>fN(v,1)+" km/h"},
+  {label:"Pendenza media più alta (≥2 km)",get:x=>x.pend,fmt:v=>fN(v,1)+" %"},
+  {label:"Calorie",get:x=>x.cal,fmt:v=>fN(v)+" kcal"},
+  {label:"Frequenza cardiaca massima",get:x=>x.hrmax,fmt:v=>fN(v)+" bpm"}
+];
+function renderRecords(){
+  const r=RECORDS[+$("rec-m").value||0];
+  const top=F.filter(x=>r.get(x)!=null).sort((a,b)=>r.get(b)-r.get(a)).slice(0,10);
+  $("rec-list").innerHTML=top.length?top.map((x,i)=>`<div class="rank" data-id="${x.id}"><span class="p">${i+1}</span><span>${esc(x.t)}<small>${fD(x.d)} · ${esc(x.loc)}</small></span><span class="v">${r.fmt(r.get(x))}</span></div>`).join(""):'<div class="empty">Nessun dato disponibile per questa classifica</div>';
+}
+
+/* ---------- dettaglio ---------- */
+function showDetail(id){
+  const x=DATA.find(a=>a.id===id);if(!x)return;
+  const cells=[["Data",fD(x.d)+" · "+x.h],["Distanza",x.km!=null?fN(x.km,2)+" km":null],["Dislivello +",x.dp!=null?fN(x.dp)+" m":null],["Dislivello −",x.dn!=null?fN(x.dn)+" m":null],
+    ["Tempo in movimento",fT(x.mov)],["Tempo totale",fT(x.tot)],["Velocità media",x.v?fN(x.v,1)+" km/h":null],["Pendenza media",x.pend?fN(x.pend,1)+" %":null],
+    ["Quota min",x.qmin!=null?fN(x.qmin)+" m":null],["Quota max",x.qmax!=null?fN(x.qmax)+" m":null],["FC media",x.hr?x.hr+" bpm":null],["FC max",x.hrmax?x.hrmax+" bpm":null],
+    ["Calorie",x.cal?fN(x.cal)+" kcal":null],["Temperatura",x.tmin!=null?x.tmin+"–"+x.tmax+" °C":null],["Passi",x.passi?fN(x.passi):null],["Aerobic TE",x.te]].filter(c=>c[1]!=null&&c[1]!=="—");
+  $("modal-box").innerHTML=`<button class="modal-x" aria-label="Chiudi">✕</button><span class="tag ${x.tipo==="Escursione"?"esc":"trail"}">${x.tipo}</span><h3>${esc(x.t)}</h3><div style="color:var(--ink-soft)">${esc(x.loc)} · ${esc(x.reg!==x.loc?x.reg:"")}${x.reg!==x.loc?" · ":""}${esc(x.stato)}</div>
+    <div class="dgrid">${cells.map(([l,v])=>`<div><span>${l}</span><b>${esc(v)}</b></div>`).join("")}</div>
+    ${x.multi?'<p class="note">Uscita su più giorni: il tempo totale include le soste notturne, usa il tempo in movimento per i confronti.</p>':""}`;
+  $("modal").hidden=false;
+}
+
+/* ---------- export ---------- */
+function exportCsv(){
+  const h=["Data","Ora","Tipo","Titolo","Stato","Regione","Provincia/zona","Distanza km","Dislivello +","Dislivello -","Tempo totale","Tempo movimento","Quota min","Quota max","FC media","Calorie"];
+  const q=v=>v==null?"":'"'+String(v).replace(/"/g,'""')+'"';
+  const rows=F.map(x=>[x.d,x.h,x.tipo,x.t,x.stato,x.reg,x.loc,x.km,x.dp,x.dn,fT(x.tot),fT(x.mov),x.qmin,x.qmax,x.hr,x.cal].map(q).join(";"));
+  const blob=new Blob(["\ufeff"+[h.map(q).join(";"),...rows].join("\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="attivita_filtrate.csv";a.click();URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

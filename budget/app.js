@@ -1,0 +1,2177 @@
+/* =========================================================================
+   app.js — logica applicativa "Le Tue Finanze"
+   I dati (SEED_DATA) vivono in data.js. La sincronizzazione con GitHub vive
+   in github-sync.js. Questo file contiene solo rendering e regole di business.
+   ========================================================================= */
+
+/* ---------------- HELPERS ---------------- */
+const eur = n => (n < 0 ? "-" : "") + "€ " + Math.abs(n).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' });
+function eurCompact(n) {
+  const sign = n < 0 ? "-" : "";
+  const abs = Math.abs(n);
+  let s;
+  if (abs >= 1000000) s = (abs / 1000000).toLocaleString('it-IT', { maximumFractionDigits: 1, minimumFractionDigits: 0 }) + 'M';
+  else if (abs >= 1000) s = (abs / 1000).toLocaleString('it-IT', { maximumFractionDigits: 1, minimumFractionDigits: 0 }) + 'k';
+  else s = abs.toLocaleString('it-IT', { maximumFractionDigits: 0 });
+  return sign + '€' + s;
+}
+const pct = n => (n * 100).toFixed(1) + "%";
+const MESI_IT = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+
+function sum(arr) { return arr.reduce((a, b) => a + b, 0); }
+function fmtData(iso) { const [y, m, d] = iso.split("-"); return `${d}/${m}/${y.slice(2)}`; }
+
+/* ---------------- STATO ---------------- */
+/* Migrazione nomi categoria: se dati (locali o da GitHub) usano ancora i
+   vecchi nomi "Progetto"/"Progetti", li unifica in quello attuale. Protegge
+   da dati salvati su GitHub prima della rinomina, che altrimenti non
+   verrebbero più riconosciuti dalle formule di esclusione. */
+function migrateCategoryNames(data) {
+  const RENAME_MAP = { 'Progetto': 'Progetti/Spese Straordinarie', 'Progetti': 'Progetti/Spese Straordinarie', 'Viaggi/Hotel': 'Viaggi' };
+  function mergeDict(dict) {
+    if (!dict) return;
+    Object.keys(RENAME_MAP).forEach(old => {
+      if (dict[old]) {
+        const target = RENAME_MAP[old];
+        if (!dict[target]) dict[target] = {};
+        Object.keys(dict[old]).forEach(y => { dict[target][y] = (dict[target][y] || 0) + dict[old][y]; });
+        delete dict[old];
+      }
+    });
+  }
+  mergeDict(data.entrateCategorie);
+  mergeDict(data.usciteCategorie);
+  (data.transazioni || []).forEach(t => { if (RENAME_MAP[t.cat]) t.cat = RENAME_MAP[t.cat]; });
+  if (!data.impostazioni) data.impostazioni = {};
+  if (typeof data.impostazioni.budgetTeoricoPct !== 'number' || isNaN(data.impostazioni.budgetTeoricoPct)) {
+    data.impostazioni.budgetTeoricoPct = 50; // % storica di default (invariata rispetto al comportamento precedente)
+  }
+  if (!data.profitLoss || !Array.isArray(data.profitLoss.trades)) {
+    data.profitLoss = { trades: [], importedFiles: [] };
+  }
+  if (!Array.isArray(data.profitLoss.importedFiles)) data.profitLoss.importedFiles = [];
+  return data;
+}
+
+let DATA = migrateCategoryNames(JSON.parse(JSON.stringify(SEED_DATA)));
+let transazioni = (DATA.transazioni || []).map(t => ({ ...t }));
+let ANNI = [];
+let ANNI_CON_CATEGORIE = new Set();
+let ANNO_CORRENTE = (DATA.meta.anniFlussi || [2026]).reduce((a, b) => Math.max(a, b), 0);
+
+function refreshDerivedConstants() {
+  ANNI = DATA.meta.anniFlussi.map(Number).sort((a, b) => a - b);
+  ANNI_CON_CATEGORIE = new Set(Object.keys(DATA.entrateCategorie['TOTALE'] || {}).map(Number));
+}
+
+function patrimonioTotale() {
+  return DATA.patrimonio.reduce((s, p) => s + (p.liquidita || 0) + (p.portafoglioTitoli || 0) + (p.deposito || 0), 0);
+}
+
+const ISTITUTI_FISSI = ['Fineco', 'Illimity'];
+
+/* Mantiene sincronizzati i dati automatici del Patrimonio:
+   - il Portafoglio Titoli di Fineco riprende il valore di mercato dal tab Portafoglio Titoli
+   - garantisce sempre la presenza delle righe fisse Fineco/Illimity */
+function syncPatrimonioAutomatico() {
+  ISTITUTI_FISSI.forEach(nome => {
+    if (!DATA.patrimonio.some(p => p.istituto === nome)) {
+      DATA.patrimonio.push({ istituto: nome, liquidita: 0, portafoglioTitoli: 0, deposito: 0 });
+    }
+  });
+  const fineco = DATA.patrimonio.find(p => p.istituto === 'Fineco');
+  if (fineco) fineco.portafoglioTitoli = DATA.portafoglio.summary.valoreMercato || 0;
+}
+
+/* Aggiorna la liquidità di un istituto in base all'importo di una
+   transazione aggiunta (delta positivo) o rimossa (delta negativo, passare
+   -importo). Non fa nulla se l'istituto non è impostato o non esiste. */
+function aggiornaLiquiditaIstituto(istituto, delta) {
+  if (!istituto || !delta) return;
+  const row = DATA.patrimonio.find(p => p.istituto === istituto);
+  if (row) row.liquidita = round2((row.liquidita || 0) + delta);
+}
+function round2(n) { return Math.round(n * 100) / 100; }
+
+/* ---------------- RICALCOLO FLUSSI DA TRANSAZIONI ----------------
+   Ogni modifica alle transazioni (nuova, cancellazione, importazione) deve
+   propagarsi a flussi mensili e categorie di TUTTI gli anni per cui esiste
+   dettaglio analitico (non solo l'anno corrente), così dashboard, budget e
+   dettaglio per voce restano coerenti con i dati reali.
+   L'aggregazione mensile usa `meseRif` (il mese/foglio di competenza
+   originale, se noto) invece del solo campo `data`, perché alcune
+   registrazioni di fine mese vengono contabilizzate nel mese successivo
+   nei file sorgente; se `meseRif` non è presente (nuove registrazioni
+   manuali o importate da estratto conto) si usa il mese di `data`. */
+function meseRifOf(t) { return t.meseRif || t.data.slice(0, 7); }
+
+function recomputeFlussi() {
+  const byYear = {};
+  transazioni.forEach(t => {
+    const rif = meseRifOf(t);
+    const y = parseInt(rif.slice(0, 4), 10);
+    const mi = parseInt(rif.slice(5, 7), 10) - 1;
+    if (!y || mi < 0 || mi > 11) return;
+    if (!byYear[y]) {
+      byYear[y] = {
+        entMonth: Array(12).fill(0), usMonth: Array(12).fill(0),
+        entCatMonth: Array.from({ length: 12 }, () => ({})), usCatMonth: Array.from({ length: 12 }, () => ({})),
+        entCatYear: {}, usCatYear: {}
+      };
+    }
+    const Y = byYear[y];
+    if (t.importo >= 0) {
+      Y.entMonth[mi] += t.importo;
+      Y.entCatMonth[mi][t.cat] = (Y.entCatMonth[mi][t.cat] || 0) + t.importo;
+      Y.entCatYear[t.cat] = (Y.entCatYear[t.cat] || 0) + t.importo;
+    } else {
+      const v = -t.importo;
+      Y.usMonth[mi] += v;
+      Y.usCatMonth[mi][t.cat] = (Y.usCatMonth[mi][t.cat] || 0) + v;
+      Y.usCatYear[t.cat] = (Y.usCatYear[t.cat] || 0) + v;
+    }
+  });
+
+  DATA._monthlyCat = {};
+  Object.keys(byYear).forEach(yStr => {
+    const y = Number(yStr);
+    const Y = byYear[yStr];
+    DATA.flussi[y] = { entrate: Y.entMonth, uscite: Y.usMonth };
+
+    Object.keys(DATA.entrateCategorie).forEach(cat => { if (cat !== 'TOTALE') DATA.entrateCategorie[cat][y] = Y.entCatYear[cat] || 0; });
+    Object.keys(DATA.usciteCategorie).forEach(cat => { if (cat !== 'TOTALE') DATA.usciteCategorie[cat][y] = Y.usCatYear[cat] || 0; });
+    Object.keys(Y.entCatYear).forEach(cat => {
+      if (!(cat in DATA.entrateCategorie)) DATA.entrateCategorie[cat] = {};
+      DATA.entrateCategorie[cat][y] = Y.entCatYear[cat];
+    });
+    Object.keys(Y.usCatYear).forEach(cat => {
+      if (!(cat in DATA.usciteCategorie)) DATA.usciteCategorie[cat] = {};
+      DATA.usciteCategorie[cat][y] = Y.usCatYear[cat];
+    });
+    if (DATA.entrateCategorie['TOTALE']) DATA.entrateCategorie['TOTALE'][y] = sum(Y.entMonth);
+    if (DATA.usciteCategorie['TOTALE']) DATA.usciteCategorie['TOTALE'][y] = sum(Y.usMonth);
+
+    DATA._monthlyCat[y] = { entrate: Y.entCatMonth, uscite: Y.usCatMonth };
+  });
+
+  const anniConDettaglio = Object.keys(byYear).map(Number);
+  if (anniConDettaglio.length) {
+    ANNO_CORRENTE = Math.max(...anniConDettaglio, ...DATA.meta.anniFlussi.map(Number));
+  }
+
+  const cur = byYear[ANNO_CORRENTE];
+  const mesiConDati = [];
+  if (cur) { for (let m = 0; m < 12; m++) { if (cur.entMonth[m] !== 0 || cur.usMonth[m] !== 0) mesiConDati.push(MESI_IT[m]); } }
+  DATA.meta.mesiTransazioniDettagliate = mesiConDati;
+  DATA.meta.mesiSenzaDati2026 = MESI_IT.filter(m => !mesiConDati.includes(m));
+  DATA.meta.primoAnnoDettaglio = anniConDettaglio.length ? Math.min(...anniConDettaglio) : null;
+
+  refreshDerivedConstants();
+}
+
+/* ---------------- PERSISTENZA SU GITHUB ---------------- */
+// Tiene traccia di modifiche fatte in questa pagina che NON sono ancora
+// state confermate come salvate su GitHub. Serve per evitare di scaricare
+// (e quindi sovrascrivere silenziosamente) dati locali non ancora sincronizzati.
+let localDirty = false;
+let lastSyncFailed = false;
+window.appHasUnsyncedChanges = () => localDirty;
+
+function buildExportData() {
+  const clone = JSON.parse(JSON.stringify(DATA));
+  delete clone._monthlyCat;
+  clone.transazioni = transazioni.map(t => ({ ...t }));
+  return clone;
+}
+let persistTimer = null;
+function persist(message) {
+  localDirty = true;
+  if (persistTimer) clearTimeout(persistTimer);
+  persistTimer = setTimeout(() => {
+    const wasAlreadyFailing = lastSyncFailed;
+    GitHubSync.saveData(buildExportData(), message || 'Aggiornamento dati finanze').then(ok => {
+      if (ok) {
+        localDirty = false;
+        lastSyncFailed = false;
+      } else {
+        lastSyncFailed = true;
+        if (GitHubSync.hadConflict && GitHubSync.hadConflict()) {
+          handleSyncConflict();
+        } else if (!wasAlreadyFailing) {
+          alert('Il salvataggio automatico su GitHub non è riuscito. Le modifiche restano solo in questa pagina: NON chiudere o ricaricare la scheda finché il salvataggio non va a buon fine, oppure rischi di perderle. Controlla la connessione o le credenziali GitHub (icona in alto a destra).');
+        }
+        console.warn('Salvataggio su GitHub fallito: le modifiche restano solo locali finché non riprova con successo.');
+      }
+    });
+  }, 600);
+}
+
+let conflictPromptOpen = false;
+async function handleSyncConflict() {
+  if (conflictPromptOpen) return;
+  conflictPromptOpen = true;
+  try {
+    const overwrite = confirm(
+      'Su GitHub ci sono dati più recenti di quelli di questa pagina (probabilmente salvati da un altro dispositivo), e qui ci sono modifiche non ancora salvate.\n\n' +
+      'OK = sovrascrivi GitHub con i dati di questa pagina.\n' +
+      'Annulla = scarica i dati da GitHub (le modifiche non salvate di questa pagina andranno perse).'
+    );
+    if (overwrite) await window.pushLocalToGitHub({ force: true });
+    else await window.pullFromGitHub();
+  } finally { conflictPromptOpen = false; }
+}
+
+/* ---------------- HEADER ---------------- */
+function renderHeader() {
+  document.getElementById('hdr-patrimonio').textContent = eur(patrimonioTotale());
+  const spark = document.getElementById('hdr-spark');
+  const totali = ANNI.map(y => sum(DATA.flussi[y].entrate) - sum(DATA.flussi[y].uscite));
+  const max = Math.max(...totali.map(Math.abs), 1);
+  spark.innerHTML = totali.map(v => {
+    const h = Math.max(2, Math.abs(v) / max * 32);
+    const color = v >= 0 ? 'var(--accent)' : 'var(--red)';
+    return `<div class="bar" style="height:${h}px; background:${color};"></div>`;
+  }).join("");
+}
+
+/* ---------------- DASHBOARD ---------------- */
+function renderDataBanner() {
+  const primoDett = DATA.meta.primoAnnoDettaglio || Math.min(...ANNI_CON_CATEGORIE);
+  const ultimoAnnoCompleto = ANNO_CORRENTE - 1;
+  const mesiConDati = DATA.meta.mesiTransazioniDettagliate.join(", ") || "nessuno";
+
+  const rangeFlussi = ANNI.length > 1 ? `${ANNI[0]}&ndash;${ANNI[ANNI.length - 1]}` : `${ANNI[0]}`;
+  let rangeDettaglio;
+  if (primoDett > ultimoAnnoCompleto) {
+    rangeDettaglio = `${ANNO_CORRENTE} (parziale: ${mesiConDati})`;
+  } else if (primoDett === ultimoAnnoCompleto) {
+    rangeDettaglio = `${primoDett} (anno completo) e ${ANNO_CORRENTE} (parziale: ${mesiConDati})`;
+  } else {
+    rangeDettaglio = `${primoDett}&ndash;${ultimoAnnoCompleto} (anni completi) e ${ANNO_CORRENTE} (parziale: ${mesiConDati})`;
+  }
+
+  document.getElementById('data-banner').innerHTML =
+    `<b>Copertura dati:</b> flussi annuali ${rangeFlussi}, transazioni analitiche di dettaglio ${rangeDettaglio}.`;
+}
+
+function renderDashCards() {
+  document.getElementById('dash-cards-title').textContent = `Sintesi anno corrente (${ANNO_CORRENTE})`;
+  const escludiTitoli = !document.getElementById('summary-flag-titoli').checked;
+  const escludiProgetti = !document.getElementById('summary-flag-progetti').checked;
+
+  const entrateYTD = annoAdjEntrate(ANNO_CORRENTE, escludiTitoli, escludiProgetti);
+  const usciteYTD = annoAdjUscite(ANNO_CORRENTE, escludiTitoli, escludiProgetti);
+  const saldoYTD = entrateYTD - usciteYTD;
+
+  document.getElementById('dash-cards').innerHTML = `
+    <div class="card"><div class="label">Entrate ${ANNO_CORRENTE} (YTD)</div><div class="value pos">${eur(entrateYTD)}</div></div>
+    <div class="card"><div class="label">Uscite ${ANNO_CORRENTE} (YTD)</div><div class="value neg">${eur(usciteYTD)}</div></div>
+    <div class="card"><div class="label">Saldo ${ANNO_CORRENTE} (YTD)</div><div class="value ${saldoYTD >= 0 ? 'pos' : 'neg'}">${eur(saldoYTD)}</div></div>
+    <div class="card"><div class="label">Patrimonio totale</div><div class="value">${eur(patrimonioTotale())}</div><div class="sub">Vedi tab Patrimonio</div></div>
+  `;
+}
+
+function renderDashboard() {
+  renderDashCards();
+  document.getElementById('chart-sub').textContent = `Totali annuali, ${ANNI[0]}\u2013${ANNI[ANNI.length - 1]}.`;
+  renderDashChart();
+  renderDashboardRecent();
+}
+
+function annoAdjEntrate(y, escludiTitoli, escludiProgetti) {
+  let v = sum(DATA.flussi[y].entrate);
+  if (!ANNI_CON_CATEGORIE.has(y)) return v;
+  if (escludiTitoli) v -= (DATA.entrateCategorie['Vendita Titoli']?.[y] || 0);
+  if (escludiProgetti) v -= (DATA.entrateCategorie['Progetti/Spese Straordinarie']?.[y] || 0);
+  return v;
+}
+function annoAdjUscite(y, escludiTitoli, escludiProgetti) {
+  let v = sum(DATA.flussi[y].uscite);
+  if (!ANNI_CON_CATEGORIE.has(y)) return v;
+  if (escludiTitoli) v -= (DATA.usciteCategorie['Acquisto Titoli']?.[y] || 0);
+  if (escludiProgetti) v -= (DATA.usciteCategorie['Progetti/Spese Straordinarie']?.[y] || 0);
+  return v;
+}
+
+/* ---------------- GRAFICI INTERATTIVI (ChartKit, vedi charts.js) ---------------- */
+const CK = ChartKit.COL;
+
+function ckExcl(escludiTitoli, escludiProgetti) {
+  return [...(escludiTitoli ? CATEGORIE_TITOLI : []), ...(escludiProgetti ? CATEGORIE_PROGETTI : [])];
+}
+// Mesi (indici 0-11) da mostrare per un anno: per l'anno in corso solo quelli con dati.
+function mesiDisponibili(anno) {
+  const out = [];
+  for (let m = 0; m < 12; m++) {
+    if (anno === ANNO_CORRENTE && !DATA.meta.mesiTransazioniDettagliate.includes(MESI_IT[m])) continue;
+    out.push(m);
+  }
+  return out;
+}
+const meseCorto = m => MESI_IT[m].slice(0, 3);
+
+// Dettaglio di un anno: entrate, uscite e saldo mese per mese
+function monthlyFlowPanel(anno, escludiTitoli, escludiProgetti) {
+  const mesi = mesiDisponibili(anno);
+  const e = mesi.map(m => annoAdjEntrateMese(anno, m, escludiTitoli, escludiProgetti));
+  const u = mesi.map(m => annoAdjUsciteMese(anno, m, escludiTitoli, escludiProgetti));
+  return {
+    title: `${anno} \u2014 mese per mese`,
+    charts: [{
+      kind: 'bars', height: 240, labels: mesi.map(meseCorto),
+      series: [
+        { label: 'Entrate', color: CK.ent, data: e },
+        { label: 'Uscite', color: CK.usc, data: u },
+        { label: 'Saldo', color: CK.blue, kind: 'line', data: e.map((v, i) => v - u[i]) }
+      ]
+    }],
+    note: anno === ANNO_CORRENTE ? `${anno} \u00e8 un anno parziale: sono mostrati solo i mesi con dati.` : ''
+  };
+}
+
+// Dettaglio di un anno: saldo (entrate \u2212 uscite) mese per mese
+function monthlySavingsPanel(anno, escludiTitoli, escludiProgetti) {
+  const mesi = mesiDisponibili(anno);
+  const saldo = mesi.map(m => annoAdjEntrateMese(anno, m, escludiTitoli, escludiProgetti) - annoAdjUsciteMese(anno, m, escludiTitoli, escludiProgetti));
+  return {
+    title: `${anno} \u2014 saldo mensile`,
+    charts: [{
+      kind: 'bars', height: 220, labels: mesi.map(meseCorto),
+      series: [{ label: 'Saldo (entrate \u2212 uscite)', color: CK.green, colors: saldo.map(v => (v >= 0 ? CK.green : CK.red)), data: saldo }]
+    }],
+    note: 'Verde = mese in avanzo, rosso = mese in cui le uscite hanno superato le entrate.'
+  };
+}
+
+// Dettaglio di un mese: ciambelle delle categorie di uscita ed entrata
+function monthCategoryPanel(anno, m, categorieEscluse) {
+  const title = `${MESI_IT[m]} ${anno} \u2014 categorie`;
+  if (!haDettaglioMensile(anno)) return { title, charts: [], note: 'Dettaglio per categoria non disponibile per questo mese.' };
+  const items = lato => {
+    const obj = (DATA._monthlyCat[anno][lato] || [])[m] || {};
+    return Object.keys(obj).filter(c => c !== 'TOTALE' && !categorieEscluse.includes(c) && obj[c] > 0).map(c => ({ label: c, value: obj[c] }));
+  };
+  const u = items('uscite'), e = items('entrate');
+  const charts = [];
+  if (u.length) charts.push({ kind: 'donut', title: 'Uscite del mese', items: u, centerLabel: 'Uscite', height: 300 });
+  if (e.length) charts.push({ kind: 'donut', title: 'Entrate del mese', items: e, centerLabel: 'Entrate', height: 300 });
+  return { title, charts, note: charts.length ? '' : 'Nessun movimento categorizzato in questo mese.' };
+}
+
+// Dettaglio di una categoria: andamento negli anni + mese per mese nell'anno scelto
+function categoryPanel(tipo, cat, anno) {
+  const dict = tipo === 'entrate' ? DATA.entrateCategorie : DATA.usciteCategorie;
+  const cd = dict[cat] || {};
+  const anni = Object.keys(cd).map(Number).sort((a, b) => a - b);
+  const col = tipo === 'entrate' ? CK.ent : CK.usc;
+  const mesi = mesiDisponibili(anno);
+  const stima = !haDettaglioMensile(anno);
+  return {
+    title: cat,
+    charts: [
+      { kind: 'bars', title: 'Andamento annuale', height: 200, labels: anni.map(String),
+        series: [{ label: cat, color: col, colors: anni.map(y => (y === anno ? CK.blue : col)), data: anni.map(y => cd[y] || 0) }] },
+      { kind: 'bars', title: `${anno} mese per mese${stima ? ' (stima)' : ''}`, height: 200, labels: mesi.map(meseCorto),
+        series: [{ label: cat, color: col, data: mesi.map(m => categoriaMeseValore(dict, cat, anno, m)) }] }
+    ],
+    note: `Barra blu = anno selezionato (${anno}).`
+  };
+}
+
+// Dettaglio di una categoria nei mesi di un anno (grafico "Dettaglio per voce")
+function catMonthlyPanel(tipo, cat, anno) {
+  const dict = tipo === 'entrate' ? DATA.entrateCategorie : DATA.usciteCategorie;
+  const col = tipo === 'entrate' ? CK.ent : CK.usc;
+  const mesi = mesiDisponibili(anno);
+  const stima = !haDettaglioMensile(anno);
+  return {
+    title: `${cat} \u2014 ${anno}`,
+    charts: [{ kind: 'bars', height: 220, labels: mesi.map(meseCorto),
+      series: [{ label: cat, color: col, data: mesi.map(m => categoriaMeseValore(dict, cat, anno, m)) }] }],
+    note: stima ? 'Dettaglio mensile non disponibile per questo anno: il totale annuo \u00e8 ripartito in 12 parti uguali (stima).' : ''
+  };
+}
+
+// Entrate/uscite per anno (usato da Sommario e Analisi)
+function flussiAnnualiChart(hostId, escludiTitoli, escludiProgetti) {
+  const yt = ANNI.map(y => ({
+    y,
+    e: annoAdjEntrate(y, escludiTitoli, escludiProgetti),
+    u: annoAdjUscite(y, escludiTitoli, escludiProgetti),
+    stimato: !ANNI_CON_CATEGORIE.has(y) && (escludiTitoli || escludiProgetti)
+  }));
+  ChartKit.yearly(hostId, {
+    keys: yt.map(d => d.y),
+    labels: yt.map(d => d.y + (d.stimato ? '*' : '')),
+    series: [
+      { label: 'Entrate', color: CK.ent, data: yt.map(d => d.e) },
+      { label: 'Uscite', color: CK.usc, data: yt.map(d => d.u) },
+      { label: 'Saldo', color: CK.blue, kind: 'line', hidden: true, data: yt.map(d => d.e - d.u) }
+    ],
+    hint: 'Tocca un anno per vedere i mesi \u00b7 tocca la legenda per mostrare/nascondere le serie',
+    onPick: y => monthlyFlowPanel(y, escludiTitoli, escludiProgetti)
+  });
+}
+
+function renderDashChart() {
+  const escludiTitoli = !document.getElementById('flag-titoli').checked;
+  const escludiProgetti = !document.getElementById('flag-progetti').checked;
+  flussiAnnualiChart('dash-chart', escludiTitoli, escludiProgetti);
+
+  const noteBits = [];
+  if (escludiTitoli) noteBits.push('gestione titoli esclusa (Acquisto/Vendita Titoli)');
+  if (escludiProgetti) noteBits.push('gestione progetti esclusa (Progetti/Spese Straordinarie)');
+  const primoAnnoCat = Math.min(...ANNI_CON_CATEGORIE);
+  let note = noteBits.length ? noteBits.join(' &middot; ') : 'valori totali, nessuna esclusione applicata.';
+  if (escludiTitoli || escludiProgetti) {
+    note += ` Il dettaglio per categoria &egrave; disponibile dal ${primoAnnoCat}: gli anni precedenti (contrassegnati con *) mostrano comunque il totale completo.`;
+  }
+  document.getElementById('chart-note').innerHTML = note;
+}
+
+function renderDashboardRecent() {
+  const recent = [...transazioni].sort((a, b) => b.data.localeCompare(a.data)).slice(0, 8);
+  document.getElementById('dash-recent').querySelector('tbody').innerHTML = recent.map(t => `
+    <tr>
+      <td>${fmtData(t.data)}</td>
+      <td>${t.desc}</td>
+      <td><span class="tag">${t.cat}</span></td>
+      <td class="num ${t.importo < 0 ? 'neg' : 'pos'}">${eur(t.importo)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="4" style="color:var(--ink-soft); padding:18px;">Nessuna registrazione presente.</td></tr>`;
+}
+
+/* ---------------- IMPORTA ---------------- */
+const REGOLE_USCITE = [
+  [/ALDI|ESSELUNGA|CARREFOUR|CONAD|COOP\b|\bPAM\b|LIDL|EUROSPIN|IPERAL|BENNET|IPERSTAR/i, 'Casa - Spesa'],
+  [/FASTWEB/i, 'Casa - Internet'],
+  [/\bA2A\b/i, 'Casa - A2A'],
+  [/\bENI\d*|Q8|TAMOIL|\bAGIP\b|\bIP\b.*CARBURANT|SIA FUEL|STAZIONE DI SERVIZIO/i, 'Rifornimento'],
+  [/PRELIEVO BANCOMAT|PRELEVAMENTO|ATM \d|PRELIEVO CONTANTI/i, 'Prelievi'],
+  [/COMPRAVENDITA TITOLI|ACQUISTO TITOLI/i, 'Acquisto Titoli'],
+  [/BOLLO DOSSIER TITOLI|TOBIN TAX|IMPOSTA DI BOLLO|CANONE DEL CONTO|C\/C T\d/i, 'Imposte/Tasse'],
+  [/TELEPASS|UNIPOLTECH|UNIPOLMOVE/i, 'Telepass'],
+  [/AUTOSTRADA|PEDAGGIO/i, 'Viaggi'],
+  [/\bTAXI\b|UBER|FREE ?NOW/i, 'Taxi'],
+  [/HOTEL|BOOKING\.COM|AIRBNB|RIFUGIO/i, 'Hotel'],
+  [/RISTORANTE|TRATTORIA|OSTERIA|PIZZ|\bBAR\b|COFFEE|CAFF[EÈ]|CAFE\b|GELATER|PANIFICIO|FORNO DELLA|MC ?DONALD|BURGER/i, 'Pranzi/Cene'],
+  [/FARMACIA/i, 'Casa - Altro'],
+  [/SIBRA|TRENITALIA|TRENORD|\bATM MILANO\b|BUS\b/i, 'Viaggi'],
+  [/SPESE CARTA DI CREDITO ESTRATTO|UTILIZZO CARTA DI CREDITO/i, '__TRASFERIMENTO_CARTA__'],
+  [/AMAZON|\bAMZN\b/i, 'Hobby'],
+];
+const REGOLE_ENTRATE = [
+  [/STIPENDIO|RETRIBUZIONE/i, 'Stipendio'],
+  [/COMPRAVENDITA TITOLI|VENDITA TITOLI/i, 'Vendita Titoli'],
+  [/INTERESS|CEDOLA/i, 'Interessi/Cedole'],
+  [/DIVIDEND/i, 'Dividendi'],
+  [/RIMBORSO/i, 'Rimborsi Lavorativi'],
+];
+
+function suggerisciCategoria(desc, importo) {
+  const d = desc.toUpperCase();
+  const regole = importo < 0 ? REGOLE_USCITE : REGOLE_ENTRATE;
+  for (const [re, cat] of regole) { if (re.test(d)) return cat; }
+  return 'Altro';
+}
+
+function trovaRigaIntestazione(rows, keywords) {
+  for (let i = 0; i < rows.length; i++) {
+    const row = (rows[i] || []).map(v => (v == null ? '' : String(v)).trim());
+    if (keywords.every(k => row.includes(k))) return i;
+  }
+  return -1;
+}
+
+function parseFoglioMovimenti(rows) {
+  let hIdx = trovaRigaIntestazione(rows, ['Data operazione', 'Tipologia', 'Causale', 'Entrate', 'Uscite']);
+  if (hIdx >= 0) {
+    const out = [];
+    for (let r = hIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      if (!row || row[0] == null) continue;
+      const data = excelDateToISO(row[0]);
+      if (!data) continue;
+      const causale = row[2] != null ? String(row[2]).trim() : '';
+      const entrate = numOrNull(row[4]);
+      const uscite = numOrNull(row[5]);
+      const importo = entrate != null ? entrate : -(uscite || 0);
+      out.push({ data, desc: causale || String(row[1] || ''), importo, fonte: 'Illimity' });
+    }
+    return out;
+  }
+  hIdx = trovaRigaIntestazione(rows, ['Data_Operazione', 'Entrate', 'Uscite', 'Descrizione']);
+  if (hIdx >= 0) {
+    const out = [];
+    for (let r = hIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      if (!row || row[0] == null) continue;
+      const data = excelDateToISO(row[0]);
+      if (!data) continue;
+      const entrate = numOrNull(row[2]);
+      const uscite = numOrNull(row[3]);
+      const importo = entrate != null ? entrate : (uscite || 0);
+      const desc = row[4] != null ? String(row[4]).trim() : '';
+      out.push({ data, desc, importo, fonte: 'Fineco' });
+    }
+    return out;
+  }
+  hIdx = trovaRigaIntestazione(rows, ['Intestatario carta', 'Numero carta', 'Descrizione', 'Importo']);
+  if (hIdx >= 0) {
+    const out = [];
+    for (let r = hIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      if (!row || row[2] == null) continue;
+      const data = excelDateToISO(row[2]);
+      if (!data) continue;
+      const desc = row[4] != null ? String(row[4]).trim() : '';
+      const importo = numOrNull(row[9]) || 0;
+      out.push({ data, desc, importo, fonte: 'Fineco Carta' });
+    }
+    return out;
+  }
+  hIdx = trovaRigaIntestazione(rows, ['Data', 'Descrizione', 'Categoria', 'Istituto', 'Importo']);
+  if (hIdx >= 0) {
+    // Riconosce il file generato dal pulsante "Esporta selezionate (.xlsx)"
+    // di questa stessa app: a differenza degli estratti bancari, qui
+    // categoria e istituto sono già noti riga per riga (non vanno indovinati).
+    const headerRow = (rows[hIdx] || []).map(v => (v == null ? '' : String(v)).trim());
+    const colData = headerRow.indexOf('Data');
+    const colDesc = headerRow.indexOf('Descrizione');
+    const colCat = headerRow.indexOf('Categoria');
+    const colIst = headerRow.indexOf('Istituto');
+    const colImp = headerRow.indexOf('Importo');
+    const out = [];
+    for (let r = hIdx + 1; r < rows.length; r++) {
+      const row = rows[r];
+      if (!row || row[colData] == null) continue;
+      const data = excelDateToISO(row[colData]);
+      if (!data) continue;
+      const desc = row[colDesc] != null ? String(row[colDesc]).trim() : '';
+      const importo = numOrNull(row[colImp]) || 0;
+      const catRaw = row[colCat] != null ? String(row[colCat]).trim() : '';
+      const istRaw = row[colIst] != null ? String(row[colIst]).trim() : '';
+      out.push({
+        data, desc, importo,
+        fonte: 'Esportazione app',
+        catConosciuta: catRaw || null,
+        istitutoConosciuto: istRaw || null
+      });
+    }
+    return out;
+  }
+  return null;
+}
+
+/* Alcuni export (es. Fineco "movimenti carta") salvano un intervallo dati
+   ("dimension") interno sbagliato/obsoleto, che fa iniziare la lettura a
+   metà foglio saltando intestazione e prime righe. Ricalcola l'intervallo
+   reale dalle celle effettivamente presenti prima di leggere il foglio. */
+function fixSheetRange(ws) {
+  let minR = Infinity, maxR = -Infinity, minC = Infinity, maxC = -Infinity;
+  Object.keys(ws).forEach(key => {
+    if (key[0] === '!') return;
+    const cell = XLSX.utils.decode_cell(key);
+    if (cell.r < minR) minR = cell.r;
+    if (cell.r > maxR) maxR = cell.r;
+    if (cell.c < minC) minC = cell.c;
+    if (cell.c > maxC) maxC = cell.c;
+  });
+  if (minR === Infinity) return;
+  ws['!ref'] = XLSX.utils.encode_range({ s: { r: minR, c: minC }, e: { r: maxR, c: maxC } });
+}
+
+function numOrNull(v) {
+  if (v === null || v === undefined || v === '') return null;
+  const n = typeof v === 'number' ? v : parseFloat(String(v).replace(/\./g, '').replace(',', '.'));
+  return isNaN(n) ? null : n;
+}
+function excelDateToISO(v) {
+  if (v instanceof Date) return v.toISOString().slice(0, 10);
+  if (typeof v === 'number') {
+    const d = new Date(Math.round((v - 25569) * 86400 * 1000));
+    return d.toISOString().slice(0, 10);
+  }
+  if (typeof v === 'string') {
+    const iso = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+    const m = v.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  }
+  return null;
+}
+
+let stagingImport = [];
+
+function esisteGiaTransazione(t) {
+  return transazioni.some(x => x.data === t.data && x.importo === t.importo && x.desc.trim().toUpperCase() === t.desc.trim().toUpperCase());
+}
+
+async function handleImportFiles(fileList) {
+  const statusEl = document.getElementById('import-status');
+  statusEl.innerHTML = '';
+  stagingImport = [];
+  for (const file of fileList) {
+    try {
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, { type: 'array', cellDates: true });
+      let parsed = null;
+      for (const sheetName of wb.SheetNames) {
+        fixSheetRange(wb.Sheets[sheetName]);
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, raw: true });
+        parsed = parseFoglioMovimenti(rows);
+        if (parsed && parsed.length) break;
+      }
+      if (!parsed) {
+        statusEl.innerHTML += `<div class="file-err">✕ ${file.name}: formato non riconosciuto, file ignorato.</div>`;
+        continue;
+      }
+      parsed.forEach(t => t.fileName = file.name);
+      stagingImport.push(...parsed);
+      statusEl.innerHTML += `<div class="file-ok">✓ ${file.name}: ${parsed.length} movimenti trovati.</div>`;
+    } catch (err) {
+      statusEl.innerHTML += `<div class="file-err">✕ ${file.name}: errore di lettura (${err.message}).</div>`;
+    }
+  }
+  renderImportReview();
+}
+
+function renderImportReview() {
+  const panel = document.getElementById('import-review');
+  if (!stagingImport.length) { panel.style.display = 'none'; return; }
+  panel.style.display = 'block';
+
+  stagingImport.sort((a, b) => b.data.localeCompare(a.data));
+  const nuovi = stagingImport.filter(t => !esisteGiaTransazione(t)).length;
+  document.getElementById('import-count').textContent = `${stagingImport.length} movimenti totali · ${nuovi} nuovi · ${stagingImport.length - nuovi} già presenti`;
+
+  const catList = [...new Set([
+    ...Object.keys(DATA.usciteCategorie).filter(c => c !== 'TOTALE'),
+    ...Object.keys(DATA.entrateCategorie).filter(c => c !== 'TOTALE'),
+  ])].sort();
+  const istList = [...new Set(DATA.patrimonio.map(p => p.istituto).filter(Boolean))];
+
+  document.getElementById('import-table').querySelector('tbody').innerHTML = stagingImport.map((t, i) => {
+    const dup = esisteGiaTransazione(t);
+    let suggerita = t.catConosciuta || suggerisciCategoria(t.desc, t.importo);
+    const isTransfer = suggerita === '__TRASFERIMENTO_CARTA__';
+    if (isTransfer) suggerita = 'Altro';
+    const options = catList.map(c => `<option value="${c}" ${c === suggerita ? 'selected' : ''}>${c}</option>`).join("");
+    const istOptions = ['<option value="">&mdash; nessuno &mdash;</option>']
+      .concat(istList.map(ist => `<option value="${ist}" ${ist === t.istitutoConosciuto ? 'selected' : ''}>${ist}</option>`))
+      .join("");
+    return `<tr data-idx="${i}">
+      <td><input type="checkbox" class="import-check" data-idx="${i}" ${dup ? '' : 'checked'}></td>
+      <td>${fmtData(t.data)}</td>
+      <td>${t.desc}${dup ? '<span class="dup-badge">già presente</span>' : ''}${isTransfer ? '<span class="dup-badge">trasferimento carta &ndash; verifica</span>' : ''}</td>
+      <td class="num ${t.importo < 0 ? 'neg' : 'pos'}">${eur(t.importo)}</td>
+      <td><span class="tag">${t.fonte}</span></td>
+      <td><select class="ist-select" data-idx="${i}">${istOptions}</select></td>
+      <td><select class="cat-select" data-idx="${i}">${options}</select></td>
+    </tr>`;
+  }).join("");
+}
+
+/* ---------------- DETTAGLIO PER VOCE (2 grafici distinti) ---------------- */
+function populateVoceCats() {
+  const catsE = Object.keys(DATA.entrateCategorie).filter(c => c !== 'TOTALE').sort();
+  const catsU = Object.keys(DATA.usciteCategorie).filter(c => c !== 'TOTALE').sort();
+  const selE = document.getElementById('voce-cat-entrate');
+  const selU = document.getElementById('voce-cat-uscite');
+  const prevE = selE.value, prevU = selU.value;
+  selE.innerHTML = catsE.map(c => `<option value="${c}">${c}</option>`).join("");
+  selU.innerHTML = catsU.map(c => `<option value="${c}">${c}</option>`).join("");
+  if (catsE.includes(prevE)) selE.value = prevE;
+  else if (catsE.includes('Stipendio')) selE.value = 'Stipendio';
+  if (catsU.includes(prevU)) selU.value = prevU;
+  else if (catsU.includes('Viaggi')) selU.value = 'Viaggi';
+}
+
+function renderVoceBlock(tipo) {
+  const suffix = tipo === 'entrate' ? 'entrate' : 'uscite';
+  const dict = (tipo === 'entrate' ? DATA.entrateCategorie : DATA.usciteCategorie);
+  const cat = document.getElementById('voce-cat-' + suffix).value;
+  const catDict = dict[cat] || {};
+  const anniCat = Object.keys(catDict).map(Number).sort((a, b) => a - b);
+  const vals = anniCat.map(y => catDict[y]);
+  const colMain = tipo === 'entrate' ? CK.ent : CK.usc;
+  ChartKit.yearly('voce-chart-' + suffix, {
+    keys: anniCat,
+    labels: anniCat.map(y => y + (y === ANNO_CORRENTE ? '*' : '')),
+    series: [{ label: cat || 'Totale', color: colMain, colors: vals.map(v => (v < 0 ? CK.red : colMain)), data: vals }],
+    hint: 'Tocca un anno per vedere i mesi',
+    onPick: y => catMonthlyPanel(tipo, cat, y)
+  });
+
+  document.getElementById('voce-table-' + suffix).querySelector('tbody').innerHTML = anniCat.map((y, i) => {
+    const v = vals[i];
+    const isPartial = (y === ANNO_CORRENTE);
+    const mesiDivisor = isPartial ? Math.max(DATA.meta.mesiTransazioniDettagliate.length, 1) : 12;
+    const media = v / mesiDivisor;
+    const prev = i > 0 ? vals[i - 1] : null;
+    const delta = prev !== null ? v - prev : null;
+    const favorevole = delta === null ? null : (tipo === 'entrate' ? delta >= 0 : delta <= 0);
+    return `<tr>
+      <td>${y}${isPartial ? ' <span class="tag">parziale</span>' : ''}</td>
+      <td class="num">${eur(v)}</td>
+      <td class="num">${eur(media)}</td>
+      <td class="num ${favorevole === null ? '' : (favorevole ? 'pos' : 'neg')}">${delta === null ? '—' : eur(delta)}</td>
+    </tr>`;
+  }).join("");
+}
+
+function renderVoceAll() {
+  renderVoceBlock('entrate');
+  renderVoceBlock('uscite');
+}
+
+/* ---------------- TRANSAZIONI ---------------- */
+function populateFilters() {
+  const anni = [...new Set(transazioni.map(t => t.data.slice(0, 4)))].sort().reverse();
+  const fy = document.getElementById('filter-anno');
+  const prevAnno = fy.value;
+  fy.innerHTML = '<option value="">Tutti gli anni</option>' + anni.map(a => `<option value="${a}">${a}</option>`).join("");
+  if (anni.includes(prevAnno)) fy.value = prevAnno;
+
+  const fm = document.getElementById('filter-mese');
+  const prevMese = fm.value;
+  fm.innerHTML = '<option value="">Tutti i mesi</option>' + MESI_IT.map((nome, i) => {
+    const mm = String(i + 1).padStart(2, '0');
+    return `<option value="${mm}">${nome}</option>`;
+  }).join("");
+  fm.value = prevMese;
+
+  const catSet = [...new Set(transazioni.map(t => t.cat))].sort();
+  const fc = document.getElementById('filter-cat');
+  const prevCat = fc.value;
+  fc.innerHTML = '<option value="">Tutte le categorie</option>' + catSet.map(c => `<option value="${c}">${c}</option>`).join("");
+  if (catSet.includes(prevCat)) fc.value = prevCat;
+
+  const sc = document.getElementById('f-cat');
+  const allCats = [...new Set([
+    ...Object.keys(DATA.usciteCategorie).filter(c => c !== 'TOTALE'),
+    ...Object.keys(DATA.entrateCategorie).filter(c => c !== 'TOTALE'),
+  ])].sort();
+  sc.innerHTML = allCats.map(c => `<option value="${c}">${c}</option>`).join("");
+}
+
+function filteredTransazioni() {
+  const anno = document.getElementById('filter-anno').value;
+  const mese = document.getElementById('filter-mese').value;
+  const cat = document.getElementById('filter-cat').value;
+  const da = document.getElementById('filter-da').value;
+  const a = document.getElementById('filter-a').value;
+  let rows = [...transazioni];
+  if (da) rows = rows.filter(t => t.data >= da);
+  if (a) rows = rows.filter(t => t.data <= a);
+  if (!da && !a) {
+    if (anno) rows = rows.filter(t => t.data.slice(0, 4) === anno);
+    if (mese) rows = rows.filter(t => t.data.slice(5, 7) === mese);
+  }
+  if (cat) rows = rows.filter(t => t.cat === cat);
+  return rows;
+}
+
+let lastTxRows = [];
+let editingTx = null;
+
+function openTxForm(tx) {
+  editingTx = tx || null;
+  document.getElementById('tx-form-title').textContent = tx ? 'Modifica registrazione' : 'Nuova registrazione';
+  document.getElementById('f-data').value = tx ? tx.data : '';
+  document.getElementById('f-desc').value = tx ? tx.desc : '';
+  document.getElementById('f-importo').value = tx ? tx.importo : '';
+  document.getElementById('f-cat').value = tx ? tx.cat : '';
+  document.getElementById('f-istituto').value = (tx && tx.istituto) ? tx.istituto : '';
+  document.getElementById('tx-form').classList.add('open');
+}
+
+function renderTransazioni() {
+  const rows = filteredTransazioni();
+  rows.sort((a, b) => b.data.localeCompare(a.data));
+  lastTxRows = rows;
+
+  const entrate = sum(rows.filter(t => t.importo >= 0).map(t => t.importo));
+  const uscite = sum(rows.filter(t => t.importo < 0).map(t => -t.importo));
+  const saldo = entrate - uscite;
+  document.getElementById('tx-summary').innerHTML = `
+    <div class="card"><div class="label">Entrate (filtro attivo)</div><div class="value pos">${eur(entrate)}</div></div>
+    <div class="card"><div class="label">Uscite (filtro attivo)</div><div class="value neg">${eur(uscite)}</div></div>
+    <div class="card"><div class="label">Saldo netto</div><div class="value ${saldo >= 0 ? 'pos' : 'neg'}">${eur(saldo)}</div><div class="sub">${rows.length} registrazioni</div></div>
+  `;
+
+  document.getElementById('tx-table').querySelector('tbody').innerHTML = rows.map((t, i) => `
+    <tr>
+      <td><input type="checkbox" class="tx-select" data-idx="${i}"></td>
+      <td>${fmtData(t.data)}</td>
+      <td>${t.desc}</td>
+      <td><span class="tag">${t.cat}</span></td>
+      <td>${t.istituto ? `<span class="tag">${t.istituto}</span>` : ''}</td>
+      <td class="num ${t.importo < 0 ? 'neg' : 'pos'}">${eur(t.importo)}</td>
+      <td><button class="rowbtn" onclick="editTx(${i})">modifica</button> <button class="rowbtn" onclick="deleteTxAt(${i})">elimina</button></td>
+    </tr>
+  `).join("") || `<tr><td colspan="7" style="color:var(--ink-soft); padding:18px;">Nessuna registrazione trovata per questo filtro.</td></tr>`;
+
+  document.getElementById('tx-select-all').checked = false;
+  updateTxSelectCount();
+  document.querySelectorAll('.tx-select').forEach(cb => cb.addEventListener('change', updateTxSelectCount));
+}
+
+function updateTxSelectCount() {
+  const n = document.querySelectorAll('.tx-select:checked').length;
+  const el = document.getElementById('tx-select-count');
+  if (n > 0) { el.style.display = 'inline-block'; el.textContent = `${n} selezionate`; }
+  else { el.style.display = 'none'; }
+}
+
+function editTx(idx) {
+  const tx = lastTxRows[idx];
+  if (!tx) return;
+  openTxForm(tx);
+}
+
+function deleteTxAt(idx) {
+  const tx = lastTxRows[idx];
+  if (!tx) return;
+  const realIdx = transazioni.indexOf(tx);
+  if (realIdx === -1) return;
+  transazioni.splice(realIdx, 1);
+  if (tx.istituto) aggiornaLiquiditaIstituto(tx.istituto, -tx.importo);
+  recomputeFlussi();
+  populateFilters();
+  renderAll();
+  renderVoceAll();
+  persist('Eliminazione transazione');
+}
+
+function exportSelectedTxToXLSX() {
+  const checked = [...document.querySelectorAll('.tx-select:checked')];
+  if (!checked.length) { alert('Seleziona almeno una transazione da esportare.'); return; }
+  const selected = checked.map(cb => lastTxRows[parseInt(cb.dataset.idx, 10)]).filter(Boolean);
+  const dataRows = selected.map(t => ({
+    Data: t.data,
+    Descrizione: t.desc,
+    Categoria: t.cat,
+    Istituto: t.istituto || '',
+    Importo: t.importo
+  }));
+  const ws = XLSX.utils.json_to_sheet(dataRows);
+  ws['!cols'] = [{ wch: 12 }, { wch: 40 }, { wch: 22 }, { wch: 12 }, { wch: 12 }];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Transazioni');
+  const stamp = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(wb, `transazioni_export_${stamp}.xlsx`);
+}
+
+
+/* ---------------- BUDGET ---------------- */
+function haDettaglioMensile(anno) {
+  return !!(DATA._monthlyCat && DATA._monthlyCat[anno]);
+}
+function haDettaglioCategorie(anno) {
+  return haDettaglioMensile(anno) || ANNI_CON_CATEGORIE.has(anno);
+}
+
+function categoriaMeseValore(dict, cat, anno, mIdx) {
+  if (haDettaglioMensile(anno)) {
+    const lato = dict === DATA.entrateCategorie ? 'entrate' : 'uscite';
+    const monthly = DATA._monthlyCat[anno][lato];
+    return (monthly && monthly[mIdx] && monthly[mIdx][cat]) || 0;
+  }
+  const annualVal = dict[cat] ? dict[cat][anno] : undefined;
+  if (annualVal === undefined) return 0;
+  return annualVal / 12;
+}
+
+/* Ultimo mese (indice 0-11) per cui l'anno corrente ha transazioni registrate.
+   Serve per capire quanto è "parziale" l'anno in corso e limitare i confronti
+   con l'anno precedente allo stesso periodo (YTD vs YTD), invece di confrontare
+   un anno incompleto con un anno intero. Ritorna 11 (Dicembre) se l'anno
+   corrente non ha ancora dettaglio mensile, così i confronti restano a 12 mesi. */
+function ultimoMeseConDatiAnnoCorrente() {
+  const mesi = (DATA.meta && DATA.meta.mesiTransazioniDettagliate) || [];
+  if (!mesi.length) return 11;
+  let idx = -1;
+  mesi.forEach(nome => {
+    const i = MESI_IT.indexOf(nome);
+    if (i > idx) idx = i;
+  });
+  return idx < 0 ? 11 : idx;
+}
+
+/* Somma il valore di una categoria per i primi `mesiCount` mesi (Gennaio in poi)
+   di un dato anno. Se l'anno non ha dettaglio mensile, categoriaMeseValore()
+   ripartisce già il totale annuo in dodicesimi, quindi il risultato equivale
+   a una stima proporzionale (annuo / 12 * mesiCount). */
+function sumCategoriaPeriodo(dict, cat, anno, mesiCount) {
+  let s = 0;
+  for (let m = 0; m < mesiCount; m++) s += categoriaMeseValore(dict, cat, anno, m);
+  return s;
+}
+
+function stipendioMese(anno, mIdx) {
+  if (!haDettaglioCategorie(anno)) return 0;
+  return categoriaMeseValore(DATA.entrateCategorie, 'Stipendio', anno, mIdx);
+}
+/* Flusso Effettivo = Entrate nette − Uscite nette, dove:
+   Entrate nette = Entrate totali − Rimborsi Lavorativi − Entrate da Progetto − Vendita Titoli
+   Uscite nette  = Uscite totali − Spese Lavorative − Acquisto Titoli − Uscite da Progetto
+   Il risultato è quindi un saldo Entrate−Uscite depurato della gestione
+   lavorativa (rimborsi/spese) e di titoli/progetti su entrambi i lati. */
+function entrateBaseEffettivo(anno, mIdx) {
+  let v = DATA.flussi[anno].entrate[mIdx];
+  if (!haDettaglioCategorie(anno)) return v;
+  v -= categoriaMeseValore(DATA.entrateCategorie, 'Rimborsi Lavorativi', anno, mIdx);
+  v -= categoriaMeseValore(DATA.entrateCategorie, 'Progetti/Spese Straordinarie', anno, mIdx);
+  v -= categoriaMeseValore(DATA.entrateCategorie, 'Vendita Titoli', anno, mIdx);
+  return v;
+}
+function usciteBaseEffettivo(anno, mIdx) {
+  let v = DATA.flussi[anno].uscite[mIdx];
+  if (!haDettaglioCategorie(anno)) return v;
+  v -= categoriaMeseValore(DATA.usciteCategorie, 'Spese Lavorative', anno, mIdx);
+  v -= categoriaMeseValore(DATA.usciteCategorie, 'Acquisto Titoli', anno, mIdx);
+  v -= categoriaMeseValore(DATA.usciteCategorie, 'Progetti/Spese Straordinarie', anno, mIdx);
+  return v;
+}
+function annoAdjEntrateMese(anno, mIdx, escludiTitoli, escludiProgetti) {
+  let v = DATA.flussi[anno].entrate[mIdx];
+  if (!haDettaglioCategorie(anno)) return v;
+  if (escludiTitoli) v -= categoriaMeseValore(DATA.entrateCategorie, 'Vendita Titoli', anno, mIdx);
+  if (escludiProgetti) v -= categoriaMeseValore(DATA.entrateCategorie, 'Progetti/Spese Straordinarie', anno, mIdx);
+  return v;
+}
+function annoAdjUsciteMese(anno, mIdx, escludiTitoli, escludiProgetti) {
+  let v = DATA.flussi[anno].uscite[mIdx];
+  if (!haDettaglioCategorie(anno)) return v;
+  if (escludiTitoli) v -= categoriaMeseValore(DATA.usciteCategorie, 'Acquisto Titoli', anno, mIdx);
+  if (escludiProgetti) v -= categoriaMeseValore(DATA.usciteCategorie, 'Progetti/Spese Straordinarie', anno, mIdx);
+  return v;
+}
+
+
+
+function populateBudgetAnno() {
+  const sel = document.getElementById('budget-anno');
+  const prev = sel.value;
+  sel.innerHTML = [...ANNI].reverse().map(y => `<option value="${y}">${y}</option>`).join("");
+  sel.value = ANNI.includes(Number(prev)) ? prev : ANNO_CORRENTE;
+}
+
+// Riassume un intero anno sommando mese per mese, con la stessa logica
+// (e la stessa base Stipendio per la %) usata nel dettaglio mensile.
+// Riutilizzata sia dalla tabella "Totali per anno" sia dal totale annuale
+// nel dettaglio, per garantire che i due punti dell'interfaccia siano
+// sempre coerenti fra loro.
+function calcolaAnnoBudget(anno, escludiTitoli, escludiProgetti, teoricoPct) {
+  let totE = 0, totU = 0, totTeor = 0, totEff = 0, totStipendio = 0;
+  for (let i = 0; i < 12; i++) {
+    const e = annoAdjEntrateMese(anno, i, escludiTitoli, escludiProgetti);
+    const u = annoAdjUsciteMese(anno, i, escludiTitoli, escludiProgetti);
+    const stipendio = stipendioMese(anno, i);
+    const teorico = (teoricoPct / 100) * stipendio;
+    const effettivo = entrateBaseEffettivo(anno, i) - usciteBaseEffettivo(anno, i);
+    totE += e; totU += u; totTeor += teorico; totEff += effettivo; totStipendio += stipendio;
+  }
+  const pctRisparmio = totStipendio !== 0 ? (totEff / totStipendio) * 100 : null;
+  return { anno, totE, totU, totTeor, totEff, totStipendio, pctRisparmio };
+}
+
+function budgetRowHtml(label, r, teoricoPct, opts) {
+  opts = opts || {};
+  const saldo = r.totE - r.totU;
+  const delta = r.totEff - r.totTeor;
+  return `<tr${opts.clickAnno != null ? ` class="budget-year-row" data-anno="${opts.clickAnno}" style="cursor:pointer;"` : ''}${opts.bold ? ' style="font-weight:700; border-top:2px solid var(--ink);"' : ''}>
+    <td>${label}</td>
+    <td class="num pos">${eur(r.totE)}</td>
+    <td class="num neg">${eur(r.totU)}</td>
+    <td class="num ${saldo >= 0 ? 'pos' : 'neg'}">${eur(saldo)}</td>
+    <td class="num">${eur(r.totTeor)}</td>
+    <td class="num ${r.totEff > r.totTeor ? 'pos' : 'neg'}">${eur(r.totEff)}</td>
+    <td class="num ${delta > 0 ? 'delta-pos' : 'delta-neg'}">${eur(delta)}</td>
+    <td class="num ${r.pctRisparmio == null ? '' : (r.pctRisparmio >= teoricoPct ? 'pos' : 'neg')}">${r.pctRisparmio == null ? '&mdash;' : r.pctRisparmio.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'}</td>
+  </tr>`;
+}
+
+function renderBudgetYears() {
+  const escludiTitoli = !document.getElementById('budget-flag-titoli').checked;
+  const escludiProgetti = !document.getElementById('budget-flag-progetti').checked;
+  const teoricoPct = DATA.impostazioni.budgetTeoricoPct;
+  const anniDesc = [...ANNI].reverse(); // più recente in alto
+  const righeAnni = anniDesc.map(y => calcolaAnnoBudget(y, escludiTitoli, escludiProgetti, teoricoPct));
+  const selectedAnno = parseInt(document.getElementById('budget-anno').value || ANNO_CORRENTE, 10);
+
+  document.getElementById('budget-years-table').querySelector('tbody').innerHTML =
+    righeAnni.map(r => budgetRowHtml(
+      `${r.anno}${r.anno === selectedAnno ? ' &larr;' : ''}`,
+      r, teoricoPct, { clickAnno: r.anno }
+    )).join("");
+
+  document.querySelectorAll('#budget-years-table .budget-year-row').forEach(row => {
+    row.addEventListener('click', () => {
+      document.getElementById('budget-anno').value = row.dataset.anno;
+      renderBudget();
+    });
+  });
+}
+
+function renderBudget() {
+  const anno = parseInt(document.getElementById('budget-anno').value || ANNO_CORRENTE, 10);
+  const escludiTitoli = !document.getElementById('budget-flag-titoli').checked;
+  const escludiProgetti = !document.getElementById('budget-flag-progetti').checked;
+  const teoricoPct = DATA.impostazioni.budgetTeoricoPct;
+  document.getElementById('budget-teorico-pct').value = teoricoPct;
+  document.getElementById('budget-title').textContent = `Budget mensile ${anno}`;
+
+  renderBudgetYears();
+
+  let totE = 0, totU = 0, totTeor = 0, totEff = 0, totStipendio = 0;
+  document.getElementById('budget-table').querySelector('tbody').innerHTML = MESI_IT.map((m, i) => {
+    const eRaw = DATA.flussi[anno].entrate[i], uRaw = DATA.flussi[anno].uscite[i];
+    const noData = (eRaw === 0 && uRaw === 0);
+    const e = annoAdjEntrateMese(anno, i, escludiTitoli, escludiProgetti);
+    const u = annoAdjUsciteMese(anno, i, escludiTitoli, escludiProgetti);
+    const saldo = e - u;
+    const stipendio = stipendioMese(anno, i);
+    const teorico = (teoricoPct / 100) * stipendio;
+    const effettivo = entrateBaseEffettivo(anno, i) - usciteBaseEffettivo(anno, i);
+    const delta = effettivo - teorico;
+    // Stessa base dello Stipendio usata per il Flusso Teorico, così la %
+    // è sempre direttamente comparabile con la % target impostata sopra:
+    // se il Flusso Effettivo supera il Flusso Teorico in euro, la %
+    // risulta automaticamente >= alla % target (e viceversa).
+    const pctRisparmio = stipendio !== 0 ? (effettivo / stipendio) * 100 : null;
+    totE += e; totU += u; totTeor += teorico; totEff += effettivo; totStipendio += stipendio;
+    return `<tr>
+      <td>${m}${noData ? ' <span class="tag">nessun dato</span>' : ''}</td>
+      <td class="num pos">${eur(e)}</td>
+      <td class="num neg">${eur(u)}</td>
+      <td class="num ${saldo >= 0 ? 'pos' : 'neg'}">${eur(saldo)}</td>
+      <td class="num">${eur(teorico)}</td>
+      <td class="num ${effettivo > teorico ? 'pos' : 'neg'}">${eur(effettivo)}</td>
+      <td class="num ${delta > 0 ? 'delta-pos' : 'delta-neg'}">${eur(delta)}</td>
+      <td class="num ${pctRisparmio == null ? '' : (pctRisparmio >= teoricoPct ? 'pos' : 'neg')}">${pctRisparmio == null ? '&mdash;' : pctRisparmio.toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'}</td>
+    </tr>`;
+  }).join("");
+
+  const totPctRisparmio = totStipendio !== 0 ? (totEff / totStipendio) * 100 : null;
+  document.getElementById('budget-table').querySelector('tfoot').innerHTML =
+    budgetRowHtml(`TOTALE ${anno}`, { totE, totU, totTeor, totEff, pctRisparmio: totPctRisparmio }, teoricoPct, { bold: true });
+
+  const note = [];
+  note.push(`Flusso teorico = ${teoricoPct}% dello stipendio del mese (percentuale modificabile qui sopra).`);
+  note.push('Flusso effettivo = Entrate nette &minus; Uscite nette, dove Entrate nette = Entrate totali &minus; Rimborsi Lavorativi &minus; Entrate da Progetto &minus; Vendita Titoli, e Uscite nette = Uscite totali &minus; Spese Lavorative &minus; Acquisto Titoli &minus; Uscite da Progetto.');
+  note.push('Il Flusso effettivo è verde quando supera il Flusso teorico, rosso quando è inferiore. Delta = Flusso effettivo &minus; Flusso teorico.');
+  note.push(`% Risparmio effettivo = Flusso effettivo / Stipendio del mese, ossia la stessa base usata per il Flusso Teorico: è quindi sempre confrontabile direttamente con la % target impostata sopra (verde se &ge; ${teoricoPct}%, rosso altrimenti). Il totale annuale (sia nel dettaglio sotto sia nella tabella "Totali per anno" in alto) è calcolato come somma dei Flussi Effettivi diviso somma degli stipendi dell'anno (media ponderata sui mesi, non media delle percentuali mensili).`);
+  note.push('Clicca su una riga della tabella "Totali per anno" in alto per aprirne il dettaglio mensile qui sotto.');
+  if (!haDettaglioMensile(anno)) note.push(`Per l'anno ${anno} non sono disponibili transazioni mensili dettagliate: stipendio e categorie escluse dal calcolo (Rimborsi Lavorativi, Spese Lavorative, Progetti/Spese Straordinarie, Acquisto/Vendita Titoli) sono stimati distribuendo il totale annuale in parti uguali sui 12 mesi.`);
+  document.getElementById('budget-note').innerHTML = note.join(' ');
+}
+
+/* ---------------- PATRIMONIO (editabile) ---------------- */
+function formatItNumber(n) {
+  return (n || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: 'always' });
+}
+function parseItNumber(str) {
+  if (typeof str !== 'string') return Number(str) || 0;
+  const s = str.trim().replace(/\./g, '').replace(',', '.');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+function renderPatrimonio() {
+  syncPatrimonioAutomatico();
+  const tbody = document.getElementById('patrimonio-table').querySelector('tbody');
+  tbody.innerHTML = DATA.patrimonio.map((p, i) => {
+    const fisso = ISTITUTI_FISSI.includes(p.istituto);
+    const finecoAuto = p.istituto === 'Fineco';
+    const tot = (p.liquidita || 0) + (p.portafoglioTitoli || 0) + (p.deposito || 0);
+    const numField = (field, val, readOnly) => `<input class="cell-edit patr-field" data-idx="${i}" data-field="${field}" type="text" inputmode="decimal" value="${formatItNumber(val)}" ${readOnly ? 'readonly title="Aggiornato automaticamente dal tab Portafoglio Titoli"' : ''}>`;
+    const istitutoCell = fisso
+      ? `<span style="font-weight:600; padding:6px 8px; display:inline-block;">${p.istituto}</span>`
+      : `<input class="cell-edit patr-field" data-idx="${i}" data-field="istituto" type="text" value="${p.istituto == null ? '' : p.istituto}">`;
+    return `<tr data-idx="${i}">
+      <td>${istitutoCell}</td>
+      <td>${numField('liquidita', p.liquidita, false)}</td>
+      <td>${numField('portafoglioTitoli', p.portafoglioTitoli, finecoAuto)}</td>
+      <td>${numField('deposito', p.deposito, false)}</td>
+      <td class="num" style="font-weight:600;">${eur(tot)}</td>
+      <td>${fisso ? '' : `<button class="rowbtn" data-idx="${i}" onclick="deletePatrimonioRow(${i})">elimina</button>`}</td>
+    </tr>`;
+  }).join("");
+  const totRow = ['liquidita', 'portafoglioTitoli', 'deposito'].map(k => DATA.patrimonio.reduce((s, p) => s + (p[k] || 0), 0));
+  document.getElementById('patrimonio-table').querySelector('tfoot').innerHTML = `
+    <tr style="font-weight:700; border-top:2px solid var(--ink);">
+      <td>TOTALE</td>
+      <td class="num">${eur(totRow[0])}</td>
+      <td class="num">${eur(totRow[1])}</td>
+      <td class="num">${eur(totRow[2])}</td>
+      <td class="num">${eur(patrimonioTotale())}</td>
+      <td></td>
+    </tr>`;
+
+  tbody.querySelectorAll('.patr-field').forEach(inp => {
+    if (inp.readOnly) return;
+    inp.addEventListener('change', onPatrimonioFieldChange);
+    if (inp.dataset.field !== 'istituto') {
+      // in focus mostra il numero "grezzo" (facile da editare), al blur riformatta con il separatore
+      inp.addEventListener('focus', (e) => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const field = e.target.dataset.field;
+        const raw = DATA.patrimonio[idx] ? (DATA.patrimonio[idx][field] || 0) : 0;
+        e.target.value = String(raw).replace('.', ',');
+      });
+      inp.addEventListener('blur', (e) => {
+        const idx = parseInt(e.target.dataset.idx, 10);
+        const field = e.target.dataset.field;
+        const row = DATA.patrimonio[idx];
+        if (row) e.target.value = formatItNumber(row[field]);
+      });
+    }
+  });
+}
+
+function onPatrimonioFieldChange(e) {
+  const idx = parseInt(e.target.dataset.idx, 10);
+  const field = e.target.dataset.field;
+  const row = DATA.patrimonio[idx];
+  if (!row) return;
+  if (field === 'istituto') {
+    if (ISTITUTI_FISSI.includes(row.istituto)) return; // nome non modificabile per gli istituti fissi
+    row.istituto = e.target.value.trim() || null;
+  } else {
+    row[field] = parseItNumber(e.target.value);
+  }
+  renderPatrimonio();
+  renderHeader();
+  renderDashboard();
+  persist('Aggiornamento patrimonio');
+}
+
+function addPatrimonioRow() {
+  DATA.patrimonio.push({ istituto: 'Nuovo istituto', liquidita: 0, portafoglioTitoli: 0, deposito: 0 });
+  renderPatrimonio();
+  renderHeader();
+  renderDashboard();
+  persist('Aggiunta istituto patrimonio');
+}
+function deletePatrimonioRow(idx) {
+  const row = DATA.patrimonio[idx];
+  if (row && ISTITUTI_FISSI.includes(row.istituto)) return; // Fineco e Illimity non sono eliminabili
+  DATA.patrimonio.splice(idx, 1);
+  renderPatrimonio();
+  renderHeader();
+  renderDashboard();
+  persist('Rimozione istituto patrimonio');
+}
+
+
+/* ---------------- PORTAFOGLIO ---------------- */
+function renderPortafoglio() {
+  const s = DATA.portafoglio.summary;
+  document.getElementById('ptf-cards').innerHTML = `
+    <div class="card"><div class="label">Valore di carico</div><div class="value">${eur(s.valoreCarico)}</div></div>
+    <div class="card"><div class="label">Valore di mercato</div><div class="value">${eur(s.valoreMercato)}</div></div>
+    <div class="card"><div class="label">Variazione</div><div class="value ${s.varEuro >= 0 ? 'pos' : 'neg'}">${eur(s.varEuro)} (${pct(s.varPct)})</div></div>
+  `;
+  document.getElementById('ptf-updated').textContent = DATA.portafoglio.aggiornatoIl
+    ? `Ultimo aggiornamento: ${fmtData(DATA.portafoglio.aggiornatoIl)}` : '';
+  document.getElementById('ptf-table').querySelector('tbody').innerHTML = DATA.portafoglio.titoli.map(t => `
+    <tr>
+      <td>${t.nome}</td>
+      <td>${t.isin || ''}</td>
+      <td><span class="tag">${t.mercato || ''}</span></td>
+      <td><span class="tag">${t.strumento || ''}</span></td>
+      <td class="num">${(t.qta || 0).toLocaleString('it-IT', { useGrouping: 'always' })}</td>
+      <td class="num">${(t.pzo || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 5 })}</td>
+      <td class="num">${eur(t.valoreCarico || 0)}</td>
+      <td class="num">${t.pzoMercato != null ? t.pzoMercato.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 5 }) : ''}</td>
+      <td class="num">${eur(t.valoreMercato || 0)}</td>
+      <td class="num ${(t.varPct || 0) >= 0 ? 'pos' : 'neg'}">${t.varPct != null ? pct(t.varPct / 100) : ''}</td>
+      <td class="num ${(t.varEuro || 0) >= 0 ? 'pos' : 'neg'}">${t.varEuro != null ? eur(t.varEuro) : ''}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="11" style="color:var(--ink-soft); padding:18px;">Nessun titolo in portafoglio: importa un file per popolarlo.</td></tr>`;
+}
+
+/* ---------------- ANALISI ---------------- */
+function getAnalisiFlags() {
+  return {
+    escludiTitoli: !document.getElementById('analisi-flag-titoli').checked,
+    escludiProgetti: !document.getElementById('analisi-flag-progetti').checked,
+  };
+}
+
+function renderAnalisiFlussi() {
+  const { escludiTitoli, escludiProgetti } = getAnalisiFlags();
+  flussiAnnualiChart('analisi-flussi-chart', escludiTitoli, escludiProgetti);
+
+  const escl = [];
+  if (escludiTitoli) escl.push('Acquisto/Vendita Titoli');
+  if (escludiProgetti) escl.push('Progetti/Spese Straordinarie');
+  const esclTxt = escl.length ? ` Escluse dal calcolo: ${escl.join(' e ')}.` : '';
+  const primoAnnoCat = Math.min(...ANNI_CON_CATEGORIE);
+  let note = `Totali annuali di entrate e uscite, a confronto diretto.${esclTxt}`;
+  if (escludiTitoli || escludiProgetti) {
+    note += ` Il dettaglio per categoria è disponibile dal ${primoAnnoCat}: gli anni precedenti (contrassegnati con *) mostrano comunque il totale completo.`;
+  }
+  document.getElementById('analisi-flussi-note').innerHTML = note;
+}
+
+function renderAnalisiMensile() {
+  const { escludiTitoli, escludiProgetti } = getAnalisiFlags();
+  const anno = parseInt(document.getElementById('analisi-anno').value || ANNO_CORRENTE, 10);
+  const noteEl = document.getElementById('analisi-mensile-note');
+
+  const mesi = mesiDisponibili(anno).map(m => ({
+    m,
+    e: annoAdjEntrateMese(anno, m, escludiTitoli, escludiProgetti),
+    u: annoAdjUsciteMese(anno, m, escludiTitoli, escludiProgetti),
+  }));
+  if (!mesi.length) {
+    ChartKit.clear('analisi-mensile-chart');
+    noteEl.textContent = `Nessun dato mensile disponibile per il ${anno}.`;
+    return;
+  }
+  const excl = ckExcl(escludiTitoli, escludiProgetti);
+  ChartKit.yearly('analisi-mensile-chart', {
+    keys: mesi.map(d => d.m),
+    labels: mesi.map(d => meseCorto(d.m)),
+    series: [
+      { label: 'Entrate', color: CK.ent, data: mesi.map(d => d.e) },
+      { label: 'Uscite', color: CK.usc, data: mesi.map(d => d.u) },
+      { label: 'Saldo', color: CK.blue, kind: 'line', hidden: true, data: mesi.map(d => d.e - d.u) }
+    ],
+    controls: { range: false, type: true },
+    hint: 'Tocca un mese per vedere le categorie',
+    onPick: m => monthCategoryPanel(anno, m, excl)
+  });
+
+  const migliore = mesi.reduce((a, b) => (b.e - b.u > a.e - a.u ? b : a));
+  const peggiore = mesi.reduce((a, b) => (b.e - b.u < a.e - a.u ? b : a));
+  noteEl.innerHTML = `Mese con saldo migliore: ${MESI_IT[migliore.m]} (${eur(migliore.e - migliore.u)}). Mese con saldo peggiore: ${MESI_IT[peggiore.m]} (${eur(peggiore.e - peggiore.u)}).`;
+}
+
+function renderAnalisiHBar(tipo, anno, categorieEscluse) {
+  const dict = tipo === 'entrate' ? DATA.entrateCategorie : DATA.usciteCategorie;
+  const cats = Object.keys(dict).filter(c => c !== 'TOTALE' && !categorieEscluse.includes(c));
+  const righe = cats
+    .map(c => ({ cat: c, val: dict[c][anno] || 0 }))
+    .filter(r => r.val > 0)
+    .sort((a, b) => b.val - a.val);
+  const targetId = tipo === 'entrate' ? 'analisi-ent-hbar' : 'analisi-usc-hbar';
+  const donutId = tipo === 'entrate' ? 'analisi-ent-donut' : 'analisi-usc-donut';
+
+  ChartKit.donut(donutId, {
+    items: righe.map(r => ({ label: r.cat, value: r.val })),
+    centerLabel: tipo === 'entrate' ? 'Entrate' : 'Uscite',
+    onPick: cat => categoryPanel(tipo, cat, anno)
+  });
+
+  const maxVal = Math.max(...righe.map(r => r.val), 1);
+  const clsFill = tipo === 'entrate' ? 'ent' : 'usc';
+  const el = document.getElementById(targetId);
+  el.innerHTML = righe.map(r => {
+    const w = Math.max(2, r.val / maxVal * 100);
+    const attr = r.cat.replace(/"/g, '&quot;');
+    return `<div class="hbar-row hbar-click" data-cat="${attr}">
+      <div class="hbar-label" title="${attr}">${r.cat}</div>
+      <div class="hbar-track"><div class="hbar-fill ${clsFill}" style="width:${w}%;"></div></div>
+      <div class="hbar-val">${eurCompact(r.val)}</div>
+    </div>`;
+  }).join("") || `<div style="color:var(--ink-soft); font-family:'Inter',sans-serif; font-size:12.5px; padding:6px 0;">Nessun dato per l'anno selezionato.</div>`;
+  el.onclick = ev => {
+    const row = ev.target.closest('.hbar-row[data-cat]');
+    if (row) ChartKit.openDrill(donutId, row.dataset.cat);
+  };
+}
+
+function renderAnalisiRisparmio() {
+  const { escludiTitoli, escludiProgetti } = getAnalisiFlags();
+  const punti = ANNI.map(y => {
+    const ent = annoAdjEntrate(y, escludiTitoli, escludiProgetti);
+    const usc = annoAdjUscite(y, escludiTitoli, escludiProgetti);
+    const risparmio = ent > 0 ? (ent - usc) / ent : 0;
+    return { y, risparmio, parziale: y === ANNO_CORRENTE };
+  });
+  ChartKit.yearly('analisi-risparmio-chart', {
+    keys: punti.map(p => p.y),
+    labels: punti.map(p => p.y + (p.parziale ? '*' : '')),
+    series: [{
+      label: 'Tasso di risparmio', color: CK.ent,
+      colors: punti.map(p => (p.risparmio >= 0 ? CK.green : CK.red)),
+      data: punti.map(p => p.risparmio * 100)
+    }],
+    fmt: v => v.toFixed(1) + '%',
+    tickFmt: v => v + '%',
+    hint: 'Tocca un anno per vedere il saldo mese per mese',
+    onPick: y => monthlySavingsPanel(y, escludiTitoli, escludiProgetti)
+  });
+  const escl = [];
+  if (escludiTitoli) escl.push('Acquisto/Vendita Titoli');
+  if (escludiProgetti) escl.push('Progetti/Spese Straordinarie');
+  const esclTxt = escl.length ? ` Escluse dal calcolo: ${escl.join(' e ')}.` : '';
+  document.getElementById('analisi-risparmio-note').innerHTML =
+    `Tasso di risparmio = (Entrate &minus; Uscite) / Entrate. Valori negativi indicano un anno in cui le uscite hanno superato le entrate.${esclTxt} * anno parziale (${ANNO_CORRENTE}).`;
+}
+
+function buildMonthlySeries(escludiTitoli, escludiProgetti) {
+  const out = [];
+  ANNI.forEach(y => {
+    const f = DATA.flussi[y];
+    for (let m = 0; m < 12; m++) {
+      if (y === ANNO_CORRENTE && !DATA.meta.mesiTransazioniDettagliate.includes(MESI_IT[m])) continue;
+      const entrate = annoAdjEntrateMese(y, m, escludiTitoli, escludiProgetti);
+      const uscite = annoAdjUsciteMese(y, m, escludiTitoli, escludiProgetti);
+      out.push({ y, m, entrate, uscite, entrateRaw: f.entrate[m], usciteRaw: f.uscite[m] });
+    }
+  });
+  return out;
+}
+
+function renderAnalisiTrend() {
+  const { escludiTitoli, escludiProgetti } = getAnalisiFlags();
+  const serie = buildMonthlySeries(escludiTitoli, escludiProgetti);
+  const rolling = [];
+  for (let i = 11; i < serie.length; i++) {
+    const finestra = serie.slice(i - 11, i + 1);
+    rolling.push({
+      y: serie[i].y, m: serie[i].m,
+      rollingUscite: sum(finestra.map(w => w.uscite)),
+      rollingEntrate: sum(finestra.map(w => w.entrate))
+    });
+  }
+
+  const noteEl = document.getElementById('analisi-trend-note');
+  if (!rolling.length) {
+    ChartKit.clear('analisi-trend-chart');
+    noteEl.textContent = 'Servono almeno 12 mesi di dati consecutivi per calcolare la media mobile su 12 mesi.';
+    return;
+  }
+  const excl = ckExcl(escludiTitoli, escludiProgetti);
+  ChartKit.yearly('analisi-trend-chart', {
+    keys: rolling.map((r, i) => i),
+    itemYears: rolling.map(r => r.y),
+    labels: rolling.map(r => `${meseCorto(r.m)} ${String(r.y).slice(2)}`),
+    series: [
+      { label: 'Uscite ultimi 12 mesi', color: CK.uscDark, kind: 'line', fill: true, data: rolling.map(r => r.rollingUscite) },
+      { label: 'Entrate ultimi 12 mesi', color: CK.ent, kind: 'line', data: rolling.map(r => r.rollingEntrate) }
+    ],
+    defaultType: 'line', controls: { range: true, type: false }, maxTicks: 8,
+    hint: 'Tocca un punto per vedere le categorie di quel mese',
+    onPick: i => { const r = rolling[i]; return r ? monthCategoryPanel(r.y, r.m, excl) : null; }
+  });
+
+  const last = rolling[rolling.length - 1];
+  const escl = [];
+  if (escludiTitoli) escl.push('Acquisto Titoli');
+  if (escludiProgetti) escl.push('Progetti/Spese Straordinarie');
+  const esclTxt = escl.length ? ` Escluse dal calcolo: ${escl.join(' e ')}.` : '';
+  noteEl.innerHTML = `Ultimo punto disponibile (${MESI_IT[last.m]} ${last.y}): uscite degli ultimi 12 mesi pari a ${eur(last.rollingUscite)}, entrate pari a ${eur(last.rollingEntrate)}. Ogni punto è la somma mobile dei 12 mesi che lo precedono (incluso il mese stesso).${esclTxt}`;
+}
+
+function populateAnalisiAnno() {
+  const sel = document.getElementById('analisi-anno');
+  const prev = sel.value;
+  sel.innerHTML = [...ANNI].reverse().map(y => `<option value="${y}">${y}</option>`).join("");
+  sel.value = ANNI.includes(Number(prev)) ? prev : ANNO_CORRENTE;
+}
+
+const CATEGORIE_TITOLI = ['Acquisto Titoli', 'Vendita Titoli'];
+const CATEGORIE_PROGETTI = ['Progetti/Spese Straordinarie'];
+
+function renderClassificaTabella(tipo, anno, annoPrec, categorieEscluse) {
+  const dict = tipo === 'entrate' ? DATA.entrateCategorie : DATA.usciteCategorie;
+  const cats = Object.keys(dict).filter(c => c !== 'TOTALE' && !categorieEscluse.includes(c));
+
+  // Se l'anno selezionato è l'anno corrente e non è ancora concluso, confronta
+  // anno e anno precedente sugli stessi mesi (YTD vs YTD) invece che sul totale
+  // annuo intero dell'anno precedente, altrimenti il confronto sarebbe fuorviante.
+  const ultimoMeseIdx = ultimoMeseConDatiAnnoCorrente();
+  const annoParziale = anno === ANNO_CORRENTE && ultimoMeseIdx < 11;
+  const mesiCount = annoParziale ? ultimoMeseIdx + 1 : 12;
+
+  const valAnno = c => annoParziale ? sumCategoriaPeriodo(dict, c, anno, mesiCount) : (dict[c][anno] || 0);
+  const valPrecFn = c => annoParziale ? sumCategoriaPeriodo(dict, c, annoPrec, mesiCount) : (dict[c][annoPrec] || 0);
+
+  const totaleAnno = sum(cats.map(valAnno));
+
+  const righe = cats
+    .map(c => ({ cat: c, val: valAnno(c), valPrec: valPrecFn(c) }))
+    .filter(r => r.val !== 0 || r.valPrec !== 0)
+    .sort((a, b) => b.val - a.val);
+
+  document.getElementById(`analisi-${tipo}-table`).querySelector('tbody').innerHTML = righe.map(r => {
+    const quota = totaleAnno ? (r.val / totaleAnno * 100) : 0;
+    const delta = r.val - r.valPrec;
+    const deltaPct = r.valPrec ? (delta / r.valPrec * 100) : null;
+    const favorevole = tipo === 'entrate' ? delta >= 0 : delta <= 0;
+    const deltaTxt = `${delta >= 0 ? '+' : ''}${eur(delta)}` + (deltaPct !== null ? ` (${delta >= 0 ? '+' : ''}${deltaPct.toFixed(0)}%)` : '');
+    return `<tr>
+      <td>${r.cat}</td>
+      <td class="num">${eur(r.val)}</td>
+      <td class="num">${quota.toFixed(1)}%</td>
+      <td class="num">${eur(r.valPrec)}</td>
+      <td class="num ${favorevole ? 'pos' : 'neg'}">${deltaTxt}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="5" style="color:var(--ink-soft); padding:18px;">Nessun dato per l'anno selezionato.</td></tr>`;
+
+  const thAnno = document.getElementById(`analisi-${tipo}-th-anno`);
+  const thPrec = document.getElementById(`analisi-${tipo}-th-prec`);
+  if (thAnno && thPrec) {
+    if (annoParziale) {
+      const periodoTxt = mesiCount === 1 ? MESI_IT[0] : `Gen\u2013${MESI_IT[ultimoMeseIdx].slice(0, 3)}`;
+      thAnno.textContent = `${anno} (${periodoTxt})`;
+      thPrec.textContent = `${annoPrec} (${periodoTxt})`;
+    } else {
+      thAnno.textContent = 'Anno selezionato';
+      thPrec.textContent = 'Anno precedente';
+    }
+  }
+
+  return { annoParziale, mesiCount, ultimoMeseIdx };
+}
+
+function renderAnalisiClassifica() {
+  const { escludiTitoli, escludiProgetti } = getAnalisiFlags();
+  const categorieEscluse = [
+    ...(escludiTitoli ? CATEGORIE_TITOLI : []),
+    ...(escludiProgetti ? CATEGORIE_PROGETTI : []),
+  ];
+  const anno = parseInt(document.getElementById('analisi-anno').value || ANNO_CORRENTE, 10);
+  const annoPrec = anno - 1;
+  const infoU = renderClassificaTabella('uscite', anno, annoPrec, categorieEscluse);
+  const infoE = renderClassificaTabella('entrate', anno, annoPrec, categorieEscluse);
+  renderAnalisiHBar('uscite', anno, categorieEscluse);
+  renderAnalisiHBar('entrate', anno, categorieEscluse);
+
+  const subEl = document.getElementById('analisi-composizione-sub');
+  if (subEl) {
+    const info = infoU.annoParziale ? infoU : infoE;
+    if (info.annoParziale) {
+      const periodoTxt = info.mesiCount === 1 ? MESI_IT[0] : `Gennaio\u2013${MESI_IT[info.ultimoMeseIdx]}`;
+      subEl.innerHTML = `Le voci che pesano di più sul totale del periodo. <b>${anno} è un anno parziale</b>: per un confronto corretto, sia ${anno} sia ${annoPrec} sono limitati allo stesso periodo (${periodoTxt}), invece di confrontare un anno incompleto con uno intero.`;
+    } else {
+      subEl.textContent = 'Le voci che pesano di più sul totale dell\u2019anno selezionato.';
+    }
+  }
+}
+
+function renderAnalisiAnnoDipendenti() {
+  renderAnalisiMensile();
+  renderAnalisiClassifica();
+}
+
+function renderAnalisi() {
+  renderAnalisiFlussi();
+  renderAnalisiRisparmio();
+  renderAnalisiTrend();
+  renderAnalisiAnnoDipendenti();
+}
+
+
+
+/* ---------------- IMPORTAZIONE PORTAFOGLIO (sostituisce il tab) ----------------
+   Riconosce l'export "Portafoglio di sintesi" (xls/xlsx) con colonne:
+   Titolo, ISIN, Simbolo, Mercato, Strumento, Valuta, Quantità, P.zo medio di
+   carico, Cambio di carico, Valore di carico, P.zo di mercato, Cambio di
+   mercato, Valore di mercato €, Var%, Var €, Var in valuta, Rateo. */
+function trovaColonna(headerRow, nomi) {
+  for (let c = 0; c < headerRow.length; c++) {
+    const v = (headerRow[c] == null ? '' : String(headerRow[c])).trim();
+    if (nomi.includes(v)) return c;
+  }
+  return -1;
+}
+
+function parsePortafoglioSintesi(rows) {
+  let hIdx = -1, cols = null;
+  for (let i = 0; i < rows.length; i++) {
+    const row = (rows[i] || []).map(v => (v == null ? '' : String(v)).trim());
+    if (row.includes('Titolo') && row.includes('ISIN') && row.includes('Quantità')) { hIdx = i; break; }
+  }
+  if (hIdx < 0) return null;
+  const header = rows[hIdx];
+  cols = {
+    nome: trovaColonna(header, ['Titolo']),
+    isin: trovaColonna(header, ['ISIN']),
+    simbolo: trovaColonna(header, ['Simbolo']),
+    mercato: trovaColonna(header, ['Mercato']),
+    strumento: trovaColonna(header, ['Strumento']),
+    valuta: trovaColonna(header, ['Valuta']),
+    qta: trovaColonna(header, ['Quantità']),
+    pzo: trovaColonna(header, ['P.zo medio di carico']),
+    valoreCarico: trovaColonna(header, ['Valore di carico']),
+    pzoMercato: trovaColonna(header, ['P.zo di mercato']),
+    valoreMercato: trovaColonna(header, ['Valore di mercato €', 'Valore di mercato']),
+    varPct: trovaColonna(header, ['Var%']),
+    varEuro: trovaColonna(header, ['Var €', 'Var €']),
+  };
+
+  const titoli = [];
+  let r = hIdx + 1;
+  let totaleRowIdx = -1;
+  for (; r < rows.length; r++) {
+    const row = rows[r];
+    if (!row || row.every(v => v === '' || v == null)) continue;
+    const nomeVal = row[cols.nome];
+    if (nomeVal == null || String(nomeVal).trim() === '') continue;
+    if (String(nomeVal).trim().toLowerCase() === 'totale') { totaleRowIdx = r; break; }
+    titoli.push({
+      nome: String(nomeVal).trim(),
+      isin: cols.isin >= 0 ? String(row[cols.isin] || '').trim() : '',
+      simbolo: cols.simbolo >= 0 ? String(row[cols.simbolo] || '').trim() : '',
+      mercato: cols.mercato >= 0 ? String(row[cols.mercato] || '').trim() : '',
+      strumento: cols.strumento >= 0 ? String(row[cols.strumento] || '').trim() : '',
+      valuta: cols.valuta >= 0 ? String(row[cols.valuta] || '').trim() : '',
+      qta: numOrNull(row[cols.qta]) || 0,
+      pzo: numOrNull(row[cols.pzo]) || 0,
+      valoreCarico: numOrNull(row[cols.valoreCarico]) || 0,
+      pzoMercato: numOrNull(row[cols.pzoMercato]),
+      valoreMercato: numOrNull(row[cols.valoreMercato]) || 0,
+      varPct: numOrNull(row[cols.varPct]),
+      varEuro: numOrNull(row[cols.varEuro]),
+    });
+  }
+  if (!titoli.length) return null;
+
+  let summary = {
+    valoreCarico: sum(titoli.map(t => t.valoreCarico)),
+    valoreMercato: sum(titoli.map(t => t.valoreMercato)),
+    varEuro: sum(titoli.map(t => t.valoreMercato)) - sum(titoli.map(t => t.valoreCarico)),
+    varPct: 0,
+  };
+  // riga di riepilogo ufficiale del file (se presente, più precisa della somma manuale)
+  if (totaleRowIdx >= 0 && rows[totaleRowIdx + 1]) {
+    const totRow = rows[totaleRowIdx + 1];
+    const vc = numOrNull(totRow[cols.valoreCarico]);
+    const vm = numOrNull(totRow[cols.valoreMercato]);
+    const vp = numOrNull(totRow[cols.varPct]);
+    const ve = numOrNull(totRow[cols.varEuro]);
+    if (vc != null) summary.valoreCarico = vc;
+    if (vm != null) summary.valoreMercato = vm;
+    if (ve != null) summary.varEuro = ve;
+    if (vp != null) summary.varPct = vp;
+  }
+  if (!summary.varPct && summary.valoreCarico) {
+    summary.varPct = (summary.varEuro / summary.valoreCarico) * 100;
+  }
+  summary.varPct = summary.varPct / 100; // uniforma alla convenzione "frazione" usata da pct()
+
+  return { titoli, summary };
+}
+
+async function handlePortafoglioFile(file) {
+  const statusEl = document.getElementById('ptf-import-status');
+  statusEl.innerHTML = '';
+  try {
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array', cellDates: true });
+    let parsed = null;
+    for (const sheetName of wb.SheetNames) {
+      fixSheetRange(wb.Sheets[sheetName]);
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, raw: true });
+      parsed = parsePortafoglioSintesi(rows);
+      if (parsed) break;
+    }
+    if (!parsed) {
+      statusEl.innerHTML = `<div class="file-err">✕ ${file.name}: formato non riconosciuto (attese le colonne del "Portafoglio di sintesi").</div>`;
+      return;
+    }
+    DATA.portafoglio = {
+      titoli: parsed.titoli,
+      summary: parsed.summary,
+      aggiornatoIl: new Date().toISOString().slice(0, 10),
+    };
+    syncPatrimonioAutomatico();
+    renderPortafoglio();
+    statusEl.innerHTML = `<div class="file-ok">&#10003; Portafoglio sostituito con ${parsed.titoli.length} titoli da ${file.name}. Il Portafoglio Titoli di Fineco nel tab Patrimonio &egrave; stato aggiornato di conseguenza.</div>`;
+    persist('Aggiornamento portafoglio da file');
+  } catch (err) {
+    statusEl.innerHTML = `<div class="file-err">✕ ${file.name}: errore di lettura (${err.message}).</div>`;
+  }
+}
+
+/* ---------------- PROFIT & LOSS ----------------
+   Riconosce il foglio "Dettagli" dell'export "Dettaglio P&L" di Fineco, con
+   colonne: Descrizione, Simbolo, Data operazione, Segno, P.zo medio apertura,
+   P.zo medio chiusura, Mercato, Quantità (talvolta scritta "Quantittà" nel
+   file sorgente), Valuta, P&L. Ogni riga è una singola chiusura di posizione
+   (anche parziale), quindi lo stesso titolo può comparire più volte. */
+function parseProfitLossDettagli(rows) {
+  let hIdx = -1;
+  for (let i = 0; i < rows.length; i++) {
+    const row = (rows[i] || []).map(v => (v == null ? '' : String(v)).trim());
+    if (row.includes('Descrizione') && row.includes('Data operazione') && row.includes('P&L')) { hIdx = i; break; }
+  }
+  if (hIdx < 0) return null;
+  const header = rows[hIdx];
+  const cols = {
+    desc: trovaColonna(header, ['Descrizione']),
+    simbolo: trovaColonna(header, ['Simbolo']),
+    data: trovaColonna(header, ['Data operazione']),
+    mercato: trovaColonna(header, ['Mercato']),
+    qta: trovaColonna(header, ['Quantittà', 'Quantità']),
+    pzoApertura: trovaColonna(header, ['P.zo medio apertura']),
+    pzoChiusura: trovaColonna(header, ['P.zo medio chiusura']),
+    valuta: trovaColonna(header, ['Valuta']),
+    pnl: trovaColonna(header, ['P&L']),
+  };
+  if (cols.desc < 0 || cols.data < 0 || cols.pnl < 0) return null;
+
+  const out = [];
+  for (let r = hIdx + 1; r < rows.length; r++) {
+    const row = rows[r];
+    if (!row || row[cols.desc] == null || String(row[cols.desc]).trim() === '') continue;
+    const dataISO = excelDateToISO(row[cols.data]);
+    const pnl = numOrNull(row[cols.pnl]);
+    if (!dataISO || pnl == null) continue;
+    out.push({
+      data: dataISO,
+      desc: String(row[cols.desc]).trim(),
+      simbolo: cols.simbolo >= 0 ? String(row[cols.simbolo] || '').trim() : '',
+      mercato: cols.mercato >= 0 ? String(row[cols.mercato] || '').trim() : '',
+      qta: cols.qta >= 0 ? (numOrNull(row[cols.qta]) || 0) : 0,
+      pzoApertura: cols.pzoApertura >= 0 ? numOrNull(row[cols.pzoApertura]) : null,
+      pzoChiusura: cols.pzoChiusura >= 0 ? numOrNull(row[cols.pzoChiusura]) : null,
+      valuta: cols.valuta >= 0 ? String(row[cols.valuta] || '').trim() : '',
+      pnl,
+    });
+  }
+  return out.length ? out : null;
+}
+
+/* Riconosce un'operazione già presente in archivio, per evitare duplicati
+   quando si ricarica uno stesso export (o un export con periodo sovrapposto
+   a uno già importato in precedenza). */
+function esisteGiaTradePL(t) {
+  return DATA.profitLoss.trades.some(x =>
+    x.data === t.data &&
+    x.simbolo === t.simbolo &&
+    Math.abs((x.qta || 0) - (t.qta || 0)) < 0.0001 &&
+    Math.abs((x.pzoChiusura || 0) - (t.pzoChiusura || 0)) < 0.0001 &&
+    Math.abs(x.pnl - t.pnl) < 0.005
+  );
+}
+
+async function handleProfitLossFile(file) {
+  const statusEl = document.getElementById('pl-import-status');
+  statusEl.innerHTML = '';
+  try {
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, { type: 'array', cellDates: false });
+    let parsed = null;
+    for (const sheetName of wb.SheetNames) {
+      fixSheetRange(wb.Sheets[sheetName]);
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, raw: true });
+      parsed = parseProfitLossDettagli(rows);
+      if (parsed && parsed.length) break;
+    }
+    if (!parsed) {
+      statusEl.innerHTML = `<div class="file-err">✕ ${file.name}: non ho trovato un foglio "Dettagli" con le colonne attese (Descrizione, Data operazione, P&amp;L...).</div>`;
+      return;
+    }
+    let nuovi = 0, duplicati = 0;
+    parsed.forEach(t => {
+      if (esisteGiaTradePL(t)) { duplicati++; return; }
+      DATA.profitLoss.trades.push(t);
+      nuovi++;
+    });
+    DATA.profitLoss.importedFiles.push({ name: file.name, importedOn: new Date().toISOString().slice(0, 10) });
+    populatePLFilters();
+    renderProfitLoss();
+    const dupMsg = duplicati ? ` (${duplicati} gi&agrave; presenti, ignorate)` : '';
+    statusEl.innerHTML = `<div class="file-ok">&#10003; ${file.name}: ${nuovi} nuove operazioni importate${dupMsg}.</div>`;
+    document.getElementById('pl-file-input').value = '';
+    persist('Importazione profit & loss da file');
+  } catch (err) {
+    statusEl.innerHTML = `<div class="file-err">✕ ${file.name}: errore di lettura (${err.message}).</div>`;
+  }
+}
+
+function populatePLFilters() {
+  const anni = [...new Set(DATA.profitLoss.trades.map(t => t.data.slice(0, 4)))].sort().reverse();
+  const sel = document.getElementById('pl-filter-anno');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Tutti gli anni</option>' + anni.map(a => `<option value="${a}">${a}</option>`).join("");
+  if (anni.includes(prev)) sel.value = prev;
+}
+
+function filteredPLTrades() {
+  const anno = document.getElementById('pl-filter-anno').value;
+  const da = document.getElementById('pl-filter-da').value;
+  const a = document.getElementById('pl-filter-a').value;
+  let rows = [...DATA.profitLoss.trades];
+  if (da) rows = rows.filter(t => t.data >= da);
+  if (a) rows = rows.filter(t => t.data <= a);
+  if (!da && !a && anno) rows = rows.filter(t => t.data.slice(0, 4) === anno);
+  return rows;
+}
+
+function renderProfitLoss() {
+  const nTotali = DATA.profitLoss.trades.length;
+  document.getElementById('pl-updated').textContent = nTotali
+    ? `${nTotali} operazioni in archivio${DATA.profitLoss.importedFiles.length ? ` · ultimo import: ${DATA.profitLoss.importedFiles[DATA.profitLoss.importedFiles.length - 1].name}` : ''}`
+    : '';
+
+  const rows = filteredPLTrades().sort((a, b) => b.data.localeCompare(a.data));
+
+  const totale = sum(rows.map(r => r.pnl));
+  const positive = rows.filter(r => r.pnl >= 0);
+  const negative = rows.filter(r => r.pnl < 0);
+  const migliore = rows.length ? rows.reduce((a, b) => (b.pnl > a.pnl ? b : a)) : null;
+  const peggiore = rows.length ? rows.reduce((a, b) => (b.pnl < a.pnl ? b : a)) : null;
+
+  document.getElementById('pl-cards').innerHTML = `
+    <div class="card"><div class="label">P&amp;L periodo filtrato</div><div class="value ${totale >= 0 ? 'pos' : 'neg'}">${eur(totale)}</div><div class="sub">${rows.length} operazioni</div></div>
+    <div class="card"><div class="label">Operazioni in utile</div><div class="value pos">${positive.length}</div><div class="sub">${eur(sum(positive.map(r => r.pnl)))}</div></div>
+    <div class="card"><div class="label">Operazioni in perdita</div><div class="value neg">${negative.length}</div><div class="sub">${eur(sum(negative.map(r => r.pnl)))}</div></div>
+    <div class="card"><div class="label">Migliore / peggiore</div><div class="value" style="font-size:14px; line-height:1.5;">${migliore ? `${migliore.desc} <span class="pos">${eur(migliore.pnl)}</span>` : '&mdash;'}${peggiore ? `<br>${peggiore.desc} <span class="neg">${eur(peggiore.pnl)}</span>` : ''}</div></div>
+  `;
+
+  // Sintesi per anno: sempre su tutto l'archivio (non risente dei filtri data/anno)
+  const byYear = {};
+  DATA.profitLoss.trades.forEach(t => {
+    const y = t.data.slice(0, 4);
+    if (!byYear[y]) byYear[y] = [];
+    byYear[y].push(t);
+  });
+  const anni = Object.keys(byYear).sort().reverse();
+  document.getElementById('pl-years-table').querySelector('tbody').innerHTML = anni.map(y => {
+    const trades = byYear[y];
+    const tot = sum(trades.map(t => t.pnl));
+    const media = trades.length ? tot / trades.length : 0;
+    const pos = trades.filter(t => t.pnl >= 0).length;
+    return `<tr>
+      <td>${y}</td>
+      <td class="num">${trades.length}</td>
+      <td class="num ${tot >= 0 ? 'pos' : 'neg'}">${eur(tot)}</td>
+      <td class="num">${eur(media)}</td>
+      <td class="num">${pos}/${trades.length}</td>
+    </tr>`;
+  }).join("") || `<tr><td colspan="5" style="color:var(--ink-soft); padding:18px;">Nessun dato: importa un file per popolare la sezione.</td></tr>`;
+
+  // Sintesi per titolo, sul periodo filtrato
+  const byTitolo = {};
+  rows.forEach(t => {
+    const key = t.simbolo || t.desc;
+    if (!byTitolo[key]) byTitolo[key] = { desc: t.desc, simbolo: t.simbolo, n: 0, pnl: 0 };
+    byTitolo[key].n++;
+    byTitolo[key].pnl += t.pnl;
+  });
+  const titoliRows = Object.values(byTitolo).sort((a, b) => b.pnl - a.pnl);
+  document.getElementById('pl-titoli-table').querySelector('tbody').innerHTML = titoliRows.map(r => `
+    <tr>
+      <td>${r.desc}</td>
+      <td><span class="tag">${r.simbolo || ''}</span></td>
+      <td class="num">${r.n}</td>
+      <td class="num ${r.pnl >= 0 ? 'pos' : 'neg'}">${eur(r.pnl)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="4" style="color:var(--ink-soft); padding:18px;">Nessuna operazione nel periodo selezionato.</td></tr>`;
+
+  // Dettaglio operazioni, sul periodo filtrato
+  document.getElementById('pl-table').querySelector('tbody').innerHTML = rows.map(t => `
+    <tr>
+      <td>${fmtData(t.data)}</td>
+      <td>${t.desc}</td>
+      <td><span class="tag">${t.simbolo || ''}</span></td>
+      <td><span class="tag">${t.mercato || ''}</span></td>
+      <td class="num">${(t.qta || 0).toLocaleString('it-IT', { useGrouping: 'always' })}</td>
+      <td class="num">${t.pzoApertura != null ? t.pzoApertura.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 5 }) : ''}</td>
+      <td class="num">${t.pzoChiusura != null ? t.pzoChiusura.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 5 }) : ''}</td>
+      <td class="num ${t.pnl >= 0 ? 'pos' : 'neg'}">${eur(t.pnl)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="8" style="color:var(--ink-soft); padding:18px;">Nessuna operazione nel periodo selezionato.</td></tr>`;
+}
+
+/* ---------------- RENDER GLOBALE ---------------- */
+function renderAll() {
+  renderHeader();
+  renderDataBanner();
+  renderDashboard();
+  renderTransazioni();
+  renderBudget();
+  renderAnalisi();
+  renderPatrimonio();
+  renderPortafoglio();
+  renderProfitLoss();
+}
+
+/* ---------------- TABS ---------------- */
+const TAB_ORDER = ['dashboard', 'pervoce', 'transazioni', 'budget', 'analisi', 'patrimonio', 'portafoglio', 'profitloss', 'importa'];
+document.getElementById('tabs').addEventListener('click', (e) => {
+  if (e.target.tagName !== 'BUTTON') return;
+  const tab = e.target.dataset.tab;
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('active', b === e.target));
+  // Su mobile la barra dei tab scorre in orizzontale: tieni visibile il tab scelto
+  // e riporta la pagina in cima, così il nuovo contenuto parte dall'inizio.
+  try {
+    e.target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    if (window.matchMedia('(max-width: 760px)').matches) window.scrollTo({ top: 0, behavior: 'auto' });
+  } catch (err) { /* browser molto vecchi: ignora */ }
+  TAB_ORDER.forEach(t => {
+    document.getElementById('tab-' + t).style.display = (t === tab) ? 'block' : 'none';
+  });
+});
+
+/* ---------------- EVENTI ---------------- */
+document.getElementById('flag-titoli').addEventListener('change', renderDashChart);
+document.getElementById('flag-progetti').addEventListener('change', renderDashChart);
+document.getElementById('summary-flag-titoli').addEventListener('change', renderDashCards);
+document.getElementById('summary-flag-progetti').addEventListener('change', renderDashCards);
+document.getElementById('budget-flag-titoli').addEventListener('change', renderBudget);
+document.getElementById('budget-flag-progetti').addEventListener('change', renderBudget);
+document.getElementById('budget-anno').addEventListener('change', renderBudget);
+document.getElementById('budget-teorico-pct').addEventListener('change', (e) => {
+  let v = parseFloat(String(e.target.value).replace(',', '.'));
+  if (isNaN(v)) v = 50;
+  v = Math.min(100, Math.max(0, v));
+  DATA.impostazioni.budgetTeoricoPct = v;
+  renderBudget();
+  persist('Aggiornamento % flusso teorico');
+});
+document.getElementById('analisi-anno').addEventListener('change', renderAnalisiAnnoDipendenti);
+document.getElementById('analisi-flag-titoli').addEventListener('change', renderAnalisi);
+document.getElementById('analisi-flag-progetti').addEventListener('change', renderAnalisi);
+
+document.getElementById('voce-cat-entrate').addEventListener('change', () => renderVoceBlock('entrate'));
+document.getElementById('voce-cat-uscite').addEventListener('change', () => renderVoceBlock('uscite'));
+
+document.getElementById('filter-anno').addEventListener('change', renderTransazioni);
+document.getElementById('filter-mese').addEventListener('change', renderTransazioni);
+document.getElementById('filter-cat').addEventListener('change', renderTransazioni);
+document.getElementById('filter-da').addEventListener('change', renderTransazioni);
+document.getElementById('filter-a').addEventListener('change', renderTransazioni);
+document.getElementById('btn-clear-filters').addEventListener('click', () => {
+  document.getElementById('filter-anno').value = '';
+  document.getElementById('filter-mese').value = '';
+  document.getElementById('filter-cat').value = '';
+  document.getElementById('filter-da').value = '';
+  document.getElementById('filter-a').value = '';
+  renderTransazioni();
+});
+
+document.getElementById('tx-select-all').addEventListener('change', (e) => {
+  document.querySelectorAll('.tx-select').forEach(cb => { cb.checked = e.target.checked; });
+  updateTxSelectCount();
+});
+document.getElementById('btn-export-tx').addEventListener('click', exportSelectedTxToXLSX);
+
+document.getElementById('btn-new-tx').addEventListener('click', () => {
+  openTxForm(null);
+});
+document.getElementById('btn-cancel-tx').addEventListener('click', () => {
+  editingTx = null;
+  document.getElementById('tx-form').classList.remove('open');
+});
+document.getElementById('btn-save-tx').addEventListener('click', () => {
+  const data = document.getElementById('f-data').value;
+  const desc = document.getElementById('f-desc').value.trim();
+  const importo = parseFloat(document.getElementById('f-importo').value);
+  const cat = document.getElementById('f-cat').value;
+  const istituto = document.getElementById('f-istituto').value || null;
+  if (!data || !desc || isNaN(importo)) { alert('Compila data, descrizione e importo.'); return; }
+
+  if (editingTx) {
+    // annulla l'effetto sulla liquidità della versione precedente, poi applica quella nuova
+    if (editingTx.istituto) aggiornaLiquiditaIstituto(editingTx.istituto, -editingTx.importo);
+    editingTx.data = data;
+    editingTx.desc = desc;
+    editingTx.importo = importo;
+    editingTx.cat = cat;
+    if (istituto) editingTx.istituto = istituto; else delete editingTx.istituto;
+    if (istituto) aggiornaLiquiditaIstituto(istituto, importo);
+    persist('Modifica transazione');
+  } else {
+    const nuovaTx = { data, desc, importo, cat };
+    if (istituto) nuovaTx.istituto = istituto;
+    transazioni.push(nuovaTx);
+    if (istituto) aggiornaLiquiditaIstituto(istituto, importo);
+    persist('Nuova transazione');
+  }
+
+  editingTx = null;
+  document.getElementById('f-data').value = '';
+  document.getElementById('f-desc').value = '';
+  document.getElementById('f-importo').value = '';
+  document.getElementById('f-istituto').value = '';
+  document.getElementById('tx-form').classList.remove('open');
+  recomputeFlussi();
+  populateFilters();
+  renderAll();
+  renderVoceAll();
+});
+
+document.getElementById('btn-choose-files').addEventListener('click', () => document.getElementById('import-file-input').click());
+document.getElementById('import-file-input').addEventListener('change', (e) => handleImportFiles(e.target.files));
+
+const dropZone = document.getElementById('import-drop');
+['dragover'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('dragover'); }));
+['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('dragover'); }));
+dropZone.addEventListener('drop', e => {
+  if (e.dataTransfer.files.length) handleImportFiles(e.dataTransfer.files);
+});
+
+document.getElementById('btn-select-all-new').addEventListener('click', () => {
+  document.querySelectorAll('.import-check').forEach(cb => {
+    const t = stagingImport[cb.dataset.idx];
+    cb.checked = !esisteGiaTransazione(t);
+  });
+});
+document.getElementById('btn-select-none').addEventListener('click', () => {
+  document.querySelectorAll('.import-check').forEach(cb => cb.checked = false);
+});
+
+document.getElementById('btn-confirm-import').addEventListener('click', () => {
+  const checks = document.querySelectorAll('.import-check:checked');
+  const istitutoGlobale = document.getElementById('import-istituto').value || null;
+  let n = 0;
+  const deltaLiquiditaPerIstituto = {};
+  checks.forEach(cb => {
+    const idx = cb.dataset.idx;
+    const t = stagingImport[idx];
+    const sel = document.querySelector(`.cat-select[data-idx="${idx}"]`);
+    const cat = sel ? sel.value : (t.catConosciuta || suggerisciCategoria(t.desc, t.importo));
+    const istSel = document.querySelector(`.ist-select[data-idx="${idx}"]`);
+    // Se la riga ha già un istituto noto (es. import di un export già fatto
+    // da questa app), usa quello; altrimenti applica l'istituto scelto
+    // globalmente per il file (comportamento invariato per gli estratti bancari).
+    const istitutoRiga = (istSel && istSel.value) || istitutoGlobale || null;
+    const nuovaTx = { data: t.data, desc: t.desc, importo: t.importo, cat };
+    if (istitutoRiga) {
+      nuovaTx.istituto = istitutoRiga;
+      deltaLiquiditaPerIstituto[istitutoRiga] = (deltaLiquiditaPerIstituto[istitutoRiga] || 0) + t.importo;
+    }
+    transazioni.push(nuovaTx);
+    n++;
+  });
+  Object.keys(deltaLiquiditaPerIstituto).forEach(ist => {
+    if (deltaLiquiditaPerIstituto[ist]) aggiornaLiquiditaIstituto(ist, deltaLiquiditaPerIstituto[ist]);
+  });
+  stagingImport = [];
+  document.getElementById('import-review').style.display = 'none';
+  const istitutiToccati = Object.keys(deltaLiquiditaPerIstituto);
+  const istitutoMsg = istitutiToccati.length
+    ? ` (liquidit&agrave; aggiornata: ${istitutiToccati.map(ist => `${ist} ${eur(deltaLiquiditaPerIstituto[ist])}`).join(', ')})`
+    : '';
+  document.getElementById('import-status').innerHTML += `<div class="file-ok">&#10003; Importati ${n} movimenti nelle Transazioni${istitutoMsg}.</div>`;
+  document.getElementById('import-file-input').value = '';
+  document.getElementById('import-istituto').value = '';
+  recomputeFlussi();
+  populateFilters();
+  populateVoceCats();
+  populateBudgetAnno();
+  populateAnalisiAnno();
+  populatePLFilters();
+  renderAll();
+  renderVoceAll();
+  persist(`Importazione ${n} movimenti da file`);
+});
+
+document.getElementById('btn-add-istituto').addEventListener('click', addPatrimonioRow);
+
+document.getElementById('btn-import-ptf').addEventListener('click', () => document.getElementById('ptf-file-input').click());
+document.getElementById('ptf-file-input').addEventListener('change', (e) => {
+  if (e.target.files.length) handlePortafoglioFile(e.target.files[0]);
+  e.target.value = '';
+});
+
+document.getElementById('btn-import-pl').addEventListener('click', () => document.getElementById('pl-file-input').click());
+document.getElementById('pl-file-input').addEventListener('change', (e) => {
+  if (e.target.files.length) handleProfitLossFile(e.target.files[0]);
+});
+document.getElementById('pl-filter-anno').addEventListener('change', () => {
+  document.getElementById('pl-filter-da').value = '';
+  document.getElementById('pl-filter-a').value = '';
+  renderProfitLoss();
+});
+document.getElementById('pl-filter-da').addEventListener('change', renderProfitLoss);
+document.getElementById('pl-filter-a').addEventListener('change', renderProfitLoss);
+document.getElementById('btn-pl-clear-filters').addEventListener('click', () => {
+  document.getElementById('pl-filter-anno').value = '';
+  document.getElementById('pl-filter-da').value = '';
+  document.getElementById('pl-filter-a').value = '';
+  renderProfitLoss();
+});
+
+/* ---------------- INIZIALIZZAZIONE ---------------- */
+async function initApp() {
+  GitHubSync.init();
+  refreshDerivedConstants();
+
+  // Forza i flag titoli/progetti a deflaggato all'avvio: alcuni browser
+  // ripristinano automaticamente lo stato delle checkbox dopo un refresh
+  // (bfcache/autofill), che altrimenti farebbe apparire "spuntati" senza
+  // che l'utente li abbia mai toccati in questa sessione.
+  ['flag-titoli', 'flag-progetti', 'summary-flag-titoli', 'summary-flag-progetti', 'budget-flag-titoli', 'budget-flag-progetti', 'analisi-flag-titoli', 'analisi-flag-progetti']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.checked = false; });
+
+  // All'avvio la pagina mostra subito i dati incorporati nel sito e, se GitHub è
+  // collegato, li aggiorna in background con quelli del repository (vedi
+  // autoPullIfNeeded). Un controllo anti-sovrascrittura in github-sync.js impedisce
+  // comunque di salvare dati vecchi sopra quelli più recenti presenti online.
+
+  recomputeFlussi();
+  syncPatrimonioAutomatico();
+  populateFilters();
+  populateVoceCats();
+  populateBudgetAnno();
+  populateAnalisiAnno();
+  populatePLFilters();
+  renderVoceAll();
+  renderAll();
+  autoPullIfNeeded(true);
+}
+
+/* Pulsante "⬆ Carica su GitHub": invia SUBITO (senza attese) i dati
+   attualmente presenti in questa pagina, sovrascrivendo quelli online. */
+window.pushLocalToGitHub = async function (opts) {
+  if (persistTimer) { clearTimeout(persistTimer); persistTimer = null; }
+  const force = !!(opts && opts.force);
+  let ok = await GitHubSync.saveData(buildExportData(), 'Caricamento manuale su GitHub', { force });
+  if (!ok && !force && GitHubSync.hadConflict && GitHubSync.hadConflict()) {
+    const go = confirm('Su GitHub ci sono dati più recenti di quelli di questa pagina (probabilmente salvati da un altro dispositivo).\n\nSovrascriverli con i dati di questa pagina?\n\nPremi Annulla per non toccare nulla: poi puoi usare \"Scarica da GitHub\".');
+    if (!go) return;
+    ok = await GitHubSync.saveData(buildExportData(), 'Caricamento manuale su GitHub', { force: true });
+  }
+  if (ok) {
+    localDirty = false;
+    lastSyncFailed = false;
+  } else {
+    lastSyncFailed = true;
+    alert('Caricamento su GitHub non riuscito. Controlla la connessione o le credenziali (icona in alto a destra) e riprova.');
+  }
+};
+
+/* Pulsante "⬇ Scarica da GitHub": sostituisce i dati di questa pagina con
+   quelli attualmente presenti sul repository. */
+window.pullFromGitHub = async function (opts) {
+  const remote = await GitHubSync.loadData();
+  if (remote) {
+    DATA = migrateCategoryNames(remote);
+    transazioni = (DATA.transazioni || []).map(t => ({ ...t }));
+    localDirty = false;
+    lastSyncFailed = false;
+    recomputeFlussi();
+    syncPatrimonioAutomatico();
+    populateFilters();
+    populateVoceCats();
+    populateBudgetAnno();
+    populateAnalisiAnno();
+    populatePLFilters();
+    renderVoceAll();
+    renderAll();
+  } else if (!(opts && opts.silent)) {
+    const dbg = (typeof GitHubSync.getLastLoadDebug === 'function') ? GitHubSync.getLastLoadDebug() : null;
+    let detail = '';
+    if (dbg) {
+      // Evidenzia eventuali caratteri "invisibili" (non stampabili, es. spazi
+      // speciali inseriti dalla tastiera del telefono) mostrando anche il
+      // codice esadecimale di ogni carattere del percorso e del branch usati.
+      const showChars = (label, v) => {
+        const suspicious = /[^\x20-\x7E]/.test(v || '');
+        return `${label}: "${v}"${suspicious ? '  ⚠ contiene caratteri non standard: [' + Array.from(v).map(c => c.charCodeAt(0).toString(16)).join(' ') + ']' : ''}`;
+      };
+      detail = `\n\nDettagli tecnici:\nURL interrogato: ${dbg.url}\nRisposta GitHub: ${dbg.status}\n${showChars('Branch usato', dbg.branch)}\n${showChars('Percorso usato', dbg.path)}`;
+      if (dbg.errMessage) {
+        detail += `\n\nDettaglio: ${dbg.errName ? dbg.errName + ': ' : ''}${dbg.errMessage}`;
+      }
+    }
+    alert('Non ho trovato nessun file dati su questo repository/percorso GitHub. Verifica owner, repository, branch e percorso file, oppure usa prima "Carica su GitHub" per crearlo.' + detail);
+  }
+};
+
+/* ---------------- TRASFERIMENTO DATI VIA FILE (metodo alternativo, senza rete) ----------------
+   Non usa mai l'API di GitHub: scarica un file .json dal browser (sempre
+   affidabile, zero chiamate di rete) che l'utente carica su GitHub da sé
+   tramite il sito github.com (drag&drop), e per riportarlo su un altro
+   dispositivo basta scaricare quello stesso file da GitHub e ricaricarlo
+   qui con un normale selettore di file. Utile quando la sincronizzazione
+   automatica via token/API dà problemi di rete su mobile. */
+
+window.downloadDataFile = function () {
+  const json = JSON.stringify(buildExportData(), null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+window.loadDataFile = function (file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let parsed;
+    try {
+      parsed = JSON.parse(reader.result);
+    } catch (e) {
+      alert('Il file scelto non è un JSON valido. Assicurati di aver selezionato il file data.json scaricato da GitHub.');
+      return;
+    }
+    if (!parsed || !Array.isArray(parsed.transazioni)) {
+      alert('Il file non sembra avere il formato dati atteso (manca "transazioni"). Controlla di aver scelto il file giusto.');
+      return;
+    }
+    DATA = migrateCategoryNames(parsed);
+    transazioni = (DATA.transazioni || []).map(t => ({ ...t }));
+    lastSyncFailed = false;
+    recomputeFlussi();
+    syncPatrimonioAutomatico();
+    populateFilters();
+    populateVoceCats();
+    populateBudgetAnno();
+    populateAnalisiAnno();
+    populatePLFilters();
+    renderVoceAll();
+    renderAll();
+    // I dati da file non sono (ancora) su GitHub: li segno come non salvati, così
+    // l'aggiornamento automatico non li sostituisce, e li salvo se GitHub è collegato
+    // (il controllo anti-sovrascrittura chiede conferma se online c'è di più recente).
+    if (GitHubSync.isConfigured()) { persist('Caricamento dati da file'); } else { localDirty = false; }
+    const statusEl = document.getElementById('file-sync-status');
+    if (statusEl) statusEl.textContent = `✓ Dati caricati dal file "${file.name}" (${transazioni.length} transazioni).`;
+  };
+  reader.onerror = () => alert('Non sono riuscito a leggere il file scelto. Riprova.');
+  reader.readAsText(file);
+};
+
+/* Aggiornamento automatico dai dati di GitHub: scarica solo se il file online è
+   cambiato rispetto all'ultima versione nota, e mai se ci sono modifiche locali
+   non salvate o se stai compilando un modulo. */
+let autoPullBusy = false;
+let lastAutoPullAt = 0;
+async function autoPullIfNeeded(force) {
+  if (autoPullBusy || localDirty || !GitHubSync.isConfigured()) return;
+  const now = Date.now();
+  if (!force) {
+    if (now - lastAutoPullAt < 20000) return;
+    const ae = document.activeElement;
+    if ((ae && /^(INPUT|SELECT|TEXTAREA)$/.test(ae.tagName)) ||
+        document.querySelector('.form-panel.open') || document.querySelector('.modal-backdrop.open')) return;
+  }
+  autoPullBusy = true;
+  lastAutoPullAt = now;
+  try {
+    const remoteSha = await GitHubSync.fetchRemoteSha();
+    if (remoteSha && remoteSha !== GitHubSync.getLastKnownSha() && !localDirty) {
+      await window.pullFromGitHub({ silent: true });
+    }
+  } catch (e) { console.warn('Aggiornamento automatico da GitHub non riuscito', e); }
+  finally { autoPullBusy = false; }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') autoPullIfNeeded(false); });
+window.addEventListener('focus', () => autoPullIfNeeded(false));
+setInterval(() => { if (document.visibilityState === 'visible') autoPullIfNeeded(false); }, 60000);
+
+window.addEventListener('beforeunload', (e) => {
+  if (localDirty) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+initApp();
