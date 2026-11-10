@@ -2773,26 +2773,94 @@ function calcStats(items,fromDate,toDate){
   const freqPerWeek=items.length>0?+(items.length/(days/7)).toFixed(1):null;
   return{km,elev,dur,avgHR,avgP,bestP,avgEff,maxElevItem,maxDistItem,maxAltItem,freqPerWeek,count:items.length};
 }
+// ---- Confronta: filtri rapidi (aggiunti dall'hub) ----
+function cmpYmd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function cmpPreset(key){
+  const t=new Date();t.setHours(0,0,0,0);
+  const y=t.getFullYear(),m=t.getMonth(),d=t.getDate();
+  const back=n=>new Date(y,m-n,d+1);
+  if(key==='m1')return[back(1),t];
+  if(key==='m3')return[back(3),t];
+  if(key==='m6')return[back(6),t];
+  if(key==='m12')return[back(12),t];
+  if(key==='ytd')return[new Date(y,0,1),t];
+  if(/^y\d{4}$/.test(key)){const Y=+key.slice(1);return[new Date(Y,0,1),Y===y?t:new Date(Y,11,31)];}
+  return null;
+}
+function cmpSet(sid,which,from,to){
+  document.getElementById(sid+'-cmp-'+which+'-from').value=cmpYmd(from);
+  document.getElementById(sid+'-cmp-'+which+'-to').value=cmpYmd(to);
+}
+function cmpClear(sid,which){
+  ['a','b'].forEach(w=>{if(which&&which!==w)return;const box=document.getElementById(sid+'-cmp-'+w+'-chips');if(box)box.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('active'));});
+  const pr=document.getElementById(sid+'-cmp-pairs');if(pr)pr.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('active'));
+}
+function cmpQuick(sid,which,key,btn){
+  if(key==='prev'||key==='yago'){
+    const af=document.getElementById(sid+'-cmp-a-from').value,at=document.getElementById(sid+'-cmp-a-to').value;
+    if(!af||!at){toast('Imposta prima il Periodo A','err');return;}
+    const A0=parseLocalDate(af),A1=parseLocalDate(at);
+    if(key==='prev'){
+      const len=Math.round((A1-A0)/86400000)+1;
+      const e=new Date(A0);e.setDate(e.getDate()-1);
+      const st=new Date(e);st.setDate(st.getDate()-(len-1));
+      cmpSet(sid,'b',st,e);
+    }else{
+      const st=new Date(A0);st.setFullYear(st.getFullYear()-1);
+      const e=new Date(A1);e.setFullYear(e.getFullYear()-1);
+      cmpSet(sid,'b',st,e);
+    }
+  }else{
+    const r=cmpPreset(key);if(!r)return;
+    cmpSet(sid,which,r[0],r[1]);
+  }
+  cmpClear(sid,which);
+  if(btn)btn.classList.add('active');
+  runCompare(sid);
+}
+function cmpYears(sid,yA,yB,btn){
+  const a=cmpPreset('y'+yA),b=cmpPreset('y'+yB);
+  cmpSet(sid,'a',a[0],a[1]);cmpSet(sid,'b',b[0],b[1]);
+  cmpClear(sid);
+  if(btn)btn.classList.add('active');
+  runCompare(sid);
+}
 function renderCompare(sid){
   const el=document.getElementById(sid+'-compare-content');
   if(!el)return;
   const color=SECT_COLOR[sid];
+  const items=getItemsForSection(sid)||[];
+  const years=[...new Set(items.map(w=>String(w.date||'').slice(0,4)).filter(y=>/^\d{4}$/.test(y)))].sort().reverse();
+  const pairs=years.filter(y=>years.includes(String(+y-1))).slice(0,4);
+  const pill=(which,key,label)=>`<button type="button" class="filter-pill" onclick="cmpQuick('${sid}','${which}','${key}',this)">${label}</button>`;
+  const baseKeys=[['m1','Ultimo mese'],['m3','Ultimi 3 mesi'],['m6','Ultimi 6 mesi'],['m12','Ultimi 12 mesi'],['ytd',"Quest'anno"]];
+  const chipsFor=which=>baseKeys.map(([k,l])=>pill(which,k,l)).join('')
+    +years.map(y=>pill(which,'y'+y,y)).join('')
+    +(which==='b'?pill('b','prev','Periodo precedente')+pill('b','yago','Stesso periodo anno scorso'):'');
+  const lbl='font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px';
+  const pairHtml=pairs.length?`<div style="margin-bottom:16px">
+      <div style="${lbl}">CONFRONTO RAPIDO TRA ANNI</div>
+      <div id="${sid}-cmp-pairs" style="display:flex;flex-wrap:wrap;gap:6px">${pairs.map(y=>`<button type="button" class="filter-pill" onclick="cmpYears('${sid}','${y}','${+y-1}',this)">${y} vs ${+y-1}</button>`).join('')}</div>
+    </div>`:'';
   el.innerHTML=`<div class="card">
     <div class="card-title">Confronta Periodi</div>
+    ${pairHtml}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
       <div>
-        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">PERIODO A</div>
+        <div style="${lbl}">PERIODO A</div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <input type="date" class="form-input" id="${sid}-cmp-a-from" style="font-size:12px">
-          <input type="date" class="form-input" id="${sid}-cmp-a-to" style="font-size:12px">
+          <input type="date" class="form-input" id="${sid}-cmp-a-from" style="font-size:12px" oninput="cmpClear('${sid}','a')">
+          <input type="date" class="form-input" id="${sid}-cmp-a-to" style="font-size:12px" oninput="cmpClear('${sid}','a')">
         </div>
+        <div id="${sid}-cmp-a-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${chipsFor('a')}</div>
       </div>
       <div>
-        <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">PERIODO B</div>
+        <div style="${lbl}">PERIODO B</div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <input type="date" class="form-input" id="${sid}-cmp-b-from" style="font-size:12px">
-          <input type="date" class="form-input" id="${sid}-cmp-b-to" style="font-size:12px">
+          <input type="date" class="form-input" id="${sid}-cmp-b-from" style="font-size:12px" oninput="cmpClear('${sid}','b')">
+          <input type="date" class="form-input" id="${sid}-cmp-b-to" style="font-size:12px" oninput="cmpClear('${sid}','b')">
         </div>
+        <div id="${sid}-cmp-b-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${chipsFor('b')}</div>
       </div>
     </div>
     <button class="btn btn-primary" style="width:100%;margin-bottom:16px" onclick="runCompare('${sid}')">Confronta</button>
