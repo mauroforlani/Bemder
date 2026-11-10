@@ -6,6 +6,7 @@ Quattro strumenti in un unico sito, con una home da cui scegliere:
 |---|---|---|
 | Astrofotografia | `astrofoto/` | catalogo oggetti, planetario, meteo |
 | Attività | `attivita/` | escursioni, motogiri, punti di interesse, gare, registro |
+| Registro | `registro/` | archivio delle attività con statistiche (legge i dati di `attivita/data/`) |
 | Budget | `budget/` | finanze personali e portafoglio titoli |
 | Running | `running/` | allenamenti e analisi dello stato di forma |
 

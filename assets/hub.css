@@ -31,12 +31,14 @@
   /* accento di ogni sezione */
   --hub-c-astrofoto: #4f46e5;
   --hub-c-attivita: #c2410c;
+  --hub-c-registro: #4d7c0f;
   --hub-c-budget: #0e6e5c;
   --hub-c-running: #1f8fc7;
   --hub-accent: var(--hub-ink);
 }
 body[data-app="astrofoto"] { --hub-accent: var(--hub-c-astrofoto); }
-body[data-app="attivita"]  { --hub-accent: var(--hub-c-attivita); }
+body:is([data-app="attivita"], [data-app="registro"])  { --hub-accent: var(--hub-c-attivita); }
+body[data-app="registro"]  { --hub-accent: var(--hub-c-registro); }
 body[data-app="budget"]    { --hub-accent: var(--hub-c-budget); }
 body[data-app="running"]   { --hub-accent: var(--hub-c-running); }
 
@@ -94,6 +96,7 @@ body[data-app="running"]   { --hub-accent: var(--hub-c-running); }
 .hub-dot { width: 7px; height: 7px; border-radius: 50%; display: block; flex-shrink: 0; }
 .hub-link[data-s="astrofoto"] .hub-dot { background: var(--hub-c-astrofoto); }
 .hub-link[data-s="attivita"]  .hub-dot { background: var(--hub-c-attivita); }
+.hub-link[data-s="registro"]  .hub-dot { background: var(--hub-c-registro); }
 .hub-link[data-s="budget"]    .hub-dot { background: var(--hub-c-budget); }
 .hub-link[data-s="running"]   .hub-dot { background: var(--hub-c-running); }
 /* il pallino di Astrofoto su sfondo scuro ha bisogno di più luce */
@@ -104,9 +107,12 @@ body[data-app="running"]   { --hub-accent: var(--hub-c-running); }
   .hub-bar-in { gap: 0; }
   .hub-brand { padding-right: 10px; margin-right: 2px; }
   .hub-brand-name { display: none; }
-  .hub-link { padding: 0 9px; font-size: 13px; gap: 6px; }
-  .hub-link[aria-current="page"]::after { left: 9px; right: 9px; }
+  .hub-link { padding: 0 7px; font-size: 13px; gap: 5px; }
+  .hub-link[aria-current="page"]::after { left: 7px; right: 7px; }
+  .hub-dot { width: 6px; height: 6px; }
 }
+
+@media (max-width: 430px) { .hub-dot { display: none; } .hub-link { padding: 0 8px; } .hub-link[aria-current="page"]::after { left: 8px; right: 8px; } }
 
 /* ---------- 3. HOME ---------- */
 body.hub-home {
@@ -121,8 +127,11 @@ body.hub-home {
 }
 .home-lead { margin: 0; font-size: 17px; color: var(--hub-soft); max-width: 46ch; }
 
-.home-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-@media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; gap: 14px; } .home-wrap { padding-top: 36px; } }
+.home-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
+.home-grid .tile { grid-column: span 2; }
+.home-grid .tile:nth-child(n+4) { grid-column: span 3; }
+@media (max-width: 980px) { .home-grid .tile, .home-grid .tile:nth-child(n+4) { grid-column: span 3; } .home-grid .tile:nth-child(5) { grid-column: span 6; } }
+@media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; gap: 14px; } .home-grid .tile, .home-grid .tile:nth-child(n+4), .home-grid .tile:nth-child(5) { grid-column: auto; } .home-wrap { padding-top: 36px; } }
 
 .tile {
   --c: var(--hub-ink);
@@ -135,6 +144,7 @@ body.hub-home {
 }
 .tile[data-app="astrofoto"] { --c: var(--hub-c-astrofoto); }
 .tile[data-app="attivita"]  { --c: var(--hub-c-attivita); }
+.tile[data-app="registro"]  { --c: var(--hub-c-registro); }
 .tile[data-app="budget"]    { --c: var(--hub-c-budget); }
 .tile[data-app="running"]   { --c: var(--hub-c-running); }
 .tile:hover, .tile:focus-visible { border-color: var(--c); box-shadow: var(--hub-shadow); outline: none; }
@@ -174,7 +184,7 @@ body[data-app="running"] {
   --text: var(--hub-text); --text2: #3d4756; --muted: var(--hub-faint);
   --accent: var(--hub-c-running); --radius: var(--hub-radius); --shadow-sm: none;
 }
-body[data-app="attivita"] {
+body:is([data-app="attivita"], [data-app="registro"]) {
   --bg: var(--hub-paper); --surface: var(--hub-surface);
   --ink: var(--hub-text); --ink-soft: var(--hub-soft); --border: var(--hub-line);
   --radius-sm: var(--hub-radius-sm);
@@ -190,17 +200,17 @@ body[data-app] { font-family: var(--hub-body); color: var(--hub-text); }
 /* 4.2 larghezza e margini uguali */
 body[data-app="astrofoto"] .header-inner, body[data-app="astrofoto"] .ctrl-inner,
 body[data-app="astrofoto"] main,
-body[data-app="attivita"] .nav-inner, body[data-app="attivita"] .hero,
-body[data-app="attivita"] .section-header, body[data-app="attivita"] .section-cards,
-body[data-app="attivita"] .map-wrap, body[data-app="attivita"] .controls, body[data-app="attivita"] .list,
-body[data-app="attivita"] .gallery-upload, body[data-app="attivita"] .gallery-grid, body[data-app="attivita"] footer,
-body[data-app="attivita"] .wrap,
+body:is([data-app="attivita"], [data-app="registro"]) .nav-inner, body:is([data-app="attivita"], [data-app="registro"]) .hero,
+body:is([data-app="attivita"], [data-app="registro"]) .section-header, body:is([data-app="attivita"], [data-app="registro"]) .section-cards,
+body:is([data-app="attivita"], [data-app="registro"]) .map-wrap, body:is([data-app="attivita"], [data-app="registro"]) .controls, body:is([data-app="attivita"], [data-app="registro"]) .list,
+body:is([data-app="attivita"], [data-app="registro"]) .gallery-upload, body:is([data-app="attivita"], [data-app="registro"]) .gallery-grid, body:is([data-app="attivita"], [data-app="registro"]) footer,
+body:is([data-app="attivita"], [data-app="registro"]) .wrap,
 body[data-app="budget"] .wrap, body[data-app="running"] .app { max-width: var(--hub-maxw); }
 body[data-app="astrofoto"] main { padding-left: var(--hub-pad); padding-right: var(--hub-pad); }
 body[data-app="astrofoto"] header { padding-left: 0; padding-right: 0; }
 body[data-app="astrofoto"] .header-inner { padding: 0 var(--hub-pad); }
-body[data-app="attivita"] .nav-inner, body[data-app="attivita"] .hero,
-body[data-app="attivita"] .section-header, body[data-app="attivita"] .section-cards { padding-left: var(--hub-pad); padding-right: var(--hub-pad); }
+body:is([data-app="attivita"], [data-app="registro"]) .nav-inner, body:is([data-app="attivita"], [data-app="registro"]) .hero,
+body:is([data-app="attivita"], [data-app="registro"]) .section-header, body:is([data-app="attivita"], [data-app="registro"]) .section-cards { padding-left: var(--hub-pad); padding-right: var(--hub-pad); }
 body[data-app="budget"] .wrap { padding: 0 var(--hub-pad) 90px; }
 body[data-app="running"] .app { padding: 0 var(--hub-pad) 80px; }
 
@@ -247,7 +257,7 @@ body[data-app="budget"] #data-banner { background: var(--hub-surface); border: 1
 
 body[data-app="running"] header { border-bottom: 1px solid var(--hub-line); padding: 18px 0 16px; }
 
-body[data-app="attivita"] .site-nav { background: var(--hub-paper); backdrop-filter: none; border-bottom: 1px solid var(--hub-line); }
+body:is([data-app="attivita"], [data-app="registro"]) .site-nav { background: var(--hub-paper); backdrop-filter: none; border-bottom: 1px solid var(--hub-line); }
 
 /* 4.4 schede di navigazione: tutte sottolineate con l'accento della sezione */
 body[data-app="budget"] nav.tabs {
@@ -265,24 +275,24 @@ body[data-app="budget"] nav.tabs button.active { background: transparent; color:
 body[data-app="running"] .tab { font-size: 14px; font-weight: 500; padding: 13px 16px 11px; }
 body[data-app="running"] .tab.active, body[data-app="running"] .tab[class*="active"] { font-weight: 600; }
 
-body[data-app="attivita"] .nav-links a { font-size: 14px; font-weight: 500; }
-body[data-app="attivita"] .nav-links a.active { color: var(--hub-text); border-color: var(--hub-accent); font-weight: 600; }
-body[data-app="attivita"] .nav-links a.active[class*="t-"] { color: var(--hub-text); border-color: var(--hub-accent); }
+body:is([data-app="attivita"], [data-app="registro"]) .nav-links a { font-size: 14px; font-weight: 500; }
+body:is([data-app="attivita"], [data-app="registro"]) .nav-links a.active { color: var(--hub-text); border-color: var(--hub-accent); font-weight: 600; }
+body:is([data-app="attivita"], [data-app="registro"]) .nav-links a.active[class*="t-"] { color: var(--hub-text); border-color: var(--hub-accent); }
 
 body[data-app="astrofoto"] .mnav-btn { font-family: var(--hub-body); font-size: 14px; font-weight: 500; letter-spacing: 0; text-transform: none; }
 body[data-app="astrofoto"] .mnav-btn.active { color: var(--hub-text); border-bottom-color: var(--hub-accent); font-weight: 600; }
 
 /* 4.5 pulsanti */
 body[data-app="budget"] button.primary, body[data-app="running"] .btn-primary,
-body[data-app="attivita"] .btn-add, body[data-app="attivita"] .btn-list-view {
+body:is([data-app="attivita"], [data-app="registro"]) .btn-add, body:is([data-app="attivita"], [data-app="registro"]) .btn-list-view {
   background: var(--hub-accent); color: #fff; border: 0; border-radius: var(--hub-radius-sm);
   font-family: var(--hub-body); font-weight: 600; font-size: 14px; box-shadow: none; filter: none;
 }
 body[data-app="budget"] button.primary:hover, body[data-app="running"] .btn-primary:hover,
-body[data-app="attivita"] .btn-add:hover, body[data-app="attivita"] .btn-list-view:hover {
+body:is([data-app="attivita"], [data-app="registro"]) .btn-add:hover, body:is([data-app="attivita"], [data-app="registro"]) .btn-list-view:hover {
   background: color-mix(in srgb, var(--hub-accent) 86%, #000); transform: none; box-shadow: none; filter: none;
 }
-body[data-app="budget"] button.ghost, body[data-app="running"] .btn-secondary, body[data-app="attivita"] .btn-add-distanza {
+body[data-app="budget"] button.ghost, body[data-app="running"] .btn-secondary, body:is([data-app="attivita"], [data-app="registro"]) .btn-add-distanza {
   background: var(--hub-paper); color: var(--hub-text); border: 1px solid var(--hub-line); border-radius: var(--hub-radius-sm);
   font-family: var(--hub-body); font-weight: 600; font-size: 14px; box-shadow: none;
 }
@@ -294,18 +304,18 @@ body[data-app="running"] .btn-hike { box-shadow: none; }
 
 /* 4.6 riquadri */
 body[data-app="budget"] .card, body[data-app="running"] .card, body[data-app="running"] .stat-card,
-body[data-app="attivita"] .card, body[data-app="attivita"] .section-card {
+body:is([data-app="attivita"], [data-app="registro"]) .card, body:is([data-app="attivita"], [data-app="registro"]) .section-card {
   background: var(--hub-paper); border: 1px solid var(--hub-line); border-radius: var(--hub-radius); box-shadow: none;
 }
 body[data-app="budget"] .card::before, body[data-app="running"] .stat-card::before { display: none; }
 body[data-app="budget"] .card:hover { transform: none; box-shadow: none; }
-body[data-app="attivita"] .section-card:hover { transform: none; border-color: var(--hub-accent); box-shadow: none; }
+body:is([data-app="attivita"], [data-app="registro"]) .section-card:hover { transform: none; border-color: var(--hub-accent); box-shadow: none; }
 
 /* 4.7 campi */
 body[data-app="budget"] select, body[data-app="budget"] input[type=text], body[data-app="budget"] input[type=number],
 body[data-app="budget"] input[type=date], body[data-app="budget"] input[type=password],
-body[data-app="running"] .form-input, body[data-app="attivita"] .field input, body[data-app="attivita"] .field select,
-body[data-app="attivita"] .field textarea {
+body[data-app="running"] .form-input, body:is([data-app="attivita"], [data-app="registro"]) .field input, body:is([data-app="attivita"], [data-app="registro"]) .field select,
+body:is([data-app="attivita"], [data-app="registro"]) .field textarea {
   border: 1px solid var(--hub-line); border-radius: var(--hub-radius-sm); background: var(--hub-paper); color: var(--hub-text);
   font-family: var(--hub-body); box-shadow: none;
 }
@@ -314,14 +324,16 @@ body[data-app] select:focus, body[data-app] input:focus, body[data-app] textarea
 }
 
 /* 4.8 finestre */
-body[data-app="budget"] .modal, body[data-app="running"] .modal, body[data-app="attivita"] .modal-box,
+body[data-app="budget"] .modal, body[data-app="running"] .modal, body:is([data-app="attivita"], [data-app="registro"]) .modal-box,
 body[data-app="astrofoto"] .modal { border-radius: 14px; }
 
 /* 4.9 titoli di sezione */
 body[data-app="budget"] .section-title, body[data-app="running"] .sec-title,
-body[data-app="attivita"] .section-header h1 { font-family: var(--hub-display); font-weight: 600; letter-spacing: -.01em; }
+body:is([data-app="attivita"], [data-app="registro"]) .section-header h1 { font-family: var(--hub-display); font-weight: 600; letter-spacing: -.01em; }
 body[data-app="budget"] .section-title::before { background: var(--hub-accent); }
-body[data-app="attivita"] .hero h1 { font-weight: 600; letter-spacing: -.02em; }
+body:is([data-app="attivita"], [data-app="registro"]) .hero h1 { font-weight: 600; letter-spacing: -.02em; }
+
+body[data-app="registro"] { --blue: var(--hub-c-registro); --accent: var(--hub-c-registro); }
 
 /* mappe sotto la barra */
 .leaflet-container { isolation: isolate; }

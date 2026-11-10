@@ -10,7 +10,7 @@
   var FALLBACK = { owner: 'mauroforlani', repo: 'hub', branch: 'main' };
 
   // Cartelle delle sezioni: servono a distinguere "sito utente" da "sito progetto".
-  var APPS = ['astrofoto', 'attivita', 'budget', 'running'];
+  var APPS = ['astrofoto', 'attivita', 'registro', 'budget', 'running'];
 
   // Nomi dei vecchi repository separati, usati per migrare le impostazioni
   // GitHub già salvate nel browser (vedi HUB.migrateGhConfig).

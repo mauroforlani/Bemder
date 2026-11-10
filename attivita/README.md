@@ -2,7 +2,7 @@
 
 Sezione separata del sito, indipendente da `data/luoghi.json` e dall'app principale.
 
-- `registro.html` – pagina (filtri, statistiche, vista per provincia, elenco, record)
+- `registro/index.html` – pagina (filtri, statistiche, vista per provincia, elenco, record)
 - `attivita/data/attivita.json` – dati generati dall'Excel
 - `attivita/scripts/build_attivita.py` – converte `Attivita_unificate.xlsx` in `attivita/data/attivita.json`
 

@@ -13,6 +13,7 @@
   var SECTIONS = [
     { id: 'astrofoto', label: 'Astrofoto' },
     { id: 'attivita',  label: 'Attività' },
+    { id: 'registro',  label: 'Registro' },
     { id: 'budget',    label: 'Budget' },
     { id: 'running',   label: 'Running' }
   ];
