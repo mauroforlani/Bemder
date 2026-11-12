@@ -335,5 +335,25 @@ body:is([data-app="attivita"], [data-app="registro"]) .hero h1 { font-weight: 60
 
 body[data-app="registro"] { --blue: var(--hub-c-registro); --accent: var(--hub-c-registro); }
 
+/* RUNNING: la pagina Admin occupa tutta la pagina (sotto la barra comune) */
+body[data-app="running"] #admin-modal {
+  top: var(--hub-shell-h); padding: 0; background: var(--hub-paper); backdrop-filter: none;
+  align-items: stretch; justify-content: stretch;
+}
+body[data-app="running"] #admin-modal .modal {
+  max-width: none; width: 100%; max-height: none; height: 100%; box-sizing: border-box;
+  border: 0; border-radius: 0; box-shadow: none; padding: 24px var(--hub-pad) 40px;
+}
+body[data-app="running"] #admin-modal .admin-scroll {
+  max-height: calc(100vh - var(--hub-shell-h) - 340px); min-height: 320px;
+}
+body[data-app="running"] #admin-modal .admin-table thead th {
+  position: sticky; top: 0; z-index: 1; background: var(--hub-paper);
+}
+body[data-app="running"] #admin-modal .admin-search { width: min(320px, 100%); }
+@media (max-width: 640px) {
+  body[data-app="running"] #admin-modal .admin-scroll { max-height: none; overflow-x: auto; }
+}
+
 /* mappe sotto la barra */
 .leaflet-container { isolation: isolate; }
