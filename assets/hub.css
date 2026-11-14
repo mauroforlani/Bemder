@@ -6,6 +6,16 @@
    4. Adattamenti per sezione (in fondo: uniformano le app esistenti)
    ========================================================================== */
 
+/* ---------- 0. COMPORTAMENTO "APP" ---------- */
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+a, button, select, summary, label, input[type="checkbox"] { touch-action: manipulation; }
+.hub-install {
+  margin-top: 18px; padding: 11px 18px; border: 0; border-radius: var(--hub-radius-sm, 8px);
+  background: var(--hub-ink); color: #fff; font: 600 14px var(--hub-body, system-ui); cursor: pointer;
+}
+.hub-install:hover { background: #2a313c; }
+.hub-install[hidden] { display: none; }
+
 /* ---------- 1. TOKEN ---------- */
 :root {
   --hub-ink: #12161c;

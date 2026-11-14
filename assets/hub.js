@@ -39,4 +39,26 @@
   nav.innerHTML = html;
 
   document.body.insertBefore(nav, document.body.firstChild);
+
+  /* --- app installabile (Android/Chrome): service worker + pulsante "Installa" nella home --- */
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register(root + '/sw.js').catch(function () {});
+    });
+  }
+  var deferred = null, btn = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); deferred = e;
+    var head = document.querySelector('.home-head');
+    if (!head || btn) return;
+    btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'hub-install'; btn.textContent = 'Installa l\u2019app sul telefono';
+    btn.onclick = function () {
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; if (btn) btn.remove(); btn = null; });
+    };
+    head.appendChild(btn);
+  });
+  window.addEventListener('appinstalled', function () { if (btn) btn.remove(); btn = null; });
 })();
