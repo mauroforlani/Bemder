@@ -165,12 +165,34 @@
              : "GitHub non è configurato: le attività resteranno solo in questo browser. Per salvarle nel repository imposta il token nella sezione Attività (pulsante GitHub).";
   }
 
+  // attività aggiunte in questo browser ma non ancora nel repository
+  function pendingBox() {
+    var n = readExtra().length;
+    if (!n || !ghConfig()) return '<div id="imp-status"></div>';
+    return '<div id="imp-status"><div class="imp-msg">Ci sono <b>' + n + (n === 1 ? " attività salvata" : " attività salvate") + '</b> solo in questo browser. ' +
+      '<button class="imp-link" id="imp-sync">Salva ora su GitHub</button></div></div>';
+  }
+  function syncPending() {
+    var cfg = ghConfig(), recs = readExtra();
+    if (!cfg || !recs.length || st.saving) return;
+    st.saving = true; setStatus("Salvataggio su GitHub in corso…");
+    ghSave(cfg, recs).then(function (n) {
+      st.saving = false;
+      setStatus("<b>Fatto.</b> " + (n === 0 ? "Le attività erano già nel repository." : n + (n === 1 ? " attività salvata" : " attività salvate") + " nel repository") + ": il sito online si aggiorna entro un paio di minuti.", "ok");
+    }).catch(function (err) {
+      st.saving = false;
+      setStatus("Salvataggio su GitHub non riuscito: " + h(err.message || String(err)), "err");
+    });
+  }
+
   function renderStart() {
     q("imp-body").innerHTML =
       '<h3 id="imp-title">Importa attività da CSV</h3>' +
       '<p class="imp-sub">Carica i file esportati da Garmin Connect per Hiking e Trail Running (anche tutti e due insieme). Le attività già presenti, con la stessa data e ora, vengono riconosciute e saltate.</p>' +
+      pendingBox() +
       '<label class="imp-drop" id="imp-drop"><input type="file" id="imp-file" accept=".csv,text/csv" multiple><b>Scegli i file CSV</b> oppure trascinali qui</label>' +
       '<div id="imp-result"></div>';
+    var sy = q("imp-sync"); if (sy) sy.onclick = syncPending;
     var drop = q("imp-drop"), inp = q("imp-file");
     inp.onchange = function () { handleFiles(inp.files); };
     ["dragenter", "dragover"].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add("over"); }); });
@@ -346,7 +368,7 @@
     var txt = "<b>" + n + (n === 1 ? " attività aggiunta" : " attività aggiunte") + "</b> al registro.";
     var cls = "ok";
     if (savedGh) txt += " Salvate anche nel repository" + (addedGh === 0 ? " (erano già presenti)" : "") + ": il sito online si aggiorna entro un paio di minuti.";
-    else if (error) { cls = "err"; txt += "<br>Non sono riuscito a salvarle su GitHub: " + h(error) + ". Restano in questo browser: puoi riprovare importando di nuovo gli stessi file, oppure scaricare il file aggiornato."; }
+    else if (error) { cls = "err"; txt += "<br>Non sono riuscito a salvarle su GitHub: " + h(error) + ". Restano in questo browser: dopo aver sistemato il token, riapri “Importa attività da CSV” e premi “Salva ora su GitHub”. In alternativa scarica il file aggiornato."; }
     else txt += " Per ora sono salvate solo in questo browser.";
     setStatus(txt, cls);
     var foot = document.querySelector("#imp-result .imp-foot");
