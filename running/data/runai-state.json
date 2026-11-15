@@ -1,6 +1,31 @@
 {
   "workouts": [
     {
+      "id": "g-2026-11-15 11:11:45-8vf",
+      "date": "2026-11-15",
+      "type": "trail",
+      "activityType": "Trail Running",
+      "title": "Rifugio Lecco",
+      "distance": 15.4,
+      "duration": 132.26666666666668,
+      "elevGain": 990,
+      "elevLoss": 969,
+      "maxAlt": 1831,
+      "minAlt": 812,
+      "avgHR": 152,
+      "maxHR": 178,
+      "aerobicTE": 4.3,
+      "avgPace": "8:35",
+      "bestPace": "4:13",
+      "paceSeconds": 515,
+      "calories": 1640,
+      "avgCadence": 117,
+      "bodyBatteryDrain": null,
+      "perceivedEffort": null,
+      "notes": "",
+      "source": "garmin_import"
+    },
+    {
       "id": "g-2026-11-14 19:14:56-j2j",
       "date": "2026-11-14",
       "type": "running",
