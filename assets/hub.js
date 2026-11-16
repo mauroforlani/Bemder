@@ -49,7 +49,7 @@
   var deferred = null, btn = null;
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault(); deferred = e;
-    var head = document.querySelector('.home-head');
+    var head = document.querySelector('.home-actions') || document.querySelector('.home-head');
     if (!head || btn) return;
     btn = document.createElement('button');
     btn.type = 'button'; btn.className = 'hub-install'; btn.textContent = 'Installa l\u2019app sul telefono';

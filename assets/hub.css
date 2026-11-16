@@ -9,8 +9,15 @@
 /* ---------- 0. COMPORTAMENTO "APP" ---------- */
 html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
 a, button, select, summary, label, input[type="checkbox"] { touch-action: manipulation; }
+.home-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.hub-btn {
+  padding: 10px 16px; border: 1px solid var(--hub-line); border-radius: var(--hub-radius-sm, 8px);
+  background: var(--hub-paper); color: var(--hub-text); font: 600 14px var(--hub-body, system-ui); cursor: pointer;
+}
+.hub-btn:hover { background: var(--hub-surface); border-color: #cdd3db; }
+.hub-btn[disabled] { opacity: .6; cursor: progress; }
 .hub-install {
-  margin-top: 18px; padding: 11px 18px; border: 0; border-radius: var(--hub-radius-sm, 8px);
+  padding: 11px 18px; border: 0; border-radius: var(--hub-radius-sm, 8px);
   background: var(--hub-ink); color: #fff; font: 600 14px var(--hub-body, system-ui); cursor: pointer;
 }
 .hub-install:hover { background: #2a313c; }
@@ -173,6 +180,19 @@ body.hub-home {
 .tile:hover 
 
 @media (prefers-reduced-motion: reduce) { .tile, .hub-link { transition: none; } }
+
+/* risultato di "Aggiorna tutto da GitHub" */
+#hub-update-out { margin: -16px 0 28px; }
+.upd-box { border: 1px solid var(--hub-line); border-radius: var(--hub-radius); padding: 6px 18px 10px; background: var(--hub-paper); }
+.upd-head { font-weight: 600; padding: 12px 0 8px; font-size: 15px; }
+.upd-time { font-weight: 400; color: var(--hub-faint); font-size: 13px; margin-left: 6px; }
+.upd-row { display: grid; grid-template-columns: 10px 150px 1fr; gap: 10px; align-items: baseline; padding: 8px 0; border-top: 1px solid var(--hub-line); font-size: 14px; }
+.upd-dot { width: 8px; height: 8px; border-radius: 50%; background: #1b8a57; align-self: center; }
+.upd-row.warn .upd-dot { background: #b4842a; }
+.upd-row.err .upd-dot { background: #c13a2e; }
+.upd-name { font-weight: 600; }
+.upd-msg { color: var(--hub-soft); }
+@media (max-width: 640px) { .upd-row { grid-template-columns: 10px 1fr; } .upd-msg { grid-column: 2; } }
 
 /* ---------- 4. LINGUAGGIO COMUNE ----------
    Ogni sezione riceve gli stessi componenti: intestazione chiara, schede
