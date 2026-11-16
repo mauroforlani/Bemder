@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="assets/config.js"></script>
 <link rel="stylesheet" href="assets/hub.css">
 </head>
 <body class="hub-home">
@@ -24,7 +25,9 @@
   <header class="home-head">
     <h1 class="home-title">Cosa vuoi vedere?</h1>
     <p class="home-lead">Scegli la sezione da aprire.</p>
+    <div class="home-actions"><button type="button" class="hub-btn" id="hub-update">Aggiorna tutto da GitHub</button></div>
   </header>
+  <div id="hub-update-out" aria-live="polite"></div>
 
   <div class="home-grid">
 
@@ -127,5 +130,6 @@
 
   </div>
 </main>
+<script src="assets/hub-update.js"></script>
 </body>
 </html>
