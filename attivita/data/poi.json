@@ -1,0 +1,3086 @@
+{
+ "albe buscagna": {
+  "nf": 1
+ },
+ "alpe devero": {
+  "lat": 46.31459,
+  "lng": 8.25954,
+  "tipo": "hamlet",
+  "comune": "Baceno"
+ },
+ "alpe gembrè": {
+  "lat": 46.32933,
+  "lng": 9.96237,
+  "tipo": "isolated_dwelling",
+  "comune": "Lanzada"
+ },
+ "alpe genuina": {
+  "lat": 46.20529,
+  "lng": 8.29107,
+  "tipo": "locality",
+  "comune": "Crodo"
+ },
+ "alpe sangiatto": {
+  "lat": 46.32012,
+  "lng": 8.28923,
+  "tipo": "locality",
+  "comune": "Baceno"
+ },
+ "alpe veglia": {
+  "lat": 46.27397,
+  "lng": 8.14538,
+  "tipo": "hamlet",
+  "comune": "Varzo"
+ },
+ "alta luce": {
+  "lat": 45.8833,
+  "lng": 7.8347,
+  "tipo": "peak",
+  "comune": "Gressoney-La-Trinité"
+ },
+ "anticima corno stella": {
+  "nf": 1
+ },
+ "anticima pizzo arera": {
+  "nf": 1
+ },
+ "baita alta del cardeto": {
+  "lat": 46.0138,
+  "lng": 9.89852,
+  "tipo": "yes",
+  "comune": "Gandellino"
+ },
+ "baita alta di grem": {
+  "lat": 45.89416,
+  "lng": 9.82251,
+  "tipo": "yes",
+  "comune": "Oneta"
+ },
+ "baita cardeto": {
+  "lat": 45.99793,
+  "lng": 9.92456,
+  "tipo": "yes",
+  "comune": "Gandellino"
+ },
+ "baita cassinelli": {
+  "lat": 45.94221,
+  "lng": 10.07663,
+  "tipo": "alpine_hut",
+  "comune": "Castione della Presolana"
+ },
+ "baita cassinelli trail running": {
+  "nf": 1
+ },
+ "baita cernello": {
+  "lat": 46.00206,
+  "lng": 9.88697,
+  "tipo": "wilderness_hut",
+  "comune": "Valgoglio"
+ },
+ "baita cima bianca": {
+  "nf": 1
+ },
+ "baita cornetto": {
+  "lat": 45.93054,
+  "lng": 10.05829,
+  "tipo": "alpine_hut",
+  "comune": "Dorga"
+ },
+ "baita corte alta": {
+  "nf": 1
+ },
+ "baita del camoscio": {
+  "lat": 46.04485,
+  "lng": 9.69815,
+  "tipo": "restaurant",
+  "comune": "Valleve"
+ },
+ "baita del meriggio": {
+  "lat": 46.11171,
+  "lng": 9.86732,
+  "tipo": "isolated_dwelling",
+  "comune": "Albosaggia"
+ },
+ "baita di campo": {
+  "lat": 45.93269,
+  "lng": 10.02945,
+  "tipo": "chalet",
+  "comune": "Castione della Presolana"
+ },
+ "baita presolana": {
+  "lat": 45.94824,
+  "lng": 10.03766,
+  "tipo": "alpine_hut",
+  "comune": "Castione della Presolana"
+ },
+ "barga trail running": {
+  "nf": 1
+ },
+ "becca della traversière": {
+  "nf": 1
+ },
+ "becca di nona": {
+  "lat": 45.68719,
+  "lng": 7.36574,
+  "tipo": "peak",
+  "comune": "Charvensod"
+ },
+ "becca trecare": {
+  "lat": 45.85802,
+  "lng": 7.67634,
+  "tipo": "peak",
+  "comune": "Chamois"
+ },
+ "belvedere": {
+  "lat": 45.85012,
+  "lng": 9.35218,
+  "tipo": "quarter",
+  "comune": "Valmadrera"
+ },
+ "bergamo": {
+  "lat": 46.36541,
+  "lng": 11.03456,
+  "tipo": "unclassified",
+  "comune": "Cles"
+ },
+ "bivacco alpini": {
+  "lat": 46.29599,
+  "lng": 9.82095,
+  "tipo": "wilderness_hut",
+  "comune": "Chiesa in Valmalenco"
+ },
+ "bivacco anghileri": {
+  "lat": 46.32939,
+  "lng": 9.9838,
+  "tipo": "wilderness_hut",
+  "comune": "Lanzada"
+ },
+ "bivacco città di clusone": {
+  "lat": 45.9508,
+  "lng": 10.06273,
+  "tipo": "wilderness_hut",
+  "comune": "Castione della Presolana"
+ },
+ "bivacco del pastore rasmulì": {
+  "lat": 45.92514,
+  "lng": 10.39709,
+  "tipo": "wilderness_hut",
+  "comune": "Breno"
+ },
+ "bivacco farello": {
+  "lat": 46.29077,
+  "lng": 8.17982,
+  "tipo": "wilderness_hut",
+  "comune": "Varzo"
+ },
+ "bivacco ferrario": {
+  "lat": 45.92188,
+  "lng": 9.39075,
+  "tipo": "shelter",
+  "comune": "Mandello del Lario"
+ },
+ "bivacco legui": {
+  "lat": 46.09187,
+  "lng": 9.62848,
+  "tipo": "shelter",
+  "comune": "Albaredo per San Marco"
+ },
+ "bivacco m.a.g.a.": {
+  "nf": 1
+ },
+ "bivacco mistri": {
+  "lat": 45.90117,
+  "lng": 9.82599,
+  "tipo": "wilderness_hut",
+  "comune": "Gorno"
+ },
+ "bivacco pedrinelli": {
+  "lat": 46.04986,
+  "lng": 9.82378,
+  "tipo": "wilderness_hut",
+  "comune": "Carona"
+ },
+ "bivacco tellini": {
+  "nf": 1
+ },
+ "blinnenhorn": {
+  "nf": 1
+ },
+ "bocchetta acqua fredda": {
+  "nf": 1
+ },
+ "bocchetta dei lupi": {
+  "nf": 1
+ },
+ "bocchetta del torno": {
+  "nf": 1
+ },
+ "bocchetta di gelt": {
+  "nf": 1
+ },
+ "bocchetta di pesciola": {
+  "lat": 45.95405,
+  "lng": 9.50119,
+  "tipo": "yes",
+  "comune": "Barzio"
+ },
+ "bocchetta di tremezzo": {
+  "lat": 46.00538,
+  "lng": 9.19135,
+  "tipo": "saddle",
+  "comune": "Tremezzina"
+ },
+ "bolettone": {
+  "lat": 45.83715,
+  "lng": 9.17938,
+  "tipo": "peak",
+  "comune": "Albavilla"
+ },
+ "breithorn occidentale": {
+  "nf": 1
+ },
+ "buco di viso": {
+  "nf": 1
+ },
+ "cabane du combal": {
+  "nf": 1
+ },
+ "campanile e forcella di val montanaia": {
+  "nf": 1
+ },
+ "campo dei fiori trail": {
+  "nf": 1
+ },
+ "capanna 2000": {
+  "lat": 45.78934,
+  "lng": 9.50824,
+  "tipo": "house",
+  "comune": "Costa Valle Imagna"
+ },
+ "capanna boval": {
+  "nf": 1
+ },
+ "capanna carlo emilio": {
+  "nf": 1
+ },
+ "capanna fassa": {
+  "lat": 46.50895,
+  "lng": 11.82814,
+  "tipo": "alpine_hut",
+  "comune": "Corvara in Badia"
+ },
+ "capanna gnifetti": {
+  "nf": 1
+ },
+ "capanna gries": {
+  "nf": 1
+ },
+ "capanna mara": {
+  "lat": 45.84411,
+  "lng": 9.19474,
+  "tipo": "restaurant",
+  "comune": "Erba"
+ },
+ "capanna margherita": {
+  "lat": 45.92707,
+  "lng": 7.87702,
+  "tipo": "alpine_hut",
+  "comune": "Alagna Valsesia"
+ },
+ "cappella savina": {
+  "lat": 45.95184,
+  "lng": 10.06211,
+  "tipo": "place_of_worship",
+  "comune": "Castione della Presolana"
+ },
+ "casa pio x": {
+  "lat": 46.01569,
+  "lng": 9.47698,
+  "tipo": "wilderness_hut",
+  "comune": "Introbio"
+ },
+ "cascata della val sambuzza": {
+  "lat": 46.02596,
+  "lng": 9.81341,
+  "tipo": "waterfall",
+  "comune": "Carona"
+ },
+ "castione della presolana trail running": {
+  "nf": 1
+ },
+ "ceresole reale - cà bianca": {
+  "nf": 1
+ },
+ "ceresole reale - lago serrù": {
+  "nf": 1
+ },
+ "cervino matterhorn ultra race 30k": {
+  "nf": 1
+ },
+ "chalet dell'aquila": {
+  "lat": 45.96857,
+  "lng": 10.03928,
+  "tipo": "alpine_hut",
+  "comune": "Rovetta"
+ },
+ "chalet dell’aquila": {
+  "lat": 45.96857,
+  "lng": 10.03928,
+  "tipo": "restaurant",
+  "comune": "Rovetta"
+ },
+ "chamanna paradis": {
+  "lat": 46.47853,
+  "lng": 9.93705,
+  "tipo": "restaurant",
+  "comune": "Pontresina"
+ },
+ "chamois trail running": {
+  "nf": 1
+ },
+ "cheneil": {
+  "lat": 45.86426,
+  "lng": 7.64372,
+  "tipo": "hamlet",
+  "comune": "Valtournenche"
+ },
+ "chiesetta di san peder": {
+  "lat": 45.92168,
+  "lng": 10.03299,
+  "tipo": "place_of_worship",
+  "comune": "Castione della Presolana"
+ },
+ "chiesetta san calimero": {
+  "lat": 45.95928,
+  "lng": 9.42094,
+  "tipo": "place_of_worship",
+  "comune": "Baiedo"
+ },
+ "cima bianca": {
+  "lat": 45.97136,
+  "lng": 10.04183,
+  "tipo": "station",
+  "comune": "Rovetta"
+ },
+ "cima blum": {
+  "lat": 45.90806,
+  "lng": 9.9683,
+  "tipo": "peak",
+  "comune": "Rovetta"
+ },
+ "cima croz all'altissimo": {
+  "nf": 1
+ },
+ "cima del costone": {
+  "lat": 45.91237,
+  "lng": 9.221,
+  "tipo": "peak",
+  "comune": "Bellagio"
+ },
+ "cima delle miniere": {
+  "lat": 46.01204,
+  "lng": 9.49184,
+  "tipo": "peak",
+  "comune": "Valtorta"
+ },
+ "cima di barbignaga": {
+  "nf": 1
+ },
+ "cima di croce": {
+  "lat": 45.97668,
+  "lng": 9.77607,
+  "tipo": "peak",
+  "comune": "Isola di Fondra"
+ },
+ "cima di lemma": {
+  "lat": 46.05403,
+  "lng": 9.6882,
+  "tipo": "peak",
+  "comune": "Valleve"
+ },
+ "cima di piazzi": {
+  "nf": 1
+ },
+ "cima di piazzo": {
+  "lat": 45.95109,
+  "lng": 9.53827,
+  "tipo": "peak",
+  "comune": "Barzio"
+ },
+ "cima di valcervia": {
+  "nf": 1
+ },
+ "cima d’olino": {
+  "lat": 46.01214,
+  "lng": 9.42701,
+  "tipo": "peak",
+  "comune": "Crandola Valsassina"
+ },
+ "cima e croce montebello": {
+  "nf": 1
+ },
+ "cima e rifugio cavallone": {
+  "nf": 1
+ },
+ "cima foppazzi": {
+  "lat": 45.91148,
+  "lng": 9.82645,
+  "tipo": "peak",
+  "comune": "Premolo"
+ },
+ "cima grem": {
+  "lat": 45.90781,
+  "lng": 9.82232,
+  "tipo": "peak",
+  "comune": "Oltre il Colle"
+ },
+ "cima gulter": {
+  "lat": 45.93561,
+  "lng": 10.09182,
+  "tipo": "peak",
+  "comune": "Castione della Presolana"
+ },
+ "cima lago": {
+  "lat": 46.08821,
+  "lng": 10.07991,
+  "tipo": "water",
+  "comune": "Valbondione"
+ },
+ "cima montebello": {
+  "nf": 1
+ },
+ "cima papa giovanni ii": {
+  "nf": 1
+ },
+ "cima papa giovanni paolo ii": {
+  "lat": 45.97784,
+  "lng": 9.81006,
+  "tipo": "peak",
+  "comune": "Ardesio"
+ },
+ "cima papa giovanni xxiii": {
+  "nf": 1
+ },
+ "cima paradiso": {
+  "lat": 45.89101,
+  "lng": 9.39096,
+  "tipo": "peak",
+  "comune": "Lecco"
+ },
+ "cima parè": {
+  "lat": 45.91879,
+  "lng": 9.98936,
+  "tipo": "peak",
+  "comune": "Fino del Monte"
+ },
+ "cima pianchette": {
+  "lat": 46.11819,
+  "lng": 9.15779,
+  "tipo": "peak",
+  "comune": "Garzeno"
+ },
+ "cima piazzotti": {
+  "lat": 46.02255,
+  "lng": 9.56365,
+  "tipo": "peak",
+  "comune": "Ornica"
+ },
+ "cima pora": {
+  "lat": 45.88753,
+  "lng": 10.10106,
+  "tipo": "chair_lift",
+  "comune": "Castione della Presolana"
+ },
+ "cima rosetta": {
+  "lat": 46.26273,
+  "lng": 11.83121,
+  "tipo": "peak",
+  "comune": "Primiero San Martino di Castrozza"
+ },
+ "cima rosetta (rosetta vertical)": {
+  "nf": 1
+ },
+ "cima sodadura": {
+  "nf": 1
+ },
+ "cima solda": {
+  "lat": 46.46874,
+  "lng": 10.60035,
+  "tipo": "peak",
+  "comune": "Valfurva"
+ },
+ "cima valsacco": {
+  "nf": 1
+ },
+ "cima venina": {
+  "lat": 46.04611,
+  "lng": 9.84666,
+  "tipo": "peak",
+  "comune": "Carona"
+ },
+ "cimone di margno": {
+  "lat": 46.0239,
+  "lng": 9.41308,
+  "tipo": "peak",
+  "comune": "Casargo"
+ },
+ "cmur 30k": {
+  "nf": 1
+ },
+ "colle armoine": {
+  "lat": 44.71558,
+  "lng": 7.08443,
+  "tipo": "yes",
+  "comune": "Crissolo"
+ },
+ "colle bettaforca": {
+  "lat": 45.86847,
+  "lng": 7.78118,
+  "tipo": "yes",
+  "comune": "Gressoney-La-Trinité"
+ },
+ "colle del lys": {
+  "lat": 45.17791,
+  "lng": 7.38257,
+  "tipo": "locality",
+  "comune": "Rubiana"
+ },
+ "colle della presolana": {
+  "lat": 45.93834,
+  "lng": 10.05258,
+  "tipo": "yes",
+  "comune": "Castione della Presolana"
+ },
+ "colle della rho": {
+  "lat": 45.1161,
+  "lng": 6.64271,
+  "tipo": "yes",
+  "comune": "Bardonecchia"
+ },
+ "colle della rossa": {
+  "lat": 45.58893,
+  "lng": 7.28365,
+  "tipo": "yes",
+  "comune": "Cogne"
+ },
+ "colle delle traversette": {
+  "nf": 1
+ },
+ "colle rosset": {
+  "nf": 1
+ },
+ "colma di marucolo": {
+  "lat": 45.80828,
+  "lng": 10.21134,
+  "tipo": "peak",
+  "comune": "Artogne"
+ },
+ "colma di sormano": {
+  "lat": 45.88296,
+  "lng": 9.22901,
+  "tipo": "yes",
+  "comune": "Dicinisio"
+ },
+ "conca nevosa": {
+  "lat": 46.04039,
+  "lng": 9.80323,
+  "tipo": "station",
+  "comune": "Carona"
+ },
+ "cornizzolo": {
+  "lat": 45.8198,
+  "lng": 9.2726,
+  "tipo": "residential",
+  "comune": "Penzano"
+ },
+ "corno bianco - weisshorn": {
+  "lat": 46.35238,
+  "lng": 11.44811,
+  "tipo": "station",
+  "comune": "Aldino"
+ },
+ "corno di canzo orientale": {
+  "lat": 45.86118,
+  "lng": 9.33246,
+  "tipo": "peak",
+  "comune": "Valmadrera"
+ },
+ "corno orientale di canzo": {
+  "lat": 45.86118,
+  "lng": 9.33246,
+  "tipo": "peak",
+  "comune": "Valmadrera"
+ },
+ "corno stella": {
+  "lat": 46.04976,
+  "lng": 9.80321,
+  "tipo": "water",
+  "comune": "Foppolo"
+ },
+ "crampiolo": {
+  "lat": 46.32696,
+  "lng": 8.2794,
+  "tipo": "hamlet",
+  "comune": "Baceno"
+ },
+ "crandola valsassina trail running": {
+  "nf": 1
+ },
+ "cristo dei ghiaioni": {
+  "nf": 1
+ },
+ "croce di vareno": {
+  "nf": 1
+ },
+ "croce di zorzone": {
+  "nf": 1
+ },
+ "croda del becco": {
+  "lat": 46.67542,
+  "lng": 12.06532,
+  "tipo": "peak",
+  "comune": "Braies"
+ },
+ "diavolezza": {
+  "lat": 46.4107,
+  "lng": 9.96706,
+  "tipo": "saddle",
+  "comune": "Pontresina"
+ },
+ "druogno hiking": {
+  "nf": 1
+ },
+ "eyehorn": {
+  "lat": 45.94862,
+  "lng": 8.34421,
+  "tipo": "peak",
+  "comune": "Valstrona"
+ },
+ "forcella di lech": {
+  "lat": 46.5566,
+  "lng": 12.00627,
+  "tipo": "yes",
+  "comune": "Marebbe"
+ },
+ "forcella di zulino": {
+  "lat": 45.96359,
+  "lng": 9.85165,
+  "tipo": "yes",
+  "comune": "Ardesio"
+ },
+ "fusky 30k": {
+  "nf": 1
+ },
+ "ghiacciaio del ventina": {
+  "nf": 1
+ },
+ "giro dei laghi del cardeto": {
+  "nf": 1
+ },
+ "giro dei laghi di valgoglio": {
+  "nf": 1
+ },
+ "giro del sassolungo": {
+  "nf": 1
+ },
+ "gran paradiso": {
+  "lat": 45.51782,
+  "lng": 7.2672,
+  "tipo": "peak",
+  "comune": "Valsavarenche"
+ },
+ "grignetta": {
+  "lat": 45.9219,
+  "lng": 9.39072,
+  "tipo": "peak",
+  "comune": "Mandello del Lario"
+ },
+ "grotta dei pagani": {
+  "lat": 45.95436,
+  "lng": 10.05639,
+  "tipo": "cave_entrance",
+  "comune": "Castione della Presolana"
+ },
+ "gtc 30k": {
+  "nf": 1
+ },
+ "laghetti del venerocolo": {
+  "lat": 46.05591,
+  "lng": 10.15502,
+  "tipo": "water",
+  "comune": "Schilpario"
+ },
+ "laghetti di ponteranica": {
+  "lat": 46.02496,
+  "lng": 9.59008,
+  "tipo": "path",
+  "comune": "Cusio"
+ },
+ "laghetti e forcella di montozzo": {
+  "nf": 1
+ },
+ "laghetto e monte pietra quadra": {
+  "nf": 1
+ },
+ "laghi colbricon": {
+  "lat": 46.2817,
+  "lng": 11.76531,
+  "tipo": "lake",
+  "comune": "San Martino di Castrozza"
+ },
+ "laghi del cardeto": {
+  "nf": 1
+ },
+ "laghi di belle combe": {
+  "nf": 1
+ },
+ "laghi di boden": {
+  "nf": 1
+ },
+ "laghi di campagneda": {
+  "lat": 46.29959,
+  "lng": 9.96721,
+  "tipo": "lake",
+  "comune": "Lanzada"
+ },
+ "laghi di valgoglio": {
+  "lat": 46.00294,
+  "lng": 9.87303,
+  "tipo": "dam",
+  "comune": "Valgoglio"
+ },
+ "laghi gemelli": {
+  "lat": 45.98718,
+  "lng": 9.80714,
+  "tipo": "reservoir",
+  "comune": "Branzi"
+ },
+ "laghi porcile": {
+  "lat": 46.06367,
+  "lng": 9.73263,
+  "tipo": "water",
+  "comune": "Tartano"
+ },
+ "laghi sangiatto": {
+  "nf": 1
+ },
+ "lago basso del cardeto": {
+  "nf": 1
+ },
+ "lago bianco": {
+  "lat": 46.28532,
+  "lng": 8.16147,
+  "tipo": "lake",
+  "comune": "Varzo"
+ },
+ "lago buscagna": {
+  "nf": 1
+ },
+ "lago caldera": {
+  "lat": 46.40524,
+  "lng": 9.41363,
+  "tipo": "lake",
+  "comune": "Campodolcino"
+ },
+ "lago colombo": {
+  "lat": 45.99747,
+  "lng": 9.82335,
+  "tipo": "reservoir",
+  "comune": "Branzi"
+ },
+ "lago cornuto": {
+  "lat": 45.64644,
+  "lng": 7.57785,
+  "tipo": "water",
+  "comune": "Champdepraz"
+ },
+ "lago dei seracchi": {
+  "lat": 45.66791,
+  "lng": 6.97869,
+  "tipo": "lake",
+  "comune": "La Thuile"
+ },
+ "lago del becco": {
+  "nf": 1
+ },
+ "lago del diavolo": {
+  "lat": 46.04377,
+  "lng": 9.8705,
+  "tipo": "reservoir",
+  "comune": "Carona"
+ },
+ "lago del truzzo": {
+  "lat": 46.36413,
+  "lng": 9.31631,
+  "tipo": "reservoir",
+  "comune": "San Giacomo Filippo"
+ },
+ "lago delle foppe e delle trote": {
+  "nf": 1
+ },
+ "lago delle locce": {
+  "lat": 45.94356,
+  "lng": 7.91527,
+  "tipo": "water",
+  "comune": "Macugnaga"
+ },
+ "lago delle streghe": {
+  "lat": 46.07235,
+  "lng": 8.04432,
+  "tipo": "water",
+  "comune": "Antrona Schieranco"
+ },
+ "lago di cornalta": {
+  "lat": 46.02561,
+  "lng": 10.09939,
+  "tipo": "water",
+  "comune": "Vilminore di Scalve"
+ },
+ "lago di lod": {
+  "lat": 45.8454,
+  "lng": 7.62293,
+  "tipo": "water",
+  "comune": "Chamois"
+ },
+ "lago di lova": {
+  "lat": 45.96592,
+  "lng": 10.20849,
+  "tipo": "reservoir",
+  "comune": "Borno"
+ },
+ "lago di malgina": {
+  "nf": 1
+ },
+ "lago di miage": {
+  "nf": 1
+ },
+ "lago di nambino": {
+  "lat": 46.24219,
+  "lng": 10.80017,
+  "tipo": "lake",
+  "comune": "Madonna di Campiglio"
+ },
+ "lago di sasso": {
+  "lat": 46.01781,
+  "lng": 9.51424,
+  "tipo": "lake",
+  "comune": "Introbio"
+ },
+ "lago di val viola": {
+  "nf": 1
+ },
+ "lago di varro": {
+  "lat": 46.02879,
+  "lng": 10.10834,
+  "tipo": "lake",
+  "comune": "Vilminore di Scalve"
+ },
+ "lago d’arpy": {
+  "lat": 45.72295,
+  "lng": 7.00046,
+  "tipo": "lake",
+  "comune": "Morgex"
+ },
+ "lago e passo branchino": {
+  "nf": 1
+ },
+ "lago e rifugio saoseo": {
+  "nf": 1
+ },
+ "lago federa": {
+  "lat": 46.48818,
+  "lng": 12.10452,
+  "tipo": "lake",
+  "comune": "Cortina d'Ampezzo"
+ },
+ "lago gelt": {
+  "lat": 46.08649,
+  "lng": 10.06813,
+  "tipo": "lake",
+  "comune": "Valbondione"
+ },
+ "lago grigio": {
+  "lat": 45.67108,
+  "lng": 6.99147,
+  "tipo": "lake",
+  "comune": "La Thuile"
+ },
+ "lago lagazuolo": {
+  "nf": 1
+ },
+ "lago malgina": {
+  "lat": 46.08256,
+  "lng": 10.05945,
+  "tipo": "lake",
+  "comune": "Valbondione"
+ },
+ "lago moro": {
+  "lat": 46.052,
+  "lng": 9.79485,
+  "tipo": "lake",
+  "comune": "Foppolo"
+ },
+ "lago nero": {
+  "lat": 46.4035,
+  "lng": 8.4428,
+  "tipo": "water",
+  "comune": "Formazza"
+ },
+ "lago pantano": {
+  "lat": 46.16362,
+  "lng": 10.47049,
+  "tipo": "reservoir",
+  "comune": "Edolo"
+ },
+ "lago sruer": {
+  "lat": 46.38834,
+  "lng": 8.35459,
+  "tipo": "lake",
+  "comune": "Formazza"
+ },
+ "lago volaia e wolayerseehütte": {
+  "nf": 1
+ },
+ "lej languard": {
+  "lat": 46.47525,
+  "lng": 9.95364,
+  "tipo": "lake",
+  "comune": "Pontresina"
+ },
+ "madonna delle nevi": {
+  "lat": 45.86241,
+  "lng": 10.07944,
+  "tipo": "place_of_worship",
+  "comune": "Costa Volpino"
+ },
+ "malga bassa e alta di barbarossa": {
+  "nf": 1
+ },
+ "malga cornetto": {
+  "lat": 45.93544,
+  "lng": 10.05502,
+  "tipo": "path",
+  "comune": "Castione della Presolana"
+ },
+ "malga cornetto trail running": {
+  "nf": 1
+ },
+ "malga langalm": {
+  "nf": 1
+ },
+ "milan trail running": {
+  "nf": 1
+ },
+ "mont avril": {
+  "nf": 1
+ },
+ "mont chaberton": {
+  "lat": 44.96429,
+  "lng": 6.75159,
+  "tipo": "peak",
+  "comune": "Monginevro"
+ },
+ "mont fortin": {
+  "lat": 45.76338,
+  "lng": 6.87061,
+  "tipo": "peak",
+  "comune": "La Thuile"
+ },
+ "mont thabor": {
+  "lat": 45.11408,
+  "lng": 6.56375,
+  "tipo": "peak",
+  "comune": "Névache"
+ },
+ "montagnina": {
+  "lat": 45.84449,
+  "lng": 9.9436,
+  "tipo": "peak",
+  "comune": "Gandino"
+ },
+ "monte alto": {
+  "lat": 45.86759,
+  "lng": 10.08995,
+  "tipo": "peak",
+  "comune": "Costa Volpino"
+ },
+ "monte aralta": {
+  "nf": 1
+ },
+ "monte avaro": {
+  "lat": 46.01444,
+  "lng": 9.58695,
+  "tipo": "peak",
+  "comune": "Ornica"
+ },
+ "monte barro": {
+  "lat": 45.83079,
+  "lng": 9.38021,
+  "tipo": "peak",
+  "comune": "Galbiate"
+ },
+ "monte berlinghera": {
+  "lat": 46.20683,
+  "lng": 9.38733,
+  "tipo": "path",
+  "comune": "Sorico"
+ },
+ "monte bisbino": {
+  "lat": 45.87369,
+  "lng": 9.06666,
+  "tipo": "peak",
+  "comune": "Cernobbio"
+ },
+ "monte bolettone": {
+  "lat": 45.83715,
+  "lng": 9.17938,
+  "tipo": "peak",
+  "comune": "Albavilla"
+ },
+ "monte bregagnino": {
+  "lat": 46.08182,
+  "lng": 9.2247,
+  "tipo": "peak",
+  "comune": "Plesio"
+ },
+ "monte bregagno": {
+  "lat": 46.09746,
+  "lng": 9.22123,
+  "tipo": "peak",
+  "comune": "Cremia"
+ },
+ "monte bul": {
+  "lat": 45.86684,
+  "lng": 9.20439,
+  "tipo": "peak",
+  "comune": "Caglio"
+ },
+ "monte cabianca": {
+  "lat": 46.01026,
+  "lng": 9.86648,
+  "tipo": "peak",
+  "comune": "Carona"
+ },
+ "monte cadelle": {
+  "lat": 46.06292,
+  "lng": 9.74585,
+  "tipo": "peak",
+  "comune": "Foppolo"
+ },
+ "monte campagnano": {
+  "lat": 46.05164,
+  "lng": 8.74364,
+  "tipo": "unclassified",
+  "comune": "Maccagno Superiore"
+ },
+ "monte campioncino": {
+  "lat": 46.03339,
+  "lng": 10.25105,
+  "tipo": "peak",
+  "comune": "Schilpario"
+ },
+ "monte campione": {
+  "lat": 45.81043,
+  "lng": 10.21688,
+  "tipo": "peak",
+  "comune": "Pezzaze"
+ },
+ "monte cazzola": {
+  "lat": 46.29514,
+  "lng": 8.23739,
+  "tipo": "peak",
+  "comune": "Baceno"
+ },
+ "monte cerano": {
+  "lat": 45.93308,
+  "lng": 8.38565,
+  "tipo": "peak",
+  "comune": "Ornavasso"
+ },
+ "monte chiavello": {
+  "lat": 45.97133,
+  "lng": 9.49778,
+  "tipo": "peak",
+  "comune": "Barzio"
+ },
+ "monte chierico": {
+  "lat": 46.04486,
+  "lng": 9.80861,
+  "tipo": "peak",
+  "comune": "Carona"
+ },
+ "monte cistella": {
+  "lat": 46.25842,
+  "lng": 8.2536,
+  "tipo": "peak",
+  "comune": "Crodo"
+ },
+ "monte colmegnone": {
+  "lat": 45.89246,
+  "lng": 9.11828,
+  "tipo": "peak",
+  "comune": "Laglio"
+ },
+ "monte coltignone": {
+  "lat": 45.88561,
+  "lng": 9.38902,
+  "tipo": "peak",
+  "comune": "Abbadia Lariana"
+ },
+ "monte cornizzolo": {
+  "lat": 45.83707,
+  "lng": 9.30193,
+  "tipo": "peak",
+  "comune": "Civate"
+ },
+ "monte croce di muggio": {
+  "lat": 46.05076,
+  "lng": 9.35704,
+  "tipo": "peak",
+  "comune": "Casargo"
+ },
+ "monte crocetta": {
+  "lat": 46.12299,
+  "lng": 9.26393,
+  "tipo": "peak",
+  "comune": "Dongo"
+ },
+ "monte crocione": {
+  "lat": 46.0061,
+  "lng": 9.19594,
+  "tipo": "peak",
+  "comune": "Tremezzina"
+ },
+ "monte di tremezzo": {
+  "lat": 46.00192,
+  "lng": 9.18529,
+  "tipo": "peak",
+  "comune": "Tremezzina"
+ },
+ "monte e bocchetta di lenno": {
+  "nf": 1
+ },
+ "monte e rifugio torcola": {
+  "nf": 1
+ },
+ "monte ferrante": {
+  "lat": 45.97477,
+  "lng": 10.02872,
+  "tipo": "peak",
+  "comune": "Vilminore di Scalve"
+ },
+ "monte ferrantino": {
+  "lat": 45.97072,
+  "lng": 10.03194,
+  "tipo": "peak",
+  "comune": "Vilminore di Scalve"
+ },
+ "monte frati": {
+  "lat": 46.00766,
+  "lng": 9.84866,
+  "tipo": "peak",
+  "comune": "Valgoglio"
+ },
+ "monte galbiga": {
+  "lat": 46.01199,
+  "lng": 9.16109,
+  "tipo": "peak",
+  "comune": "Bene Lario"
+ },
+ "monte gardena": {
+  "lat": 46.03641,
+  "lng": 10.23038,
+  "tipo": "peak",
+  "comune": "Schilpario"
+ },
+ "monte giove": {
+  "lat": 46.36149,
+  "lng": 8.38791,
+  "tipo": "peak",
+  "comune": "Premia"
+ },
+ "monte golla e matto di golla": {
+  "nf": 1
+ },
+ "monte guglielmo": {
+  "lat": 45.75585,
+  "lng": 10.16836,
+  "tipo": "peak",
+  "comune": "Zone"
+ },
+ "monte legnoncino": {
+  "lat": 46.09122,
+  "lng": 9.35544,
+  "tipo": "peak",
+  "comune": "Sueglio"
+ },
+ "monte legnone": {
+  "lat": 46.09489,
+  "lng": 9.41488,
+  "tipo": "peak",
+  "comune": "Colico"
+ },
+ "monte leone hütte": {
+  "lat": 46.26074,
+  "lng": 8.08032,
+  "tipo": "alpine_hut",
+  "comune": "Ried-Brig"
+ },
+ "monte linzone": {
+  "lat": 45.77645,
+  "lng": 9.53183,
+  "tipo": "peak",
+  "comune": "Palazzago"
+ },
+ "monte madonnino": {
+  "lat": 46.01178,
+  "lng": 9.88618,
+  "tipo": "peak",
+  "comune": "Carona"
+ },
+ "monte masoni": {
+  "lat": 46.04397,
+  "lng": 9.83637,
+  "tipo": "peak",
+  "comune": "Carona"
+ },
+ "monte massone": {
+  "lat": 45.94681,
+  "lng": 8.33791,
+  "tipo": "peak",
+  "comune": "Anzola d'Ossola"
+ },
+ "monte matto di golla": {
+  "nf": 1
+ },
+ "monte menna": {
+  "lat": 45.6933,
+  "lng": 9.71178,
+  "tipo": "unclassified",
+  "comune": "Bergamo"
+ },
+ "monte mignone": {
+  "lat": 45.9744,
+  "lng": 10.22041,
+  "tipo": "peak",
+  "comune": "Ossimo"
+ },
+ "monte moregallo": {
+  "lat": 45.8664,
+  "lng": 9.34006,
+  "tipo": "peak",
+  "comune": "Valmadrera"
+ },
+ "monte moregallo (tentativo)": {
+  "nf": 1
+ },
+ "monte palanzone": {
+  "lat": 45.86209,
+  "lng": 9.20166,
+  "tipo": "peak",
+  "comune": "Caglio"
+ },
+ "monte pez": {
+  "lat": 46.51183,
+  "lng": 11.57489,
+  "tipo": "viewpoint",
+  "comune": "Fiè allo Sciliar"
+ },
+ "monte piana": {
+  "lat": 46.61586,
+  "lng": 12.24267,
+  "tipo": "viewpoint",
+  "comune": "Auronzo di Cadore"
+ },
+ "monte pianchetta": {
+  "lat": 45.87607,
+  "lng": 9.21799,
+  "tipo": "peak",
+  "comune": "Caglio"
+ },
+ "monte poggio croce": {
+  "nf": 1
+ },
+ "monte ponciv": {
+  "lat": 45.91514,
+  "lng": 9.24054,
+  "tipo": "peak",
+  "comune": "Magreglio"
+ },
+ "monte pora": {
+  "lat": 45.88528,
+  "lng": 10.10944,
+  "tipo": "peak",
+  "comune": "Rogno"
+ },
+ "monte pulpito": {
+  "lat": 45.90008,
+  "lng": 9.83007,
+  "tipo": "peak",
+  "comune": "Premolo"
+ },
+ "monte rai": {
+  "lat": 45.85121,
+  "lng": 9.28256,
+  "tipo": "unclassified",
+  "comune": "Canzo"
+ },
+ "monte resegone": {
+  "lat": 45.85841,
+  "lng": 9.46886,
+  "tipo": "peak",
+  "comune": "Lecco"
+ },
+ "monte roisetta": {
+  "nf": 1
+ },
+ "monte san primo": {
+  "lat": 45.91545,
+  "lng": 9.20982,
+  "tipo": "peak",
+  "comune": "Zelbio"
+ },
+ "monte sangiatto": {
+  "lat": 46.31488,
+  "lng": 8.29886,
+  "tipo": "peak",
+  "comune": "Baceno"
+ },
+ "monte sasna": {
+  "lat": 46.01979,
+  "lng": 10.05097,
+  "tipo": "peak",
+  "comune": "Valbondione"
+ },
+ "monte scanapà": {
+  "lat": 45.92277,
+  "lng": 10.09061,
+  "tipo": "peak",
+  "comune": "Castione della Presolana"
+ },
+ "monte segnale": {
+  "lat": 46.00397,
+  "lng": 9.89569,
+  "tipo": "peak",
+  "comune": "Valgoglio"
+ },
+ "monte sodadura": {
+  "lat": 45.94006,
+  "lng": 9.54712,
+  "tipo": "peak",
+  "comune": "Vedeseta"
+ },
+ "monte sponda vaga": {
+  "lat": 46.00664,
+  "lng": 10.00935,
+  "tipo": "peak",
+  "comune": "Valbondione"
+ },
+ "monte tesoro": {
+  "lat": 45.80416,
+  "lng": 9.49368,
+  "tipo": "residential",
+  "comune": "Carenno"
+ },
+ "monte timogno": {
+  "nf": 1
+ },
+ "monte todano": {
+  "lat": 46.01592,
+  "lng": 8.54549,
+  "tipo": "peak",
+  "comune": "Intragna"
+ },
+ "monte todum": {
+  "lat": 45.98965,
+  "lng": 8.50237,
+  "tipo": "peak",
+  "comune": "Cossogno"
+ },
+ "monte vaccaro": {
+  "nf": 1
+ },
+ "monte valgussera": {
+  "lat": 46.03928,
+  "lng": 9.77328,
+  "tipo": "peak",
+  "comune": "Foppolo"
+ },
+ "monte vetro": {
+  "lat": 45.94414,
+  "lng": 9.78371,
+  "tipo": "peak",
+  "comune": "Roncobello"
+ },
+ "monte vigna vaga": {
+  "lat": 45.98852,
+  "lng": 10.01307,
+  "tipo": "peak",
+  "comune": "Valbondione"
+ },
+ "monte vindiolo": {
+  "lat": 45.9391,
+  "lng": 9.78134,
+  "tipo": "peak",
+  "comune": "Oltre il Colle"
+ },
+ "monte vioz": {
+  "lat": 46.40155,
+  "lng": 10.63298,
+  "tipo": "peak",
+  "comune": "Peio"
+ },
+ "monte visolo": {
+  "lat": 45.95404,
+  "lng": 10.07409,
+  "tipo": "peak",
+  "comune": "Castione della Presolana"
+ },
+ "munt pers": {
+  "lat": 46.42143,
+  "lng": 9.95349,
+  "tipo": "peak",
+  "comune": "Pontresina"
+ },
+ "orestes hutte": {
+  "lat": 45.87438,
+  "lng": 7.85005,
+  "tipo": "alpine_hut",
+  "comune": "Gressoney-La-Trinité"
+ },
+ "palanzone": {
+  "lat": 45.86209,
+  "lng": 9.20166,
+  "tipo": "peak",
+  "comune": "Caglio"
+ },
+ "papa giovanni ii": {
+  "lat": 45.80029,
+  "lng": 9.77028,
+  "tipo": "square",
+  "comune": "Aviatico"
+ },
+ "pas del soc": {
+  "lat": 45.93334,
+  "lng": 10.04635,
+  "tipo": "yes",
+  "comune": "Castione della Presolana"
+ },
+ "passo angeloga": {
+  "lat": 46.40624,
+  "lng": 9.41887,
+  "tipo": "lake",
+  "comune": "Piuro"
+ },
+ "passo bernina": {
+  "lat": 46.41092,
+  "lng": 10.02762,
+  "tipo": "yes",
+  "comune": "Poschiavo"
+ },
+ "passo caronella": {
+  "lat": 46.08793,
+  "lng": 10.07888,
+  "tipo": "yes",
+  "comune": "Teglio"
+ },
+ "passo contrabbandieri": {
+  "lat": 46.29309,
+  "lng": 10.57089,
+  "tipo": "saddle",
+  "comune": "Ponte di Legno"
+ },
+ "passo degli agnelli": {
+  "lat": 45.94918,
+  "lng": 10.04331,
+  "tipo": "yes",
+  "comune": "Castione della Presolana"
+ },
+ "passo dei campelli": {
+  "nf": 1
+ },
+ "passo dei lasteri": {
+  "lat": 46.1753,
+  "lng": 10.94311,
+  "tipo": "saddle",
+  "comune": "Molveno"
+ },
+ "passo dei salati": {
+  "lat": 45.87589,
+  "lng": 7.86826,
+  "tipo": "yes",
+  "comune": "Gressoney-La-Trinité"
+ },
+ "passo del busin": {
+  "nf": 1
+ },
+ "passo del gandazzo": {
+  "lat": 45.98219,
+  "lng": 9.49805,
+  "tipo": "yes",
+  "comune": "Introbio"
+ },
+ "passo del gotro": {
+  "lat": 46.15262,
+  "lng": 10.81403,
+  "tipo": "yes",
+  "comune": "Comano Terme"
+ },
+ "passo del lunedì": {
+  "lat": 46.17115,
+  "lng": 10.48779,
+  "tipo": "yes",
+  "comune": "Edolo"
+ },
+ "passo del porcile": {
+  "nf": 1
+ },
+ "passo del publino": {
+  "nf": 1
+ },
+ "passo del toro": {
+  "lat": 45.989,
+  "lng": 9.50115,
+  "tipo": "guidepost",
+  "comune": "Valtorta"
+ },
+ "passo del venerocolo": {
+  "lat": 46.18585,
+  "lng": 10.51646,
+  "tipo": "yes",
+  "comune": "Ponte di Legno"
+ },
+ "passo della manina": {
+  "lat": 46.01341,
+  "lng": 10.02788,
+  "tipo": "yes",
+  "comune": "Lizzola"
+ },
+ "passo della rossa (3075m)": {
+  "nf": 1
+ },
+ "passo di antermoia": {
+  "lat": 46.47079,
+  "lng": 11.64568,
+  "tipo": "yes",
+  "comune": "San Giovanni di Fassa"
+ },
+ "passo di fontanamora": {
+  "lat": 45.98578,
+  "lng": 10.01547,
+  "tipo": "yes",
+  "comune": "Gromo"
+ },
+ "passo di lemma": {
+  "lat": 46.056,
+  "lng": 9.6951,
+  "tipo": "yes",
+  "comune": "Tartano"
+ },
+ "passo di lemme": {
+  "nf": 1
+ },
+ "passo di mezzeno": {
+  "lat": 45.98005,
+  "lng": 9.80265,
+  "tipo": "yes",
+  "comune": "Branzi"
+ },
+ "passo e lago di val viola": {
+  "nf": 1
+ },
+ "passo e pizzo baciamorti": {
+  "nf": 1
+ },
+ "passo grostè": {
+  "lat": 46.21551,
+  "lng": 10.90265,
+  "tipo": "guidepost",
+  "comune": "Ville d'Anaunia"
+ },
+ "passo laghi gemelli": {
+  "lat": 45.97928,
+  "lng": 9.81108,
+  "tipo": "yes",
+  "comune": "Ardesio"
+ },
+ "passo manina": {
+  "lat": 46.01341,
+  "lng": 10.02788,
+  "tipo": "yes",
+  "comune": "Lizzola"
+ },
+ "passo marogella": {
+  "lat": 45.9651,
+  "lng": 9.81115,
+  "tipo": "yes",
+  "comune": "Roncobello"
+ },
+ "passo mezzeno": {
+  "lat": 45.98005,
+  "lng": 9.80265,
+  "tipo": "yes",
+  "comune": "Branzi"
+ },
+ "passo mignone": {
+  "lat": 45.97729,
+  "lng": 10.21122,
+  "tipo": "yes",
+  "comune": "Borno"
+ },
+ "passo monte moro": {
+  "nf": 1
+ },
+ "passo nefelgiù": {
+  "lat": 46.39712,
+  "lng": 8.36866,
+  "tipo": "yes",
+  "comune": "Formazza"
+ },
+ "passo portula": {
+  "lat": 46.01593,
+  "lng": 9.88909,
+  "tipo": "yes",
+  "comune": "Carona"
+ },
+ "passo pozzera": {
+  "lat": 45.94918,
+  "lng": 10.05628,
+  "tipo": "yes",
+  "comune": "Castione della Presolana"
+ },
+ "passo principe": {
+  "lat": 46.47425,
+  "lng": 11.63916,
+  "tipo": "yes",
+  "comune": "Tires"
+ },
+ "passo publino": {
+  "lat": 46.05023,
+  "lng": 9.82286,
+  "tipo": "saddle",
+  "comune": "Caiolo"
+ },
+ "passo san giacomo": {
+  "lat": 46.45913,
+  "lng": 8.45212,
+  "tipo": "yes",
+  "comune": "Formazza"
+ },
+ "passo san simone": {
+  "lat": 46.03915,
+  "lng": 9.68907,
+  "tipo": "yes",
+  "comune": "Valleve"
+ },
+ "passo scagnello": {
+  "lat": 45.96547,
+  "lng": 10.04772,
+  "tipo": "yes",
+  "comune": "Rovetta"
+ },
+ "passo selletta": {
+  "lat": 46.03979,
+  "lng": 9.87515,
+  "tipo": "yes",
+  "comune": "Carona"
+ },
+ "passo tartano": {
+  "lat": 46.06363,
+  "lng": 9.71857,
+  "tipo": "yes",
+  "comune": "Valleve"
+ },
+ "passo triomen": {
+  "lat": 46.0205,
+  "lng": 9.59158,
+  "tipo": "yes",
+  "comune": "Cusio"
+ },
+ "passo xii apostoli": {
+  "lat": 46.14558,
+  "lng": 10.84799,
+  "tipo": "yes",
+  "comune": "Comano Terme"
+ },
+ "pian di cengia": {
+  "nf": 1
+ },
+ "pian di nardis": {
+  "nf": 1
+ },
+ "piani di artavaggio": {
+  "lat": 45.9334,
+  "lng": 9.53284,
+  "tipo": "isolated_dwelling",
+  "comune": "Moggio"
+ },
+ "piani di bobbio": {
+  "lat": 45.96094,
+  "lng": 9.49593,
+  "tipo": "hamlet",
+  "comune": "Barzio"
+ },
+ "piramide vincent": {
+  "nf": 1
+ },
+ "piz d’alben": {
+  "nf": 1
+ },
+ "piz languard": {
+  "lat": 46.48845,
+  "lng": 9.95653,
+  "tipo": "peak",
+  "comune": "Ponte-Campovasto"
+ },
+ "piz olda": {
+  "lat": 46.11158,
+  "lng": 10.39037,
+  "tipo": "peak",
+  "comune": "Cevo"
+ },
+ "piz olda (tentativo)": {
+  "nf": 1
+ },
+ "piz tri": {
+  "lat": 46.13961,
+  "lng": 10.27767,
+  "tipo": "peak",
+  "comune": "Corteno Golgi"
+ },
+ "pizzo arera": {
+  "lat": 45.93459,
+  "lng": 9.81582,
+  "tipo": "peak",
+  "comune": "Oltre il Colle"
+ },
+ "pizzo baciamorti": {
+  "lat": 45.94657,
+  "lng": 9.5801,
+  "tipo": "peak",
+  "comune": "Vedeseta"
+ },
+ "pizzo cornagiera": {
+  "nf": 1
+ },
+ "pizzo corzene": {
+  "lat": 45.94808,
+  "lng": 10.05794,
+  "tipo": "peak",
+  "comune": "Castione della Presolana"
+ },
+ "pizzo del diavolo di malgina": {
+  "lat": 46.08488,
+  "lng": 10.04652,
+  "tipo": "peak",
+  "comune": "Ponte in Valtellina"
+ },
+ "pizzo dell'asino": {
+  "lat": 45.85344,
+  "lng": 9.19148,
+  "tipo": "peak",
+  "comune": "Faggeto Lario"
+ },
+ "pizzo dell’asino": {
+  "lat": 45.85344,
+  "lng": 9.19148,
+  "tipo": "peak",
+  "comune": "Faggeto Lario"
+ },
+ "pizzo di petto": {
+  "lat": 45.9925,
+  "lng": 10.02156,
+  "tipo": "peak",
+  "comune": "Valbondione"
+ },
+ "pizzo farno": {
+  "lat": 45.98908,
+  "lng": 9.82615,
+  "tipo": "peak",
+  "comune": "Branzi"
+ },
+ "pizzo formico": {
+  "lat": 45.84762,
+  "lng": 9.92399,
+  "tipo": "peak",
+  "comune": "Clusone"
+ },
+ "pizzo meriggio": {
+  "lat": 46.10474,
+  "lng": 9.8675,
+  "tipo": "peak",
+  "comune": "Albosaggia"
+ },
+ "pizzo pernice": {
+  "lat": 46.00066,
+  "lng": 8.51928,
+  "tipo": "peak",
+  "comune": "Miazzina"
+ },
+ "pizzo plagna": {
+  "lat": 45.93561,
+  "lng": 10.09182,
+  "tipo": "peak",
+  "comune": "Castione della Presolana"
+ },
+ "pizzo tornello": {
+  "lat": 46.03644,
+  "lng": 10.11241,
+  "tipo": "peak",
+  "comune": "Vilminore di Scalve"
+ },
+ "pizzo tre confini": {
+  "lat": 46.05072,
+  "lng": 10.08402,
+  "tipo": "peak",
+  "comune": "Valbondione"
+ },
+ "pizzo tre signori": {
+  "lat": 46.01154,
+  "lng": 9.52747,
+  "tipo": "peak",
+  "comune": "Introbio"
+ },
+ "pizzo zerna": {
+  "lat": 46.04833,
+  "lng": 9.83077,
+  "tipo": "peak",
+  "comune": "Caiolo"
+ },
+ "place moulin": {
+  "lat": 45.89903,
+  "lng": 7.48652,
+  "tipo": "isolated_dwelling",
+  "comune": "Bionaz"
+ },
+ "poncione di cabbio": {
+  "lat": 45.91267,
+  "lng": 9.06839,
+  "tipo": "peak",
+  "comune": "Cerano d'Intelvi"
+ },
+ "preuss": {
+  "lat": 46.45802,
+  "lng": 11.63258,
+  "tipo": "restaurant",
+  "comune": "San Giovanni di Fassa"
+ },
+ "punta almana": {
+  "lat": 45.71351,
+  "lng": 10.15337,
+  "tipo": "peak",
+  "comune": "Sale Marasino"
+ },
+ "punta dei camosci": {
+  "lat": 46.44145,
+  "lng": 8.35109,
+  "tipo": "peak",
+  "comune": "Formazza"
+ },
+ "punta delle oche": {
+  "lat": 46.00274,
+  "lng": 10.02173,
+  "tipo": "peak",
+  "comune": "Vilminore di Scalve"
+ },
+ "punta di ercavallo": {
+  "lat": 46.32793,
+  "lng": 10.56041,
+  "tipo": "peak",
+  "comune": "Ponte di Legno"
+ },
+ "punta di valrossa (rotentalhorn)": {
+  "nf": 1
+ },
+ "punta elgio": {
+  "lat": 46.45859,
+  "lng": 8.41493,
+  "tipo": "peak",
+  "comune": "Formazza"
+ },
+ "punta leysser": {
+  "lat": 45.75719,
+  "lng": 7.1627,
+  "tipo": "peak",
+  "comune": "Saint-Pierre"
+ },
+ "punta nera": {
+  "lat": 45.1205,
+  "lng": 6.66235,
+  "tipo": "peak",
+  "comune": "Bardonecchia"
+ },
+ "re alberto": {
+  "lat": 46.45928,
+  "lng": 11.62294,
+  "tipo": "alpine_hut",
+  "comune": "Tires"
+ },
+ "re alberto e santner": {
+  "nf": 1
+ },
+ "rifugio 3a": {
+  "lat": 46.4238,
+  "lng": 8.33521,
+  "tipo": "alpine_hut",
+  "comune": "Formazza"
+ },
+ "rifugio agostini": {
+  "lat": 46.14243,
+  "lng": 10.86948,
+  "tipo": "alpine_hut",
+  "comune": "San Lorenzo Dorsino"
+ },
+ "rifugio albani": {
+  "lat": 45.96614,
+  "lng": 10.056,
+  "tipo": "alpine_hut",
+  "comune": "Colere"
+ },
+ "rifugio allievi bonacossa": {
+  "lat": 46.28744,
+  "lng": 9.66362,
+  "tipo": "landing_site",
+  "comune": "San Martino"
+ },
+ "rifugio almici": {
+  "lat": 45.75839,
+  "lng": 10.16251,
+  "tipo": "alpine_hut",
+  "comune": "Marone"
+ },
+ "rifugio alpe corte": {
+  "lat": 45.95778,
+  "lng": 9.82398,
+  "tipo": "alpine_hut",
+  "comune": "Ardesio"
+ },
+ "rifugio alpe piazza": {
+  "lat": 46.09532,
+  "lng": 9.62992,
+  "tipo": "alpine_hut",
+  "comune": "Albaredo per San Marco"
+ },
+ "rifugio antonietta": {
+  "lat": 45.94544,
+  "lng": 9.4161,
+  "tipo": "alpine_hut",
+  "comune": "Pasturo"
+ },
+ "rifugio arbolle": {
+  "lat": 45.66757,
+  "lng": 7.34567,
+  "tipo": "alpine_hut",
+  "comune": "Charvensod"
+ },
+ "rifugio averau": {
+  "lat": 46.49957,
+  "lng": 12.0406,
+  "tipo": "alpine_hut",
+  "comune": "Colle Santa Lucia"
+ },
+ "rifugio azzoni": {
+  "lat": 45.8582,
+  "lng": 9.46938,
+  "tipo": "alpine_hut",
+  "comune": "Lecco"
+ },
+ "rifugio azzoni (da morterone)": {
+  "nf": 1
+ },
+ "rifugio bagozza": {
+  "lat": 46.02419,
+  "lng": 10.22721,
+  "tipo": "alpine_hut",
+  "comune": "Schilpario"
+ },
+ "rifugio baitone": {
+  "lat": 46.02831,
+  "lng": 9.83143,
+  "tipo": "alpine_hut",
+  "comune": "Carona"
+ },
+ "rifugio barbellino": {
+  "lat": 46.07658,
+  "lng": 10.07965,
+  "tipo": "alpine_hut",
+  "comune": "Valbondione"
+ },
+ "rifugio barbustel": {
+  "lat": 45.64921,
+  "lng": 7.58843,
+  "tipo": "alpine_hut",
+  "comune": "Champdepraz"
+ },
+ "rifugio benevolo": {
+  "lat": 45.51571,
+  "lng": 7.08432,
+  "tipo": "alpine_hut",
+  "comune": "Rhêmes-Notre-Dame"
+ },
+ "rifugio benigni": {
+  "lat": 46.02138,
+  "lng": 9.56192,
+  "tipo": "alpine_hut",
+  "comune": "Ornica"
+ },
+ "rifugio bertone": {
+  "lat": 45.80924,
+  "lng": 6.97886,
+  "tipo": "alpine_hut",
+  "comune": "Courmayeur"
+ },
+ "rifugio biella": {
+  "nf": 1
+ },
+ "rifugio bietti buzzi": {
+  "lat": 45.95466,
+  "lng": 9.37369,
+  "tipo": "alpine_hut",
+  "comune": "Mandello del Lario"
+ },
+ "rifugio bignami": {
+  "lat": 46.32934,
+  "lng": 9.95021,
+  "tipo": "alpine_hut",
+  "comune": "Lanzada"
+ },
+ "rifugio boffalora": {
+  "lat": 45.98795,
+  "lng": 9.15133,
+  "tipo": "restaurant",
+  "comune": "Tremezzina"
+ },
+ "rifugio bogani": {
+  "lat": 45.96741,
+  "lng": 9.37884,
+  "tipo": "alpine_hut",
+  "comune": "Esino Lario"
+ },
+ "rifugio bolzano": {
+  "lat": 46.67702,
+  "lng": 11.11802,
+  "tipo": "restaurant",
+  "comune": "Velloi"
+ },
+ "rifugio bonatti": {
+  "lat": 45.84691,
+  "lng": 7.03364,
+  "tipo": "alpine_hut",
+  "comune": "Courmayeur"
+ },
+ "rifugio bosi": {
+  "lat": 46.61074,
+  "lng": 12.25113,
+  "tipo": "alpine_hut",
+  "comune": "Auronzo di Cadore"
+ },
+ "rifugio bosio galli": {
+  "lat": 46.23719,
+  "lng": 9.77699,
+  "tipo": "alpine_hut",
+  "comune": "Torre di Santa Maria"
+ },
+ "rifugio bozzi": {
+  "lat": 46.30306,
+  "lng": 10.56954,
+  "tipo": "alpine_hut",
+  "comune": "Ponte di Legno"
+ },
+ "rifugio boè": {
+  "lat": 46.51461,
+  "lng": 11.82328,
+  "tipo": "alpine_hut",
+  "comune": "Corvara in Badia"
+ },
+ "rifugio branca": {
+  "lat": 46.41484,
+  "lng": 10.58411,
+  "tipo": "alpine_hut",
+  "comune": "Valfurva"
+ },
+ "rifugio branchino": {
+  "lat": 45.95133,
+  "lng": 9.8041,
+  "tipo": "alpine_hut",
+  "comune": "Roncobello"
+ },
+ "rifugio brentei": {
+  "lat": 46.17525,
+  "lng": 10.87603,
+  "tipo": "alpine_hut",
+  "comune": "Tre Ville"
+ },
+ "rifugio brioschi": {
+  "lat": 45.95316,
+  "lng": 9.38739,
+  "tipo": "alpine_hut",
+  "comune": "Pasturo"
+ },
+ "rifugio brunone": {
+  "lat": 46.0623,
+  "lng": 9.96052,
+  "tipo": "alpine_hut",
+  "comune": "Valbondione"
+ },
+ "rifugio buzzoni": {
+  "lat": 45.98122,
+  "lng": 9.49304,
+  "tipo": "alpine_hut",
+  "comune": "Introbio"
+ },
+ "rifugio ca san marco": {
+  "nf": 1
+ },
+ "rifugio ca' d'asti": {
+  "lat": 45.19109,
+  "lng": 7.07475,
+  "tipo": "alpine_hut",
+  "comune": "Mompantero"
+ },
+ "rifugio calvi": {
+  "lat": 46.02353,
+  "lng": 9.87701,
+  "tipo": "alpine_hut",
+  "comune": "Carona"
+ },
+ "rifugio campione": {
+  "lat": 46.03337,
+  "lng": 10.25741,
+  "tipo": "alpine_hut",
+  "comune": "Cerveno"
+ },
+ "rifugio capanna 2000": {
+  "lat": 45.92639,
+  "lng": 9.80444,
+  "tipo": "alpine_hut",
+  "comune": "Oltre il Colle"
+ },
+ "rifugio capanna mara": {
+  "nf": 1
+ },
+ "rifugio carate": {
+  "lat": 46.33016,
+  "lng": 9.90187,
+  "tipo": "alpine_hut",
+  "comune": "Lanzada"
+ },
+ "rifugio casati": {
+  "lat": 46.46316,
+  "lng": 10.60248,
+  "tipo": "yes",
+  "comune": "Valfurva"
+ },
+ "rifugio casera vecchia di varrone": {
+  "lat": 46.03464,
+  "lng": 9.49947,
+  "tipo": "alpine_hut",
+  "comune": "Introbio"
+ },
+ "rifugio cevedale “g. larcher”": {
+  "nf": 1
+ },
+ "rifugio chabod": {
+  "lat": 45.54027,
+  "lng": 7.2389,
+  "tipo": "alpine_hut",
+  "comune": "Valsavarenche"
+ },
+ "rifugio chalet dell'aquila": {
+  "nf": 1
+ },
+ "rifugio chiavenna": {
+  "lat": 46.40306,
+  "lng": 9.4019,
+  "tipo": "alpine_hut",
+  "comune": "Campodolcino"
+ },
+ "rifugio cima d’asta brentari": {
+  "nf": 1
+ },
+ "rifugio cinque torri": {
+  "lat": 46.50822,
+  "lng": 12.05475,
+  "tipo": "alpine_hut",
+  "comune": "Cortina d'Ampezzo"
+ },
+ "rifugio città di busto": {
+  "lat": 46.43404,
+  "lng": 8.36308,
+  "tipo": "alpine_hut",
+  "comune": "Formazza"
+ },
+ "rifugio città di trento": {
+  "lat": 46.49052,
+  "lng": 10.59733,
+  "tipo": "hut",
+  "comune": "Stelvio"
+ },
+ "rifugio claudio e bruno": {
+  "lat": 46.41484,
+  "lng": 8.32474,
+  "tipo": "alpine_hut",
+  "comune": "Formazza"
+ },
+ "rifugio coca": {
+  "lat": 46.05476,
+  "lng": 10.00987,
+  "tipo": "alpine_hut",
+  "comune": "Valbondione"
+ },
+ "rifugio colombè": {
+  "lat": 46.04457,
+  "lng": 10.38434,
+  "tipo": "alpine_hut",
+  "comune": "Grevo"
+ },
+ "rifugio coronella": {
+  "nf": 1
+ },
+ "rifugio cristina": {
+  "lat": 46.28372,
+  "lng": 9.94794,
+  "tipo": "alpine_hut",
+  "comune": "Lanzada"
+ },
+ "rifugio croce di campo": {
+  "lat": 46.10543,
+  "lng": 9.1472,
+  "tipo": "alpine_hut",
+  "comune": "Oggia"
+ },
+ "rifugio croda da lago": {
+  "lat": 46.48651,
+  "lng": 12.10574,
+  "tipo": "alpine_hut",
+  "comune": "Cortina d'Ampezzo"
+ },
+ "rifugio crosta": {
+  "lat": 46.23642,
+  "lng": 8.25713,
+  "tipo": "alpine_hut",
+  "comune": "Varzo"
+ },
+ "rifugio curò": {
+  "lat": 46.06181,
+  "lng": 10.04773,
+  "tipo": "alpine_hut",
+  "comune": "Valbondione"
+ },
+ "rifugio deffeyes": {
+  "lat": 45.6754,
+  "lng": 6.98593,
+  "tipo": "alpine_hut",
+  "comune": "La Thuile"
+ },
+ "rifugio degli angeli": {
+  "lat": 45.62452,
+  "lng": 7.02947,
+  "tipo": "alpine_hut",
+  "comune": "Valgrisenche"
+ },
+ "rifugio dordona": {
+  "lat": 46.07052,
+  "lng": 9.75531,
+  "tipo": "alpine_hut",
+  "comune": "Fusine"
+ },
+ "rifugio dosso rotondo": {
+  "lat": 45.81645,
+  "lng": 10.22036,
+  "tipo": "alpine_hut",
+  "comune": "Artogne"
+ },
+ "rifugio duca degli abruzzi all’oriondè": {
+  "lat": 45.95908,
+  "lng": 7.64378,
+  "tipo": "alpine_hut",
+  "comune": "Breuil-Cervinia"
+ },
+ "rifugio due baite": {
+  "lat": 46.01691,
+  "lng": 10.01066,
+  "tipo": "restaurant",
+  "comune": "Lizzola"
+ },
+ "rifugio e lago branchino": {
+  "nf": 1
+ },
+ "rifugio e lago coldai": {
+  "nf": 1
+ },
+ "rifugio e lago di saoseo": {
+  "nf": 1
+ },
+ "rifugio e lago san giuliano": {
+  "nf": 1
+ },
+ "rifugio e passo laghi gemelli": {
+  "nf": 1
+ },
+ "rifugio e piz de puez": {
+  "nf": 1
+ },
+ "rifugio elena": {
+  "lat": 45.88472,
+  "lng": 7.06564,
+  "tipo": "alpine_hut",
+  "comune": "Courmayeur"
+ },
+ "rifugio elisa": {
+  "lat": 45.9385,
+  "lng": 9.38152,
+  "tipo": "alpine_hut",
+  "comune": "Mandello del Lario"
+ },
+ "rifugio elisabetta": {
+  "lat": 45.767,
+  "lng": 6.83744,
+  "tipo": "alpine_hut",
+  "comune": "Courmayeur"
+ },
+ "rifugio entova allo scescen": {
+  "nf": 1
+ },
+ "rifugio falc": {
+  "lat": 46.02458,
+  "lng": 9.52296,
+  "tipo": "alpine_hut",
+  "comune": "Introbio"
+ },
+ "rifugio fanes": {
+  "lat": 46.61219,
+  "lng": 12.01416,
+  "tipo": "alpine_hut",
+  "comune": "Marebbe"
+ },
+ "rifugio fonda savio": {
+  "lat": 46.58528,
+  "lng": 12.2874,
+  "tipo": "alpine_hut",
+  "comune": "Auronzo di Cadore"
+ },
+ "rifugio forcella pordoi": {
+  "lat": 46.5019,
+  "lng": 11.8124,
+  "tipo": "alpine_hut",
+  "comune": "Canazei"
+ },
+ "rifugio friedrich august": {
+  "lat": 46.50041,
+  "lng": 11.74518,
+  "tipo": "alpine_hut",
+  "comune": "Campitello di Fassa"
+ },
+ "rifugio gac manina": {
+  "nf": 1
+ },
+ "rifugio gardeccia": {
+  "lat": 46.4472,
+  "lng": 11.64009,
+  "tipo": "alpine_hut",
+  "comune": "San Giovanni di Fassa"
+ },
+ "rifugio garibaldi": {
+  "lat": 46.17944,
+  "lng": 10.49502,
+  "tipo": "alpine_hut",
+  "comune": "Edolo"
+ },
+ "rifugio garzirola": {
+  "lat": 46.10736,
+  "lng": 9.07975,
+  "tipo": "restaurant",
+  "comune": "Cavargna"
+ },
+ "rifugio gattascosa": {
+  "lat": 46.15652,
+  "lng": 8.15853,
+  "tipo": "alpine_hut",
+  "comune": "Bognanco"
+ },
+ "rifugio gerli porro": {
+  "lat": 46.29851,
+  "lng": 9.77688,
+  "tipo": "alpine_hut",
+  "comune": "Chiesa in Valmalenco"
+ },
+ "rifugio gherardi": {
+  "lat": 45.92573,
+  "lng": 9.56484,
+  "tipo": "alpine_hut",
+  "comune": "Taleggio"
+ },
+ "rifugio giacoletti": {
+  "lat": 44.69672,
+  "lng": 7.07592,
+  "tipo": "alpine_hut",
+  "comune": "Crissolo"
+ },
+ "rifugio gianpace": {
+  "lat": 45.96608,
+  "lng": 9.88199,
+  "tipo": "alpine_hut",
+  "comune": "Valgoglio"
+ },
+ "rifugio gnutti": {
+  "lat": 46.13131,
+  "lng": 10.45386,
+  "tipo": "alpine_hut",
+  "comune": "Sonico"
+ },
+ "rifugio graffer": {
+  "lat": 46.21965,
+  "lng": 10.88941,
+  "tipo": "alpine_hut",
+  "comune": "Tre Ville"
+ },
+ "rifugio granero": {
+  "lat": 44.72805,
+  "lng": 7.04529,
+  "tipo": "alpine_hut",
+  "comune": "Bobbio Pellice"
+ },
+ "rifugio grassi": {
+  "lat": 46.00942,
+  "lng": 9.49183,
+  "tipo": "alpine_hut",
+  "comune": "Valtorta"
+ },
+ "rifugio gremei": {
+  "lat": 45.98885,
+  "lng": 9.71345,
+  "tipo": "restaurant",
+  "comune": "Piazzatorre"
+ },
+ "rifugio griera": {
+  "lat": 46.07544,
+  "lng": 9.40262,
+  "tipo": "alpine_hut",
+  "comune": "Pagnona"
+ },
+ "rifugio laeng": {
+  "lat": 45.981,
+  "lng": 10.19364,
+  "tipo": "alpine_hut",
+  "comune": "Borno"
+ },
+ "rifugio laghi gemelli": {
+  "lat": 45.99297,
+  "lng": 9.80354,
+  "tipo": "alpine_hut",
+  "comune": "Branzi"
+ },
+ "rifugio lago nambino": {
+  "lat": 46.24162,
+  "lng": 10.80023,
+  "tipo": "alpine_hut",
+  "comune": "Madonna di Campiglio"
+ },
+ "rifugio lago palù": {
+  "lat": 46.30387,
+  "lng": 9.86877,
+  "tipo": "alpine_hut",
+  "comune": "Chiesa in Valmalenco"
+ },
+ "rifugio lavaredo": {
+  "lat": 46.61833,
+  "lng": 12.31209,
+  "tipo": "restaurant",
+  "comune": "Auronzo di Cadore"
+ },
+ "rifugio lecco": {
+  "lat": 45.95602,
+  "lng": 9.5024,
+  "tipo": "restaurant",
+  "comune": "Barzio"
+ },
+ "rifugio locatelli": {
+  "lat": 46.63692,
+  "lng": 12.31049,
+  "tipo": "restaurant",
+  "comune": "Sesto"
+ },
+ "rifugio longo": {
+  "lat": 46.03987,
+  "lng": 9.86192,
+  "tipo": "alpine_hut",
+  "comune": "Carona"
+ },
+ "rifugio longoni": {
+  "lat": 46.33026,
+  "lng": 9.81957,
+  "tipo": "alpine_hut",
+  "comune": "Chiesa in Valmalenco"
+ },
+ "rifugio magnolini": {
+  "lat": 45.87135,
+  "lng": 10.08204,
+  "tipo": "restaurant",
+  "comune": "Costa Volpino"
+ },
+ "rifugio mantova al vioz": {
+  "nf": 1
+ },
+ "rifugio margaroli": {
+  "lat": 46.38524,
+  "lng": 8.36515,
+  "tipo": "alpine_hut",
+  "comune": "Formazza"
+ },
+ "rifugio maria consigliere": {
+  "nf": 1
+ },
+ "rifugio maria consiglieri": {
+  "nf": 1
+ },
+ "rifugio maria luisa": {
+  "lat": 46.4347,
+  "lng": 8.42788,
+  "tipo": "alpine_hut",
+  "comune": "Formazza"
+ },
+ "rifugio marinelli": {
+  "lat": 46.34455,
+  "lng": 9.90512,
+  "tipo": "alpine_hut",
+  "comune": "Lanzada"
+ },
+ "rifugio marinelli bombardieri": {
+  "lat": 46.34455,
+  "lng": 9.90512,
+  "tipo": "alpine_hut",
+  "comune": "Lanzada"
+ },
+ "rifugio marisa consigliere trail running": {
+  "nf": 1
+ },
+ "rifugio menaggio": {
+  "lat": 46.06025,
+  "lng": 9.21867,
+  "tipo": "alpine_hut",
+  "comune": "Plesio"
+ },
+ "rifugio mezzalama": {
+  "lat": 45.9137,
+  "lng": 7.75943,
+  "tipo": "alpine_hut",
+  "comune": "Ayas"
+ },
+ "rifugio mirtillo": {
+  "lat": 46.0089,
+  "lng": 10.00648,
+  "tipo": "restaurant",
+  "comune": "Lizzola"
+ },
+ "rifugio mont fallère": {
+  "lat": 45.76206,
+  "lng": 7.18122,
+  "tipo": "alpine_hut",
+  "comune": "Saint-Pierre"
+ },
+ "rifugio montebello": {
+  "lat": 46.04618,
+  "lng": 9.78247,
+  "tipo": "restaurant",
+  "comune": "Foppolo"
+ },
+ "rifugio nicola": {
+  "lat": 45.94287,
+  "lng": 9.53833,
+  "tipo": "alpine_hut",
+  "comune": "Barzio"
+ },
+ "rifugio nuvolau": {
+  "lat": 46.49525,
+  "lng": 12.04573,
+  "tipo": "alpine_hut",
+  "comune": "Colle Santa Lucia"
+ },
+ "rifugio oberto maroli": {
+  "lat": 45.99657,
+  "lng": 7.97879,
+  "tipo": "alpine_hut",
+  "comune": "Macugnaga"
+ },
+ "rifugio oberto maroli (tentativo)": {
+  "nf": 1
+ },
+ "rifugio olmo": {
+  "lat": 45.94824,
+  "lng": 10.03766,
+  "tipo": "alpine_hut",
+  "comune": "Castione della Presolana"
+ },
+ "rifugio ombrega": {
+  "lat": 46.01655,
+  "lng": 9.44776,
+  "tipo": "alpine_hut",
+  "comune": "Casargo"
+ },
+ "rifugio omio": {
+  "lat": 46.24948,
+  "lng": 9.56753,
+  "tipo": "alpine_hut",
+  "comune": "Val Masino"
+ },
+ "rifugio palù": {
+  "lat": 46.40391,
+  "lng": 10.48479,
+  "tipo": "restaurant",
+  "comune": "Santa Caterina Valfurva"
+ },
+ "rifugio parafulmine": {
+  "lat": 45.84071,
+  "lng": 9.93791,
+  "tipo": "alpine_hut",
+  "comune": "Cirano"
+ },
+ "rifugio passo principe": {
+  "lat": 46.47402,
+  "lng": 11.63875,
+  "tipo": "alpine_hut",
+  "comune": "Mazzin"
+ },
+ "rifugio pederù": {
+  "lat": 46.6384,
+  "lng": 12.04137,
+  "tipo": "restaurant",
+  "comune": "Marebbe"
+ },
+ "rifugio pedrotti alla tosa": {
+  "nf": 1
+ },
+ "rifugio pertini": {
+  "lat": 46.50208,
+  "lng": 11.72462,
+  "tipo": "alpine_hut",
+  "comune": "Campitello di Fassa"
+ },
+ "rifugio pizzini": {
+  "lat": 46.45282,
+  "lng": 10.5786,
+  "tipo": "alpine_hut",
+  "comune": "Valfurva"
+ },
+ "rifugio ponti": {
+  "lat": 46.25126,
+  "lng": 9.72278,
+  "tipo": "alpine_hut",
+  "comune": "Val Masino"
+ },
+ "rifugio pordenone": {
+  "lat": 46.38145,
+  "lng": 12.48994,
+  "tipo": "alpine_hut",
+  "comune": "Cimolais"
+ },
+ "rifugio prabello": {
+  "lat": 45.91324,
+  "lng": 9.07284,
+  "tipo": "alpine_hut",
+  "comune": "Cerano d'Intelvi"
+ },
+ "rifugio pradidali": {
+  "lat": 46.24431,
+  "lng": 11.8543,
+  "tipo": "alpine_hut",
+  "comune": "Primiero San Martino di Castrozza"
+ },
+ "rifugio prarayer": {
+  "lat": 45.92109,
+  "lng": 7.53295,
+  "tipo": "alpine_hut",
+  "comune": "Bionaz"
+ },
+ "rifugio prudenzini": {
+  "lat": 46.12361,
+  "lng": 10.5018,
+  "tipo": "alpine_hut",
+  "comune": "Saviore dell'Adamello"
+ },
+ "rifugio quintino sella al monviso": {
+  "nf": 1
+ },
+ "rifugio quinto alpini": {
+  "lat": 46.48168,
+  "lng": 10.53825,
+  "tipo": "alpine_hut",
+  "comune": "Valfurva"
+ },
+ "rifugio riella": {
+  "lat": 45.86203,
+  "lng": 9.19786,
+  "tipo": "alpine_hut",
+  "comune": "Faggeto Lario"
+ },
+ "rifugio riva": {
+  "lat": 45.97043,
+  "lng": 9.41978,
+  "tipo": "alpine_hut",
+  "comune": "Primaluna"
+ },
+ "rifugio roda di vael": {
+  "lat": 46.4202,
+  "lng": 11.63014,
+  "tipo": "alpine_hut",
+  "comune": "passo Carezza"
+ },
+ "rifugio rosalba": {
+  "lat": 45.92229,
+  "lng": 9.37614,
+  "tipo": "alpine_hut",
+  "comune": "Mandello del Lario"
+ },
+ "rifugio rosetta": {
+  "lat": 46.26742,
+  "lng": 11.83902,
+  "tipo": "alpine_hut",
+  "comune": "San Martino di Castrozza"
+ },
+ "rifugio salmurano": {
+  "lat": 46.02816,
+  "lng": 9.57372,
+  "tipo": "alpine_hut",
+  "comune": "Gerola Alta"
+ },
+ "rifugio san lucio": {
+  "lat": 45.86393,
+  "lng": 9.95329,
+  "tipo": "restaurant",
+  "comune": "Clusone"
+ },
+ "rifugio santa rita": {
+  "lat": 46.02486,
+  "lng": 9.50033,
+  "tipo": "alpine_hut",
+  "comune": "Introbio"
+ },
+ "rifugio santner": {
+  "lat": 46.4563,
+  "lng": 11.61845,
+  "tipo": "alpine_hut",
+  "comune": "Tires"
+ },
+ "rifugio scotoni": {
+  "lat": 46.5531,
+  "lng": 11.9984,
+  "tipo": "restaurant",
+  "comune": "Badia"
+ },
+ "rifugio segantini": {
+  "lat": 46.20924,
+  "lng": 10.7108,
+  "tipo": "shelter",
+  "comune": "Giustino"
+ },
+ "rifugio sev": {
+  "lat": 45.86429,
+  "lng": 9.32743,
+  "tipo": "alpine_hut",
+  "comune": "Candalino"
+ },
+ "rifugio somma": {
+  "lat": 46.42057,
+  "lng": 8.35307,
+  "tipo": "alpine_hut",
+  "comune": "Formazza"
+ },
+ "rifugio somma lombardo": {
+  "lat": 46.42057,
+  "lng": 8.35307,
+  "tipo": "alpine_hut",
+  "comune": "Formazza"
+ },
+ "rifugio tagliaferri": {
+  "lat": 46.05544,
+  "lng": 10.11444,
+  "tipo": "alpine_hut",
+  "comune": "Schilpario"
+ },
+ "rifugio tavecchia": {
+  "lat": 46.01645,
+  "lng": 9.47059,
+  "tipo": "alpine_hut",
+  "comune": "Introbio"
+ },
+ "rifugio terre rosse": {
+  "lat": 46.03339,
+  "lng": 9.78571,
+  "tipo": "hotel",
+  "comune": "Carona"
+ },
+ "rifugio terrerosse": {
+  "nf": 1
+ },
+ "rifugio tissi": {
+  "lat": 46.38809,
+  "lng": 12.03325,
+  "tipo": "alpine_hut",
+  "comune": "Masarè"
+ },
+ "rifugio torre di pisa": {
+  "lat": 46.36093,
+  "lng": 11.55955,
+  "tipo": "alpine_hut",
+  "comune": "Predazzo"
+ },
+ "rifugio tuckett": {
+  "lat": 46.19202,
+  "lng": 10.88215,
+  "tipo": "alpine_hut",
+  "comune": "Tre Ville"
+ },
+ "rifugio vaccaro": {
+  "lat": 45.90809,
+  "lng": 9.89252,
+  "tipo": "alpine_hut",
+  "comune": "Parre"
+ },
+ "rifugio ventina": {
+  "lat": 46.29595,
+  "lng": 9.77847,
+  "tipo": "alpine_hut",
+  "comune": "Chiesa in Valmalenco"
+ },
+ "rifugio viola": {
+  "nf": 1
+ },
+ "rifugio vioz": {
+  "lat": 46.38385,
+  "lng": 10.63148,
+  "tipo": "alpine_hut",
+  "comune": "Peio"
+ },
+ "rifugio vittorio emanuele ii": {
+  "nf": 1
+ },
+ "rifugio vittorio sella": {
+  "lat": 45.5802,
+  "lng": 7.30327,
+  "tipo": "alpine_hut",
+  "comune": "Cogne"
+ },
+ "rifugio vodala": {
+  "lat": 45.95796,
+  "lng": 9.97613,
+  "tipo": "alpine_hut",
+  "comune": "Ardesio"
+ },
+ "rifugio xii apostoli": {
+  "lat": 46.15064,
+  "lng": 10.84743,
+  "tipo": "alpine_hut",
+  "comune": "Giustino"
+ },
+ "rifugio zamboni": {
+  "lat": 45.95316,
+  "lng": 7.9179,
+  "tipo": "alpine_hut",
+  "comune": "Macugnaga"
+ },
+ "rifugio zamboni-zappa (a)": {
+  "nf": 1
+ },
+ "rifugio zamboni-zappa (r)": {
+  "nf": 1
+ },
+ "rocciamelone": {
+  "lat": 45.20346,
+  "lng": 7.07721,
+  "tipo": "peak",
+  "comune": "Usseglio"
+ },
+ "rupe di gesso": {
+  "nf": 1
+ },
+ "sasso basciotta": {
+  "lat": 46.10978,
+  "lng": 9.07796,
+  "tipo": "peak",
+  "comune": "Cavargna"
+ },
+ "sasso del rigo": {
+  "lat": 46.07644,
+  "lng": 9.40556,
+  "tipo": "peak",
+  "comune": "Pagnona"
+ },
+ "sasso di musso": {
+  "lat": 46.12064,
+  "lng": 9.2548,
+  "tipo": "peak",
+  "comune": "Dongo"
+ },
+ "sassopiatto": {
+  "lat": 46.51825,
+  "lng": 11.71853,
+  "tipo": "peak",
+  "comune": "Santa Cristina Valgardena"
+ },
+ "seceda": {
+  "lat": 46.60059,
+  "lng": 11.72578,
+  "tipo": "peak",
+  "comune": "Santa Cristina Valgardena"
+ },
+ "sedernel": {
+  "lat": 45.84857,
+  "lng": 9.78521,
+  "tipo": "isolated_dwelling",
+  "comune": "Vertova"
+ },
+ "sentiero delle capre": {
+  "lat": 45.94227,
+  "lng": 10.06288,
+  "tipo": "path",
+  "comune": "Castione della Presolana"
+ },
+ "sentiero glaciologico": {
+  "lat": 46.28479,
+  "lng": 9.7815,
+  "tipo": "path",
+  "comune": "Chiesa in Valmalenco"
+ },
+ "sentiero glaciologico alto dei forni": {
+  "nf": 1
+ },
+ "signore dei ghiaioni": {
+  "lat": 45.95058,
+  "lng": 10.04618,
+  "tipo": "wayside_cross",
+  "comune": "Castione della Presolana"
+ },
+ "stralivigno": {
+  "nf": 1
+ },
+ "testa bernarda": {
+  "lat": 45.82571,
+  "lng": 7.01395,
+  "tipo": "peak",
+  "comune": "Courmayeur"
+ },
+ "tete de la tronche": {
+  "lat": 45.82201,
+  "lng": 7.01969,
+  "tipo": "peak",
+  "comune": "Courmayeur"
+ },
+ "top dolomites 22k": {
+  "nf": 1
+ },
+ "top dolomites 50k": {
+  "nf": 1
+ },
+ "traversata bassa": {
+  "lat": 45.9354,
+  "lng": 9.41142,
+  "tipo": "guidepost",
+  "comune": "Pasturo"
+ },
+ "utlac 30k": {
+  "nf": 1
+ },
+ "vajolet": {
+  "lat": 46.4586,
+  "lng": 11.63276,
+  "tipo": "alpine_hut",
+  "comune": "San Giovanni di Fassa"
+ },
+ "val biandino": {
+  "lat": 46.01161,
+  "lng": 9.46837,
+  "tipo": "valley",
+  "comune": "Primaluna"
+ },
+ "val conchetta": {
+  "lat": 45.98543,
+  "lng": 10.03154,
+  "tipo": "valley",
+  "comune": "Teveno"
+ },
+ "val ferret": {
+  "lat": 45.84092,
+  "lng": 7.00808,
+  "tipo": "winter_sports",
+  "comune": "Courmayeur"
+ },
+ "val fredda": {
+  "lat": 45.55602,
+  "lng": 10.26902,
+  "tipo": "valley",
+  "comune": "Brescia"
+ },
+ "val grande": {
+  "lat": 46.02186,
+  "lng": 8.48281,
+  "tipo": "national_park",
+  "comune": ""
+ },
+ "val monfalcon": {
+  "lat": 46.39545,
+  "lng": 12.49276,
+  "tipo": "valley",
+  "comune": "Cimolais"
+ },
+ "val saviore": {
+  "lat": 46.065,
+  "lng": 10.42106,
+  "tipo": "valley",
+  "comune": "Cevo"
+ },
+ "val vertova": {
+  "lat": 45.8317,
+  "lng": 9.78725,
+  "tipo": "valley",
+  "comune": "Vertova"
+ },
+ "val vigezzo": {
+  "lat": 46.13511,
+  "lng": 8.46887,
+  "tipo": "valley",
+  "comune": "Santa Maria Maggiore"
+ },
+ "valle dell'ombra": {
+  "lat": 45.94731,
+  "lng": 10.06978,
+  "tipo": "valley",
+  "comune": "Castione della Presolana"
+ },
+ "vedretta del morteratsch": {
+  "nf": 1
+ },
+ "verde e lago superiore del rutor": {
+  "nf": 1
+ },
+ "via del latte": {
+  "lat": 45.93583,
+  "lng": 10.05958,
+  "tipo": "track",
+  "comune": "Castione della Presolana"
+ },
+ "vut 35k": {
+  "nf": 1
+ },
+ "zucco del corvo": {
+  "lat": 45.98899,
+  "lng": 9.49986,
+  "tipo": "peak",
+  "comune": "Introbio"
+ },
+ "zucco di valbona": {
+  "nf": 1
+ },
+ "zucco orscellara": {
+  "nf": 1
+ },
+ "zucco orscellera": {
+  "lat": 45.95461,
+  "lng": 9.49181,
+  "tipo": "peak",
+  "comune": "Barzio"
+ },
+ "zucco orscellera (piani di bobbio)": {
+  "nf": 1
+ }
+}
