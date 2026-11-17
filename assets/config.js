@@ -37,6 +37,44 @@
   H.detected = detected;
   H.apps = APPS;
 
+
+  /* ---- lettura dei dati da GitHub, con il sito come ripiego ----------------------------
+     HUB.fetchRepoText(percorsoNelRepo, urlDelSito) -> Promise<testo>
+     Ordine: API GitHub (se in qualche sezione è stato impostato un token: dati sempre
+     freschi) -> raw.githubusercontent.com (con parametro anti-cache) -> file del sito.
+     Fuori da GitHub Pages (localhost, file locale) legge direttamente il sito. */
+  H.token = function () {
+    var keys = ['runai-github', 'sentieri_gh_config_v1', 'finanze_gh_config_v1'];
+    for (var i = 0; i < keys.length; i++) {
+      try { var o = JSON.parse(localStorage.getItem(keys[i]) || 'null'); if (o && o.token) return o.token; } catch (e) {}
+    }
+    return '';
+  };
+  H.fetchRepoText = function (path, siteUrl) {
+    function get(url, opts, ms) {
+      var ctl = typeof AbortController === 'function' ? new AbortController() : null;
+      var t = ctl ? setTimeout(function () { ctl.abort(); }, ms) : null;
+      if (ctl) opts.signal = ctl.signal;
+      return fetch(url, opts).then(function (r) {
+        clearTimeout(t);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      }, function (e) { clearTimeout(t); throw e; });
+    }
+    function site() { return get(siteUrl + (siteUrl.indexOf('?') > -1 ? '&' : '?') + 't=' + Date.now(), { cache: 'no-store' }, 20000); }
+    if (!H.detected) return site();
+    var tk = H.token(), steps = [];
+    if (tk) steps.push(function () {
+      return get('https://api.github.com/repos/' + H.owner + '/' + H.repo + '/contents/' + path + '?ref=' + encodeURIComponent(H.branch),
+        { headers: { 'Authorization': 'token ' + tk, 'Accept': 'application/vnd.github.raw+json' }, cache: 'no-store' }, 10000);
+    });
+    steps.push(function () {
+      return get('https://raw.githubusercontent.com/' + H.owner + '/' + H.repo + '/' + H.branch + '/' + path + '?t=' + Date.now(), { cache: 'no-store' }, 10000);
+    });
+    steps.push(site);
+    return steps.reduce(function (p, s) { return p.catch(s); }, Promise.reject(new Error('start')));
+  };
+
   /* Percorso di un file di una sezione dentro il repository, es.
      HUB.repoPath('astrofoto', 'data.json') -> "astrofoto/data.json" */
   H.repoPath = function (app, rel) { return app + '/' + String(rel || '').replace(/^\/+/, ''); };

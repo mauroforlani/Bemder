@@ -375,7 +375,7 @@ body[data-app="running"] #admin-modal .modal {
   border: 0; border-radius: 0; box-shadow: none; padding: 24px var(--hub-pad) 40px;
 }
 body[data-app="running"] #admin-modal .admin-scroll {
-  max-height: calc(100vh - var(--hub-shell-h) - 340px); min-height: 320px;
+  max-height: min(72vh, 760px); min-height: 320px;
 }
 body[data-app="running"] #admin-modal .admin-table thead th {
   position: sticky; top: 0; z-index: 1; background: var(--hub-paper);

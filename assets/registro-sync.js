@@ -175,7 +175,8 @@
 
   /* ---------------- aggiornamento automatico da testi CSV (usato da Running) ---------------- */
   function fetchStatic() {
-    return fetch(STATIC_URL, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; });
+    var get = window.HUB && HUB.fetchRepoText ? HUB.fetchRepoText(JSON_PATH, STATIC_URL) : fetch(STATIC_URL, { cache: "no-store" }).then(function (r) { return r.text(); });
+    return get.then(function (t) { return JSON.parse(t); }).catch(function () { return []; });
   }
   function syncFromGarminTexts(texts) {
     var recs = [], seenIn = {};

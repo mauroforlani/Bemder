@@ -6,7 +6,7 @@
      sostituisce a quello di questo dispositivo. Prima ne salva una copia di sicurezza e,
      se ci sono attività presenti solo qui (non ancora su GitHub), NON sostituisce nulla.
    - Budget: non ha una copia locale, si rilegge da GitHub a ogni apertura (serve il token).
-   - Astrofoto, Attività, Registro: leggono i file del sito; qui vengono riscaricati senza cache.
+   - Astrofoto, Attività, Registro: leggono da GitHub; qui vengono riletti senza cache.
    Per ogni sezione mostra la data dell'ultimo salvataggio su GitHub.
    ========================================================================== */
 (function () {
@@ -63,8 +63,8 @@
         return d && d.date ? new Date(d.date).toLocaleString("it-IT", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }) : null;
       }).catch(function () { return null; });
   }
-  function siteJson(path) {
-    return fetch(path + (path.indexOf("?") > -1 ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" }).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+  function siteJson(path) {                      // da GitHub (ripiego: file del sito)
+    return HUB.fetchRepoText(path, path).then(function (t) { return JSON.parse(t); });
   }
 
   /* ---------------- Running ---------------- */
@@ -123,19 +123,18 @@
       return Promise.all([
         safe("Astrofotografia", pSite.then(function () { return siteJson(FILES.astrofoto); }).then(function (a) {
           var c = (a.customs || []).length, m = (a.modified || []).length;
-          return { st: "ok", msg: "Catalogo riscaricato: " + nIt(c, "oggetto aggiunto", "oggetti aggiunti") + ", " + nIt(m, "modificato", "modificati") + "." + when("astrofoto") };
+          return { st: "ok", msg: "Catalogo riletto da GitHub: " + nIt(c, "oggetto aggiunto", "oggetti aggiunti") + ", " + nIt(m, "modificato", "modificati") + "." + when("astrofoto") };
         })),
         safe("Attività", siteJson(FILES.luoghi).then(function (l) {
-          return { st: "ok", msg: "Riscaricati " + nIt(Array.isArray(l) ? l.length : 0, "luogo", "luoghi") + "." + when("luoghi") };
+          return { st: "ok", msg: "Riletti " + nIt(Array.isArray(l) ? l.length : 0, "luogo", "luoghi") + "." + when("luoghi") };
         })),
         safe("Registro", siteJson(FILES.attivita).then(function (a) {
           var p = pendingRegistro(), n = Array.isArray(a) ? a.length : 0;
-          if (p) return { st: "warn", msg: "Riscaricate " + n + " attività. " + nIt(p, "modifica è salvata", "modifiche sono salvate") + " solo in questo browser: apri il Registro, “Importa attività da CSV” e premi “Salva ora su GitHub”." + when("attivita") };
-          return { st: "ok", msg: "Riscaricate " + nIt(n, "attività", "attività") + "." + when("attivita") };
+          if (p) return { st: "warn", msg: "Rilette " + n + " attività. " + nIt(p, "modifica è salvata", "modifiche sono salvate") + " solo in questo browser: apri il Registro, “Importa attività da CSV” e premi “Salva ora su GitHub”." + when("attivita") };
+          return { st: "ok", msg: "Rilette " + nIt(n, "attività", "attività") + "." + when("attivita") };
         })),
-        safe("Budget", Promise.resolve({ st: cfgBud.token ? "ok" : "warn",
-          msg: cfgBud.token ? "Si rilegge da GitHub a ogni apertura." + when("budget")
-                            : "Token GitHub non impostato su questo dispositivo: Budget mostrerebbe i dati incorporati nel sito. Impostalo dentro Budget." + when("budget") })),
+        safe("Budget", Promise.resolve({ st: "ok",
+          msg: "Si rilegge da GitHub a ogni apertura." + (cfgBud.token ? "" : " Per salvare modifiche da questo dispositivo imposta il token dentro Budget.") + when("budget") })),
         safe("Running", pRun.then(function (r) { return { st: r.st, msg: r.msg + when("running") }; }))
       ]);
     }).then(function (rows) {
