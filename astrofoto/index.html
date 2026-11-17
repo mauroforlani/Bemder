@@ -3899,9 +3899,9 @@ injectCustomCameras();
 // Load remote data.json then boot
 (async function bootWithData(){
   try {
-    const r = await fetch('data.json?v=' + Date.now());
-    if(r.ok){
-      const data = await r.json();
+    const gh = await HUB.fetchRepoText('astrofoto/data.json', 'data.json').then(t => JSON.parse(t)).catch(() => null);
+    if(gh){
+      const data = gh;
       // Merge deleted from data.json and localStorage
       const remoteDeleted = Array.isArray(data.deleted) ? data.deleted : [];
       const localDeleted = JSON.parse(localStorage.getItem('astrofoto_deleted')||'[]');
