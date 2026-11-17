@@ -2020,6 +2020,7 @@ async function initApp() {
   renderVoceAll();
   renderAll();
   autoPullIfNeeded(true);
+  if (!GitHubSync.isConfigured()) loadPublicData();   // senza token: legge comunque da GitHub (repository pubblico)
 }
 
 /* Pulsante "⬆ Carica su GitHub": invia SUBITO (senza attese) i dati
@@ -2175,3 +2176,27 @@ window.addEventListener('beforeunload', (e) => {
 });
 
 initApp();
+
+
+/* Senza token GitHub: legge i dati direttamente da GitHub (ripiego: file del sito) invece di
+   mostrare i dati incorporati in pagina, che possono essere vecchi. Per salvare serve il token. */
+async function loadPublicData() {
+  try {
+    if (typeof HUB === 'undefined' || !HUB.fetchRepoText || localDirty) return;
+    const remote = JSON.parse(await HUB.fetchRepoText('budget/data.json', 'data.json'));
+    if (!remote || !Array.isArray(remote.transazioni)) return;
+    DATA = migrateCategoryNames(remote);
+    transazioni = (DATA.transazioni || []).map(t => ({ ...t }));
+    localDirty = false;
+    lastSyncFailed = false;
+    recomputeFlussi();
+    syncPatrimonioAutomatico();
+    populateFilters();
+    populateVoceCats();
+    populateBudgetAnno();
+    populateAnalisiAnno();
+    populatePLFilters();
+    renderVoceAll();
+    renderAll();
+  } catch (e) { console.warn('Budget: lettura da GitHub non riuscita, uso i dati incorporati', e); }
+}
