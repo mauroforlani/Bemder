@@ -3471,9 +3471,7 @@ async function loadInitialData(){
   banner.className = "data-status-banner loading";
   banner.textContent = "Caricamento dati…";
   try {
-    const res = await fetch(DEFAULT_DATA_PATH, { cache: "no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    const text = (await res.text()).trim();
+    const text = (await HUB.fetchRepoText("attivita/data/luoghi.json", DEFAULT_DATA_PATH)).trim();
     if(text === "") throw new Error("il file è vuoto");
     let data;
     try {
