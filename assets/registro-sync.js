@@ -173,6 +173,26 @@
     });
   }
 
+
+  /* Legge un file del repository, lo trasforma con transform(testo|null) e lo riscrive (se cambia). */
+  function ghUpdateFile(cfg, path, transform, msg) {
+    var base = "https://api.github.com/repos/" + cfg.repo + "/contents/" + encPath(path);
+    var headers = { "Authorization": "Bearer " + cfg.token, "Accept": "application/vnd.github+json" };
+    return fetch(base + "?ref=" + encodeURIComponent(cfg.branch), { headers: headers }).then(function (r) {
+      if (r.status === 404) return null;
+      if (!r.ok) throw new Error("Lettura di " + path + " non riuscita (" + r.status + ")");
+      return r.json().then(function (j) { return { sha: j.sha, text: b64dec(j.content) }; });
+    }).then(function (cur) {
+      var next = transform(cur ? cur.text : null);
+      if (next == null || (cur && next === cur.text)) return { changed: false };
+      var body = { message: msg, content: b64enc(next), branch: cfg.branch }; if (cur) body.sha = cur.sha;
+      return fetch(base, { method: "PUT", headers: Object.assign({ "Content-Type": "application/json" }, headers), body: JSON.stringify(body) }).then(function (r) {
+        if (!r.ok) return r.text().then(function (t) { throw new Error("Salvataggio di " + path + " non riuscito (" + r.status + ") " + t.slice(0, 120)); });
+        return { changed: true };
+      });
+    });
+  }
+
   /* ---------------- aggiornamento automatico da testi CSV (usato da Running) ---------------- */
   function fetchStatic() {
     var get = window.HUB && HUB.fetchRepoText ? HUB.fetchRepoText(JSON_PATH, STATIC_URL) : fetch(STATIC_URL, { cache: "no-store" }).then(function (r) { return r.text(); });
@@ -207,7 +227,7 @@
     EXTRA_KEY: EXTRA_KEY, PLACEHOLDER: PLACEHOLDER, FIELDS: FIELDS,
     keyOf: keyOf, byKey: byKey, pick: pick, isPlaceholder: isPlaceholder,
     parseGarmin: parseGarmin, readExtra: readExtra, writeExtra: writeExtra,
-    locIndex: locIndex, applyLocation: applyLocation, ghConfig: ghConfig, ghSave: ghSave,
+    locIndex: locIndex, applyLocation: applyLocation, ghConfig: ghConfig, ghSave: ghSave, ghUpdateFile: ghUpdateFile,
     syncFromGarminTexts: syncFromGarminTexts
   };
 
