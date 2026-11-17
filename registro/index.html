@@ -253,8 +253,7 @@ const METRICS={
 /* ---------- caricamento ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
   bind();
-  if(window.ATTIVITA){init(window.ATTIVITA);return}
-  fetch("../attivita/data/attivita.json",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("file non trovato");return r.json()}).then(init).catch(e=>{
+  HUB.fetchRepoText("attivita/data/attivita.json","../attivita/data/attivita.json").then(t=>JSON.parse(t)).then(init).catch(e=>{if(window.ATTIVITA){init(window.ATTIVITA);return}
     $("lead").innerHTML="⚠ Dati non caricati ("+esc(e.message)+"). Controlla che esista <b>attivita/data/attivita.js</b> (o <b>attivita/data/attivita.json</b>).";
   });
 });
