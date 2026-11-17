@@ -883,7 +883,42 @@ select.form-input{cursor:pointer;}
       <h3 style="margin-bottom:0">Admin — Gestione Attività</h3>
       <button class="btn btn-secondary btn-sm" onclick="closeModal('admin-modal')">✕ Chiudi</button>
     </div>
-    <div class="admin-tabs">
+    <div style="margin-top:18px;padding-top:14px;border-top:1.5px solid var(--border)">
+      <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">Strumenti & Dati</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">GITHUB SYNC</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button class="btn btn-secondary btn-sm" onclick="openGitHubModal();closeModal('admin-modal')">Configura GitHub</button>
+            <button class="btn btn-secondary btn-sm" id="admin-sync-btn" onclick="adminManualSync()">↑ Carica su GitHub</button>
+            <button class="btn btn-secondary btn-sm" id="admin-load-btn" onclick="adminLoadFromGitHub()">↓ Carica da GitHub</button>
+          </div>
+        </div>
+        <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">IMPORTA / ESPORTA</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <input type="file" id="csv-run-admin" accept=".csv" style="display:none" onchange="handleRunCSV(this)">
+            <input type="file" id="csv-hike-admin" accept=".csv" style="display:none" onchange="handleHikeCSV(this)">
+            <button class="btn btn-import btn-sm" onclick="document.getElementById('csv-run-admin').click()">⬆ Importa CSV Running</button>
+            <button class="btn btn-import-hike btn-sm" onclick="document.getElementById('csv-hike-admin').click()">⬆ Importa CSV Hiking</button>
+            <button class="btn btn-secondary btn-sm" onclick="openModal('garmin-modal');closeModal('admin-modal')">Dati Garmin</button>
+            <button class="btn btn-secondary btn-sm" onclick="exportHTML()">Esporta HTML</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Cache section -->
+    <div style="margin-top:18px;padding-top:14px;border-top:1.5px solid var(--border)">
+      <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">🧹 Gestione Cache</div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="adminClearCache('all')">🧹 Pulisci tutta la cache</button>
+        <button class="btn btn-secondary btn-sm" onclick="adminClearCache('github')">Reset GitHub</button>
+        <button class="btn btn-secondary btn-sm" onclick="adminClearCache('apikey')">Reset API key</button>
+        <span id="admin-cache-info" style="font-size:11px;color:var(--muted);font-family:var(--font-mono)"></span>
+      </div>
+      <div id="admin-cache-detail" style="font-size:11px;color:var(--muted);margin-top:8px;font-family:var(--font-mono)"></div>
+    </div>
+<div style="margin-top:18px;padding-top:14px;border-top:1.5px solid var(--border)"><div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">Elenco attività</div><div class="admin-tabs">
       <button class="admin-tab at-run" id="at-run" onclick="switchAdminTab('run',this)">Running (<span id="admin-run-count">0</span>)</button>
       <button class="admin-tab" id="at-hike" onclick="switchAdminTab('hike',this)">Hiking (<span id="admin-hike-count">0</span>)</button>
     </div>
@@ -949,41 +984,7 @@ select.form-input{cursor:pointer;}
       </div>
     </div>
     <!-- Tools section -->
-    <div style="margin-top:18px;padding-top:14px;border-top:1.5px solid var(--border)">
-      <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">Strumenti & Dati</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:12px">
-          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">GITHUB SYNC</div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <button class="btn btn-secondary btn-sm" onclick="openGitHubModal();closeModal('admin-modal')">Configura GitHub</button>
-            <button class="btn btn-secondary btn-sm" id="admin-sync-btn" onclick="adminManualSync()">↑ Carica su GitHub</button>
-            <button class="btn btn-secondary btn-sm" id="admin-load-btn" onclick="adminLoadFromGitHub()">↓ Carica da GitHub</button>
-          </div>
-        </div>
-        <div style="background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;padding:12px">
-          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.3px">IMPORTA / ESPORTA</div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <input type="file" id="csv-run-admin" accept=".csv" style="display:none" onchange="handleRunCSV(this)">
-            <input type="file" id="csv-hike-admin" accept=".csv" style="display:none" onchange="handleHikeCSV(this)">
-            <button class="btn btn-import btn-sm" onclick="document.getElementById('csv-run-admin').click()">⬆ Importa CSV Running</button>
-            <button class="btn btn-import-hike btn-sm" onclick="document.getElementById('csv-hike-admin').click()">⬆ Importa CSV Hiking</button>
-            <button class="btn btn-secondary btn-sm" onclick="openModal('garmin-modal');closeModal('admin-modal')">Dati Garmin</button>
-            <button class="btn btn-secondary btn-sm" onclick="exportHTML()">Esporta HTML</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Cache section -->
-    <div style="margin-top:18px;padding-top:14px;border-top:1.5px solid var(--border)">
-      <div style="font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">🧹 Gestione Cache</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <button class="btn btn-secondary btn-sm" onclick="adminClearCache('all')">🧹 Pulisci tutta la cache</button>
-        <button class="btn btn-secondary btn-sm" onclick="adminClearCache('github')">Reset GitHub</button>
-        <button class="btn btn-secondary btn-sm" onclick="adminClearCache('apikey')">Reset API key</button>
-        <span id="admin-cache-info" style="font-size:11px;color:var(--muted);font-family:var(--font-mono)"></span>
-      </div>
-      <div id="admin-cache-detail" style="font-size:11px;color:var(--muted);margin-top:8px;font-family:var(--font-mono)"></div>
-    </div>
+</div>
   </div>
 </div>
 
@@ -4603,5 +4604,6 @@ Object.keys(state.piano||{}).forEach(sid=>{
 });
 </script>
 <script src="../assets/registro-sync.js"></script>
+<script src="autopull.js"></script>
 </body>
 </html>
