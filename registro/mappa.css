@@ -22,3 +22,34 @@ details.coll > .coll-body { padding: 0 .8rem .85rem; }
 .poi-pop ul { margin: 0; padding-left: 1.05em; font-size: .82rem; }
 .poi-pop li { margin: 1px 0; }
 .leaflet-container { font-family: inherit; }
+
+/* Rivedi luoghi */
+.poi-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: .2rem 0 .8rem; }
+.poi-tools .chip { font: inherit; font-size: .82rem; border: 1px solid var(--border); background: #fff; border-radius: 999px; padding: .28rem .75rem; cursor: pointer; color: var(--ink-soft); }
+.poi-tools .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.poi-tools input[type=search] { font: inherit; font-size: .88rem; padding: .38rem .6rem; border: 1px solid var(--border); border-radius: 8px; min-width: 200px; flex: 1; }
+.poi-tools label { font-size: .82rem; color: var(--ink-soft); display: flex; gap: 5px; align-items: center; }
+.poi-list { border: 1px solid var(--border); border-radius: 10px; max-height: 56vh; overflow: auto; }
+.poi-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; padding: .6rem .8rem; border-bottom: 1px solid var(--border); align-items: center; }
+.poi-row:last-child { border-bottom: 0; }
+.poi-name { font-weight: 600; font-size: .92rem; }
+.poi-meta { font-size: .78rem; color: var(--ink-soft); margin-top: 2px; }
+.poi-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: .08rem .5rem; border-radius: 999px; margin-right: 6px; background: var(--surface); color: var(--ink-soft); }
+.poi-badge.nf { background: var(--red-soft); color: var(--red); }
+.poi-badge.todo { background: #fff4e5; color: var(--orange); }
+.poi-badge.man { background: var(--blue-soft); color: var(--blue); }
+.poi-badge.auto { background: var(--green-soft); color: var(--green); }
+.poi-acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.poi-acts button, .poi-panel button { font: inherit; font-size: .78rem; border: 1px solid var(--border); background: #fff; border-radius: 7px; padding: .26rem .6rem; cursor: pointer; color: var(--ink); }
+.poi-acts button:hover, .poi-panel button:hover { background: var(--surface); }
+.poi-panel { grid-column: 1 / -1; background: var(--surface); border-radius: 8px; padding: .65rem .7rem; font-size: .85rem; }
+.poi-panel .line { display: flex; gap: 8px; flex-wrap: wrap; }
+.poi-panel input[type=text] { font: inherit; font-size: .88rem; padding: .35rem .55rem; border: 1px solid var(--border); border-radius: 7px; flex: 1; min-width: 180px; background: #fff; }
+.poi-res { list-style: none; margin: .55rem 0 0; padding: 0; }
+.poi-res li { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: .35rem 0; border-top: 1px solid var(--border); }
+.poi-res small { color: var(--ink-soft); display: block; }
+.poi-help { color: var(--ink-soft); font-size: .78rem; margin-top: 6px; }
+.poi-pop .poi-fix { margin-top: 8px; font: inherit; font-size: .78rem; border: 1px solid #d1d5db; background: #fff; border-radius: 6px; padding: .2rem .55rem; cursor: pointer; }
+.map-place { cursor: crosshair !important; }
+@media (max-width: 700px) { .poi-row { grid-template-columns: 1fr; } .poi-acts { justify-content: flex-start; } }
+.map-place path.leaflet-interactive { pointer-events: none !important; }
