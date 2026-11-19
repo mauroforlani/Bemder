@@ -969,7 +969,11 @@
   "nf": 1
  },
  "milan trail running": {
-  "nf": 1
+  "lat": 45.45421,
+  "lng": 9.11135,
+  "tipo": "administrative",
+  "comune": "Milano",
+  "man": 1
  },
  "mont avril": {
   "nf": 1
