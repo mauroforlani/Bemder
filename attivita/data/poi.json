@@ -1,6 +1,10 @@
 {
  "albe buscagna": {
-  "nf": 1
+  "lat": 46.31003,
+  "lng": 8.23031,
+  "tipo": "isolated_dwelling",
+  "comune": "Baceno",
+  "man": 1
  },
  "alpe devero": {
   "lat": 46.31459,
@@ -39,10 +43,18 @@
   "comune": "Gressoney-La-Trinité"
  },
  "anticima corno stella": {
-  "nf": 1
+  "lat": 46.04976,
+  "lng": 9.80321,
+  "tipo": "water",
+  "comune": "Foppolo",
+  "man": 1
  },
  "anticima pizzo arera": {
-  "nf": 1
+  "lat": 45.93459,
+  "lng": 9.81582,
+  "tipo": "peak",
+  "comune": "Oltre il Colle",
+  "man": 1
  },
  "baita alta del cardeto": {
   "lat": 46.0138,
@@ -69,7 +81,11 @@
   "comune": "Castione della Presolana"
  },
  "baita cassinelli trail running": {
-  "nf": 1
+  "lat": 45.94221,
+  "lng": 10.07663,
+  "tipo": "alpine_hut",
+  "comune": "Castione della Presolana",
+  "man": 1
  },
  "baita cernello": {
   "lat": 46.00206,
@@ -78,7 +94,11 @@
   "comune": "Valgoglio"
  },
  "baita cima bianca": {
-  "nf": 1
+  "lat": 45.95832,
+  "lng": 10.08081,
+  "tipo": "administrative",
+  "comune": "Colere",
+  "man": 1
  },
  "baita cornetto": {
   "lat": 45.93054,
@@ -114,7 +134,11 @@
   "comune": "Castione della Presolana"
  },
  "barga trail running": {
-  "nf": 1
+  "lat": 44.07392,
+  "lng": 10.48426,
+  "tipo": "administrative",
+  "comune": "Barga",
+  "man": 1
  },
  "becca della traversière": {
   "nf": 1
@@ -201,10 +225,18 @@
   "comune": "Carona"
  },
  "bivacco tellini": {
-  "nf": 1
+  "lat": 45.90781,
+  "lng": 9.82232,
+  "tipo": "peak",
+  "comune": "Oltre il Colle",
+  "man": 1
  },
  "blinnenhorn": {
-  "nf": 1
+  "lat": 46.42593,
+  "lng": 8.30776,
+  "tipo": "peak",
+  "comune": "Obergoms",
+  "man": 1
  },
  "bocchetta acqua fredda": {
   "nf": 1
@@ -270,7 +302,11 @@
   "comune": "Corvara in Badia"
  },
  "capanna gnifetti": {
-  "nf": 1
+  "lat": 45.89972,
+  "lng": 7.84996,
+  "tipo": "alpine_hut",
+  "comune": "Gressoney-La-Trinité",
+  "man": 1
  },
  "capanna gries": {
   "nf": 1
@@ -306,7 +342,11 @@
   "comune": "Carona"
  },
  "castione della presolana trail running": {
-  "nf": 1
+  "lat": 45.90746,
+  "lng": 10.03506,
+  "tipo": "administrative",
+  "comune": "Castione della Presolana",
+  "man": 1
  },
  "ceresole reale - cà bianca": {
   "nf": 1
@@ -678,7 +718,11 @@
   "nf": 1
  },
  "giro dei laghi di valgoglio": {
-  "nf": 1
+  "lat": 45.98342,
+  "lng": 9.87481,
+  "tipo": "administrative",
+  "comune": "Valgoglio",
+  "man": 1
  },
  "giro del sassolungo": {
   "nf": 1
@@ -882,7 +926,11 @@
   "comune": "Morgex"
  },
  "lago e passo branchino": {
-  "nf": 1
+  "lat": 45.94917,
+  "lng": 9.8002,
+  "tipo": "yes",
+  "comune": "Oltre il Colle",
+  "man": 1
  },
  "lago e rifugio saoseo": {
   "nf": 1
@@ -939,7 +987,11 @@
   "comune": "Formazza"
  },
  "lago volaia e wolayerseehütte": {
-  "nf": 1
+  "lat": 46.61234,
+  "lng": 12.86711,
+  "tipo": "alpine_hut",
+  "comune": "Lesachtal",
+  "man": 1
  },
  "lej languard": {
   "lat": 46.47525,
@@ -1009,7 +1061,11 @@
   "comune": "Costa Volpino"
  },
  "monte aralta": {
-  "nf": 1
+  "lat": 45.94525,
+  "lng": 9.57693,
+  "tipo": "peak",
+  "comune": "Vedeseta",
+  "man": 1
  },
  "monte avaro": {
   "lat": 46.01444,
@@ -1387,7 +1443,11 @@
   "comune": "Carenno"
  },
  "monte timogno": {
-  "nf": 1
+  "lat": 45.96385,
+  "lng": 9.96115,
+  "tipo": "winter_sports",
+  "comune": "Spiazzi",
+  "man": 1
  },
  "monte todano": {
   "lat": 46.01592,
@@ -1402,7 +1462,11 @@
   "comune": "Cossogno"
  },
  "monte vaccaro": {
-  "nf": 1
+  "lat": 45.90809,
+  "lng": 9.89252,
+  "tipo": "alpine_hut",
+  "comune": "Parre",
+  "man": 1
  },
  "monte valgussera": {
   "lat": 46.03928,
@@ -1540,7 +1604,11 @@
   "nf": 1
  },
  "passo del publino": {
-  "nf": 1
+  "lat": 46.04986,
+  "lng": 9.82378,
+  "tipo": "wilderness_hut",
+  "comune": "Carona",
+  "man": 1
  },
  "passo del toro": {
   "lat": 45.989,
@@ -1726,10 +1794,18 @@
   "comune": "Barzio"
  },
  "piramide vincent": {
-  "nf": 1
+  "lat": 45.90811,
+  "lng": 7.86131,
+  "tipo": "peak",
+  "comune": "Gressoney-La-Trinité",
+  "man": 1
  },
  "piz d’alben": {
-  "nf": 1
+  "lat": 46.05173,
+  "lng": 9.42346,
+  "tipo": "administrative",
+  "comune": "Premana",
+  "man": 1
  },
  "piz languard": {
   "lat": 46.48845,
@@ -2320,7 +2396,11 @@
   "nf": 1
  },
  "rifugio e passo laghi gemelli": {
-  "nf": 1
+  "lat": 45.99297,
+  "lng": 9.80354,
+  "tipo": "alpine_hut",
+  "comune": "Branzi",
+  "man": 1
  },
  "rifugio e piz de puez": {
   "nf": 1
@@ -2545,10 +2625,11 @@
   "comune": "Formazza"
  },
  "rifugio marinelli": {
-  "lat": 46.34455,
-  "lng": 9.90512,
-  "tipo": "alpine_hut",
-  "comune": "Lanzada"
+  "lat": 46.5942,
+  "lng": 12.86862,
+  "tipo": "",
+  "comune": "Forni Avoltri",
+  "man": 1
  },
  "rifugio marinelli bombardieri": {
   "lat": 46.34455,
@@ -2896,7 +2977,11 @@
   "comune": "Usseglio"
  },
  "rupe di gesso": {
-  "nf": 1
+  "lat": 46.4347,
+  "lng": 8.42788,
+  "tipo": "alpine_hut",
+  "comune": "Formazza",
+  "man": 1
  },
  "sasso basciotta": {
   "lat": 46.10978,
@@ -3052,7 +3137,11 @@
   "comune": "Castione della Presolana"
  },
  "vedretta del morteratsch": {
-  "nf": 1
+  "lat": 46.45074,
+  "lng": 9.94043,
+  "tipo": "station",
+  "comune": "Pontresina",
+  "man": 1
  },
  "verde e lago superiore del rutor": {
   "nf": 1
