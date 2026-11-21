@@ -15,7 +15,11 @@
   var POI_KEY = "registro_poi_v1", COLL_KEY = "registro_coll_v1", POI_PATH = "attivita/data/poi.json";
   var CENTER = [46.05, 9.85], ZOOM = 8;                        // Alpi lombarde
   var BOX = { w: 5.0, n: 48.2, e: 14.0, s: 43.8 };               // le Alpi: scarta risultati fuori area
-  var STATI = { "Italia": 1, "Svizzera": 1, "Francia": 1, "Austria": 1, "Italia / Svizzera": 1 };
+  var STATI = { "Italia": 1, "Svizzera": 1, "Francia": 1, "Austria": 1, "Italia / Svizzera": 1 };    // paesi alpini
+  var CODICI = { "Italia": "it", "Svizzera": "ch", "Francia": "fr", "Austria": "at", "Italia / Svizzera": "it,ch", "USA": "us", "Spagna": "es",
+                 "Portogallo": "pt", "Norvegia": "no", "Islanda": "is", "Isole Fær Øer": "fo", "Germania": "de", "Slovenia": "si", "Grecia": "gr",
+                 "Regno Unito": "gb", "Irlanda": "ie", "Svezia": "se", "Finlandia": "fi", "Croazia": "hr", "Marocco": "ma", "Giappone": "jp" };
+  var alpino = function (stato) { return !!STATI[stato]; };
   var COLORS = { rifugio: "#c2410c", cima: "#15803d", passo: "#1d4ed8", lago: "#0891b2", altro: "#6b7280" };
   var LABELS = { rifugio: "Rifugi, baite, bivacchi", cima: "Cime", passo: "Passi e bocchette", lago: "Laghi", altro: "Altro" };
 
@@ -115,7 +119,7 @@
       var p = store[k]; if (!p || p.nf || p.lat == null) return;
       var it = idx[k], kind = kindOf(it.name), c = COLORS[kind];
       var acts = it.acts.slice().sort(function (a, b) { return a.d < b.d ? 1 : -1; });
-      var html = '<div class="poi-pop"><b>' + esc(it.name) + "</b><small>" + LABELS[kind] + (p.comune ? " · " + esc(p.comune) : "") + " · " + acts.length + (acts.length === 1 ? " attività" : " attività") + "</small><ul>" +
+      var html = '<div class="poi-pop"><b>' + esc(it.name) + "</b><small>" + LABELS[kind] + (p.comune ? " · " + esc(p.comune) : "") + (alpino(it.ctx.stato) ? "" : " · " + esc(it.ctx.stato)) + " · " + acts.length + (acts.length === 1 ? " attività" : " attività") + "</small><ul>" +
         acts.slice(0, 6).map(function (a) { return "<li>" + fmtAct(a) + "</li>"; }).join("") + (acts.length > 6 ? "<li>… e altre " + (acts.length - 6) + "</li>" : "") + '</ul><button type="button" class="poi-fix" data-k="' + esc(k) + '">Rettifica posizione…</button></div>';
       L.circleMarker([p.lat, p.lng], { radius: 5 + Math.min(7, Math.sqrt(acts.length) * 1.6), color: "#fff", weight: 1.5, fillColor: c, fillOpacity: .85 })
         .bindPopup(html, { maxWidth: 300 }).addTo(layer).on("popupopen", function (e) {
@@ -125,7 +129,15 @@
       markers[k] = layer.getLayers()[layer.getLayers().length - 1];
     });
     draw.pts = pts; stats(n);
+    // quando cambiano i filtri: sulle Alpi lombarde se i luoghi sono tutti alpini, altrimenti sui luoghi trovati (es. un paese estero)
+    var sig = typeof F !== "undefined" ? F.length + "/" + DATA.length : "";
+    if (draw.sig != null && draw.sig !== sig && pts.length) {
+      var alps = L.latLngBounds([43.8, 5.0], [48.2, 14.0]);
+      if (pts.every(function (q) { return alps.contains(q); })) viewAlps(); else map.fitBounds(pts, { padding: [30, 30], maxZoom: 12 });
+    }
+    draw.sig = sig;
   }
+  function viewAlps() { if (map) map.setView(CENTER, ZOOM); }
   function refresh() {
     if (!visible()) { dirty = true; return; }
     ensureMap(); if (!map) return;
@@ -135,32 +147,43 @@
   /* ---------------- stato e pulsanti ---------------- */
   var running = false, stop = false;
   function counts() {
-    var idx = collect(DATA, true), keys = Object.keys(idx), loc = 0, nf = 0;
-    keys.forEach(function (k) { var p = store[k]; if (p) { if (p.nf) nf++; else loc++; } });
-    return { total: keys.length, loc: loc, nf: nf, todo: keys.length - loc - nf, idx: idx };
+    var idx = collect(DATA, false), keys = Object.keys(idx), loc = 0, nf = 0, abroad = 0;
+    keys.forEach(function (k) {
+      var p = store[k]; if (!p) return;
+      if (p.nf) nf++; else { loc++; if (!alpino(idx[k].ctx.stato)) abroad++; }
+    });
+    return { total: keys.length, loc: loc, nf: nf, abroad: abroad, todo: keys.length - loc - nf, idx: idx };
   }
   function stats(shown) {
     var c = counts(), el = $("map-stat"); if (!el) return;
-    el.textContent = (shown == null ? "" : shown + " luoghi sulla mappa · ") + c.loc + " localizzati su " + c.total + (c.nf ? " · " + c.nf + (c.nf === 1 ? " non trovato" : " non trovati") : "") + (c.todo ? " · " + c.todo + " da localizzare" : "");
+    el.textContent = (shown == null ? "" : shown + " luoghi sulla mappa · ") + c.loc + " localizzati su " + c.total + (c.abroad ? " (" + c.abroad + " all'estero)" : "") + (c.nf ? " · " + c.nf + (c.nf === 1 ? " non trovato" : " non trovati") : "") + (c.todo ? " · " + c.todo + " da localizzare" : "");
     var b = $("map-locate"); if (b && !running) { b.hidden = !c.todo; b.textContent = "Localizza " + c.todo + (c.todo === 1 ? " luogo" : " luoghi"); }
-    var d = dirtyKeys().length, s = $("map-save"); if (s) { s.hidden = !(d && RS && RS.ghConfig()); s.textContent = "Salva " + d + (d === 1 ? " modifica" : " modifiche") + " su GitHub"; }
+    var d = dirtyKeys().length, s = $("map-save"), tk = !!(RS && RS.ghConfig());
+    if (el && d) el.textContent += " · " + d + (tk ? (d === 1 ? " modifica non ancora su GitHub" : " modifiche non ancora su GitHub") : (d === 1 ? " modifica solo su questo dispositivo" : " modifiche solo su questo dispositivo"));
+    if (s) {
+      s.hidden = !d;
+      s.textContent = tk ? "Salva " + d + (d === 1 ? " modifica" : " modifiche") + " su GitHub" : "Collega GitHub per salvare " + d + (d === 1 ? " modifica" : " modifiche");
+    }
   }
   function msg(html, cls) { var m = $("map-msg"); if (m) { m.innerHTML = html || ""; m.className = "map-msg" + (cls ? " " + cls : ""); m.hidden = !html; } }
 
   /* ---------------- localizzazione (Nominatim) ---------------- */
-  function search(q) {
-    var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=3&addressdetails=1&accept-language=it&bounded=1" +
-      "&viewbox=" + BOX.w + "," + BOX.n + "," + BOX.e + "," + BOX.s + "&q=" + encodeURIComponent(q);
+  function search(q, stato) {
+    var alp = alpino(stato), code = CODICI[stato];
+    var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=3&addressdetails=1&accept-language=it" +
+      (alp ? "&bounded=1&viewbox=" + BOX.w + "," + BOX.n + "," + BOX.e + "," + BOX.s : "") + (code ? "&countrycodes=" + code : "") + "&q=" + encodeURIComponent(q);
     return fetch(url, { headers: { "Accept": "application/json" } }).then(function (r) {
       if (r.status === 429 || r.status === 503) { var e = new Error("limite di richieste raggiunto"); e.rate = true; throw e; }
       if (!r.ok) throw new Error("HTTP " + r.status);
       return r.json();
     });
   }
-  function pickResult(list) {
+  function pickResult(list, stato) {
+    var alp = alpino(stato);
     for (var i = 0; i < list.length; i++) {
       var lat = parseFloat(list[i].lat), lng = parseFloat(list[i].lon);
-      if (lat >= BOX.s && lat <= BOX.n && lng >= BOX.w && lng <= BOX.e) {
+      if (isNaN(lat) || isNaN(lng)) continue;
+      if (!alp || (lat >= BOX.s && lat <= BOX.n && lng >= BOX.w && lng <= BOX.e)) {
         var ad = list[i].address || {};
         return { lat: Math.round(lat * 1e5) / 1e5, lng: Math.round(lng * 1e5) / 1e5, tipo: list[i].type || "",
                  comune: ad.village || ad.town || ad.city || ad.municipality || ad.hamlet || "" };
@@ -170,12 +193,13 @@
   }
   var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
   function geocode(it) {
-    var c = it.ctx, parts = function (a) { return a.filter(Boolean).join(", "); };
-    var q1 = parts([it.name, c.prov, c.reg === c.prov ? "" : c.reg, c.stato]);
-    var q2 = parts([it.name, c.reg, c.stato]);
-    return search(q1).then(function (l) {
-      var r = pickResult(l); if (r || q2 === q1) return r;
-      return wait(1100).then(function () { return search(q2); }).then(pickResult);
+    var c = it.ctx, area = function (t) { return String(t || "").replace(/[()]/g, " ").replace(/\s+/g, " ").trim(); };
+    var parts = function (a) { return a.filter(Boolean).join(", "); };
+    var q1 = parts([it.name, area(c.prov), c.reg === c.prov ? "" : area(c.reg), c.stato]);
+    var q2 = parts([it.name, area(c.reg), c.stato]);
+    return search(q1, c.stato).then(function (l) {
+      var r = pickResult(l, c.stato); if (r || q2 === q1) return r;
+      return wait(1100).then(function () { return search(q2, c.stato); }).then(function (l2) { return pickResult(l2, c.stato); });
     });
   }
   function locate() {
@@ -208,7 +232,7 @@
   }
   function saveRemote() {
     var cfg = RS && RS.ghConfig(); if (!cfg) return;
-    clearTimeout(autoSaveT);
+    clearTimeout(autoSaveT); autoSaveT = null;
     var snapshot = Object.keys(edits);
     msg("Salvataggio dei luoghi su GitHub…");
     RS.ghUpdateFile(cfg, POI_PATH, function (text) {
@@ -225,8 +249,24 @@
     }).catch(function (e) { msg("Salvataggio su GitHub non riuscito: " + esc(e.message || String(e)) + ". Le modifiche restano in questo browser.", "err"); });
   }
 
+  /* Il token GitHub è salvato per ogni dispositivo/browser: da qui lo si può impostare (stessa configurazione di Attività). */
+  function connectGithub() {
+    var H = window.HUB || {}, repo = H.fullRepo || "";
+    var t = window.prompt("Per salvare su GitHub (repository " + repo + ") incolla il token con permesso di scrittura sui contenuti.\nResta solo in questo browser.", "");
+    if (!t || !t.trim()) return;
+    var cfg = {}; try { cfg = JSON.parse(localStorage.getItem("sentieri_gh_config_v1") || "{}") || {}; } catch (e) {}
+    cfg.repo = cfg.repo || repo; cfg.branch = cfg.branch || H.branch || "main"; cfg.path = cfg.path || "attivita/data/luoghi.json"; cfg.token = t.trim();
+    try { localStorage.setItem("sentieri_gh_config_v1", JSON.stringify(cfg)); } catch (e) { msg("Non riesco a salvare il token in questo browser.", "err"); return; }
+    stats(); saveRemote();
+  }
+  // su smartphone si cambia app senza "chiudere" la pagina: salvo subito invece di aspettare i 5 secondi
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden && RS && RS.ghConfig() && (autoSaveT || dirtyKeys().length)) { clearTimeout(autoSaveT); autoSaveT = null; saveRemote(); }
+  });
+  window.addEventListener("pagehide", function () { if (autoSaveT && RS && RS.ghConfig()) { clearTimeout(autoSaveT); autoSaveT = null; saveRemote(); } });
+
   /* ---------------- rivedi luoghi: compilare i non trovati, rettificare gli automatici ---------------- */
-  var mst = { f: "nf", q: "", all: false, open: null, mode: null, res: null, limit: 80 };
+  var mst = { f: "nf", q: "", all: true, open: null, mode: null, res: null, limit: 80 };
   function statusOf(k) { var p = store[k]; if (!p) return "todo"; if (p.nf) return "nf"; return p.man ? "man" : "auto"; }
   var STATUS_LABEL = { nf: "Non trovato", todo: "Da localizzare", auto: "Automatico", man: "Manuale" };
   function modalEl() {
@@ -250,7 +290,7 @@
   }
   function closeManage() { var el = $("poi-modal"); if (el) el.hidden = true; }
   function openManage(o) {
-    modalEl(); mst = { f: "nf", q: "", all: false, open: null, mode: null, res: null, limit: 80 };
+    modalEl(); mst = { f: "nf", q: "", all: true, open: null, mode: null, res: null, limit: 80 };
     if (o) for (var k in o) mst[k] = o[k];
     if (mst.open) mst.mode = "search";
     renderManage(); $("poi-modal").hidden = false;
@@ -272,7 +312,7 @@
     $("poi-body").innerHTML = '<h3 id="poi-title">Rivedi i luoghi</h3>' +
       '<p class="imp-sub">Compila i luoghi non trovati o correggi quelli messi in automatico. Le tue correzioni hanno la precedenza e si salvano in <i>attivita/data/poi.json</i>.</p>' +
       '<div class="poi-tools">' + chip("nf", "Non trovati") + chip("todo", "Da localizzare") + chip("auto", "Automatici") + chip("man", "Manuali") + chip("all", "Tutti") +
-      '<input type="search" id="poi-q" placeholder="Cerca un luogo…" value="' + esc(mst.q) + '"><label><input type="checkbox" id="poi-all"' + (mst.all ? " checked" : "") + '> anche fuori dalle Alpi</label></div>' +
+      '<input type="search" id="poi-q" placeholder="Cerca un luogo…" value="' + esc(mst.q) + '"><label><input type="checkbox" id="poi-all"' + (mst.all ? " checked" : "") + '> includi l’estero</label></div>' +
       '<div class="poi-list" id="poi-list"></div><div id="poi-status"></div>' +
       '<div class="imp-foot"><span class="grow" id="poi-foot"></span><button class="btn dark" type="button" data-act="close">Chiudi</button></div>';
     renderList();
@@ -285,7 +325,7 @@
     if (items.length > show.length) html += '<div class="poi-row"><button type="button" class="chip" data-act="more">Mostra altri (' + (items.length - show.length) + ')</button></div>';
     $("poi-list").innerHTML = html;
     var d = dirtyKeys().length;
-    $("poi-foot").textContent = d ? d + (d === 1 ? " modifica non ancora su GitHub" : " modifiche non ancora su GitHub") + (RS && RS.ghConfig() ? " (si salvano da sole)" : " · imposta il token in Attività per salvarle nel repository") : "";
+    $("poi-foot").textContent = d ? d + (d === 1 ? " modifica non ancora su GitHub" : " modifiche non ancora su GitHub") + (RS && RS.ghConfig() ? " (si salvano da sole)" : " · collega GitHub dal pulsante nella mappa per salvarle nel repository") : "";
   }
   function rowHtml(x) {
     var p = store[x.k], it = x.it, last = it.acts.reduce(function (m, a) { return a.d > m ? a.d : m; }, "");
@@ -306,7 +346,7 @@
       return '<div class="poi-panel"><div class="line"><input type="text" id="poi-cq" placeholder="Coordinate, es. 46.0123, 9.7654" autocomplete="off"><button type="button" data-act="setcoord" data-k="' + esc(x.k) + '">Imposta</button></div>' +
         '<div class="poi-help">Su Google Maps o OpenStreetMap: tasto destro sul punto → copia le coordinate e incollale qui.</div></div>';
     }
-    var c = x.it.ctx, q = mst.sq != null ? mst.sq : [x.it.name, c.prov, c.stato].filter(Boolean).join(", ");
+    var c = x.it.ctx, q = mst.sq != null ? mst.sq : [x.it.name, String(c.prov || "").replace(/[()]/g, " "), c.stato].filter(Boolean).join(", ");
     var res = mst.res == null ? "" : !mst.res.length ? '<div class="poi-help">Nessun risultato. Prova a cambiare le parole o usa “Sulla mappa”.</div>' :
       '<ul class="poi-res">' + mst.res.map(function (r, i) { return '<li><div>' + esc(r.title) + "<small>" + esc(r.sub) + '</small></div><button type="button" data-act="pick" data-k="' + esc(x.k) + '" data-i="' + i + '">Usa questo</button></li>'; }).join("") + "</ul>";
     return '<div class="poi-panel"><div class="line"><input type="text" id="poi-sq" value="' + esc(q) + '" autocomplete="off"><button type="button" data-act="dosearch" data-k="' + esc(x.k) + '">Cerca su OpenStreetMap</button></div>' + res + "</div>";
@@ -315,7 +355,8 @@
 
   function doSearch() {
     var inp = $("poi-sq"); if (!inp) return; mst.sq = inp.value; pstatus("Ricerca in corso…");
-    var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&addressdetails=1&accept-language=it&viewbox=" + BOX.w + "," + BOX.n + "," + BOX.e + "," + BOX.s + "&q=" + encodeURIComponent(mst.sq);
+    var ctxS = (collect(DATA, false)[mst.open] || {}).ctx || {}, codeS = CODICI[ctxS.stato];
+    var url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&addressdetails=1&accept-language=it" + (alpino(ctxS.stato) || !ctxS.stato ? "&viewbox=" + BOX.w + "," + BOX.n + "," + BOX.e + "," + BOX.s : "") + (codeS ? "&countrycodes=" + codeS : "") + "&q=" + encodeURIComponent(mst.sq);
     fetch(url, { headers: { "Accept": "application/json" } }).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then(function (list) {
       mst.res = list.map(function (r) {
         var ad = r.address || {};
@@ -394,8 +435,15 @@
     setupColl("coll-cal", false, function () { var el = $("ch-cum"); if (el && DATA.length && typeof F !== "undefined" && F.length && typeof calHeat === "function") calHeat(el); });
     if ($("map-locate")) $("map-locate").onclick = locate;
     if ($("map-edit")) $("map-edit").onclick = function () { openManage(); };
-    if ($("map-save")) $("map-save").onclick = saveRemote;
+    if ($("map-save")) $("map-save").onclick = function () { if (RS && RS.ghConfig()) saveRemote(); else connectGithub(); };
     if ($("map-fit")) $("map-fit").onclick = function () { ensureMap(); if (map && draw.pts && draw.pts.length) map.fitBounds(draw.pts, { padding: [30, 30], maxZoom: 13 }); };
+    if ($("map-alps")) $("map-alps").onclick = function () { ensureMap(); viewAlps(); };
+    if ($("map-abroad")) $("map-abroad").onclick = function () {
+      ensureMap(); if (!map) return;
+      var idx = collect(typeof F !== "undefined" ? F : DATA, false), pts = [];
+      Object.keys(idx).forEach(function (k) { var p = store[k]; if (p && !p.nf && p.lat != null && !alpino(idx[k].ctx.stato)) pts.push([p.lat, p.lng]); });
+      if (pts.length) map.fitBounds(pts, { padding: [30, 30] }); else msg("Nessun luogo all’estero localizzato (o nessuno con i filtri attuali).");
+    };
     var legend = $("map-legend"); if (legend) legend.innerHTML = Object.keys(COLORS).map(function (k) { return '<span><i style="background:' + COLORS[k] + '"></i>' + LABELS[k] + "</span>"; }).join("");
     var origUpdate = window.update;
     if (typeof origUpdate === "function") window.update = function () { var r = origUpdate.apply(this, arguments); stats(); refresh(); return r; };
