@@ -448,7 +448,11 @@
   "comune": "Barzio"
  },
  "cima di valcervia": {
-  "nf": 1
+  "lat": 46.052,
+  "lng": 9.79485,
+  "tipo": "lake",
+  "comune": "Foppolo",
+  "man": 1
  },
  "cima d’olino": {
   "lat": 46.01214,
@@ -1659,7 +1663,11 @@
   "comune": "Branzi"
  },
  "passo e cima di valcerviera": {
-  "nf": 1
+  "lat": 46.052,
+  "lng": 9.79485,
+  "tipo": "lake",
+  "comune": "Foppolo",
+  "man": 1
  },
  "passo e lago di val viola": {
   "nf": 1
