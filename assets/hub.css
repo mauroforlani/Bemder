@@ -385,5 +385,10 @@ body[data-app="running"] #admin-modal .admin-search { width: min(320px, 100%); }
   body[data-app="running"] #admin-modal .admin-scroll { max-height: none; overflow-x: auto; }
 }
 
+/* ATTIVITÀ: mappa in fondo alla pagina e pulsante "Mostra tutte" */
+body[data-app="attivita"] .map-wrap.map-below { margin: 2rem auto 1rem; }
+.map-showall { background: #fff; border: 2px solid rgba(0,0,0,.2); border-radius: 6px; padding: 5px 10px; font: 600 12px var(--hub-body, system-ui); cursor: pointer; color: var(--hub-text, #1a1f27); }
+.map-showall:hover { background: #f4f4f4; }
+
 /* mappe sotto la barra */
 .leaflet-container { isolation: isolate; }
