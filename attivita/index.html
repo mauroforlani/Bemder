@@ -947,7 +947,6 @@ button.submit:hover { background: #2b2f38; }
     <h1>Tutta l'Italia, un itinerario alla volta</h1>
     <p class="lead">Escursioni, motogiri, punti di interesse e gare trail running raccolti in un unico catalogo, divisi per regione.</p>
   </div>
-  <div class="map-wrap"><div id="map-home"></div></div>
   <div class="section-cards">
     <a href="javascript:void(0)" class="section-card t-escursione" data-view="escursioni">
       <span class="dot"></span><h3>Escursioni</h3>
@@ -974,6 +973,7 @@ button.submit:hover { background: #2b2f38; }
       <div class="go">Esplora →</div>
     </a>
   </div>
+  <div class="map-wrap map-below"><div id="map-home"></div></div>
   <footer>Attività Mauro — catalogo personale</footer>
 </div>
 
@@ -1398,9 +1398,34 @@ function formatDataItaliana(iso){
   return dt.toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 }
 
+// vista iniziale: Alpi lombarde (le altre destinazioni, anche estere, si vedono con "Mostra tutte" o zoomando fuori)
+function vistaAlpiLombarde(map){
+  const s = map.getSize();
+  if(s.x > 0 && s.y > 0) map.fitBounds(L.latLngBounds([45.55, 8.75], [46.65, 10.75]), { animate: false });
+  else map.setView([46.1, 9.75], 8, { animate: false });
+}
+function addShowAll(map){
+  const Ctl = L.Control.extend({
+    options: { position: "topright" },
+    onAdd: function(){
+      const b = L.DomUtil.create("button", "map-showall");
+      b.type = "button"; b.textContent = "Mostra tutte";
+      b.title = "Inquadra tutte le destinazioni, anche fuori dalle Alpi lombarde e all'estero";
+      L.DomEvent.disableClickPropagation(b);
+      b.addEventListener("click", function(){
+        const pts = map._hubPts || [];
+        if(pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [24,24] });
+      });
+      return b;
+    }
+  });
+  new Ctl().addTo(map);
+}
 function createItalyMap(containerId){
-  const map = L.map(containerId,{scrollWheelZoom:false}).setView([42.5,12.5],6);
+  const map = L.map(containerId,{scrollWheelZoom:false});
+  vistaAlpiLombarde(map);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OpenStreetMap",maxZoom:18}).addTo(map);
+  addShowAll(map);
   return map;
 }
 function createGenericMap(containerId){
@@ -1415,7 +1440,7 @@ function fitMapToItems(map, items){
     if(it.traccia) it.traccia.forEach(p => points.push(p));
   });
   if(points.length > 0){
-    map.fitBounds(L.latLngBounds(points), { padding: [24,24] });
+    map.fitBounds(L.latLngBounds(points), { padding: [24,24], maxZoom: 12 });
   }
 }
 function makeIcon(tipo){
@@ -1441,6 +1466,7 @@ function downloadGpxById(id){
 }
 function addMarkers(map, items){
   const layer = L.layerGroup().addTo(map);
+  map._hubPts = items.filter(it => typeof it.lat === "number" && typeof it.lng === "number").map(it => [it.lat, it.lng]);
   items.forEach(it=>{
     if(it.traccia && Array.isArray(it.traccia) && it.traccia.length > 1){
       L.polyline(it.traccia, { color: TIPO_COLOR[it.tipo] || "#555", weight: 4, opacity: 0.85 })
@@ -1814,7 +1840,6 @@ document.querySelectorAll(".section-view").forEach(view => {
       ${tipo === "escursione" ? `<button type="button" class="btn-list-view" id="btn-lista-escursioni">📋 Lista escursioni</button>` : ""}
       ${tipo === "gara" ? `<button type="button" class="btn-list-view" id="btn-lista-gare">📋 Lista Trail</button>` : ""}
     </div>
-    <div class="map-wrap"><div id="map-${tipo}"></div></div>
     <section class="controls">
       <select id="filter-paese-${tipo}"><option value="tutti">Tutti i paesi</option></select>
       <select id="filter-regione-${tipo}"><option value="tutte">Tutte le regioni</option></select>
@@ -1822,6 +1847,7 @@ document.querySelectorAll(".section-view").forEach(view => {
       <span class="count-label" id="result-count-${tipo}"></span>
     </section>
     <section class="list" id="list-${tipo}"></section>
+    <div class="map-wrap map-below"><div id="map-${tipo}"></div></div>
     <footer>Attività Mauro — catalogo personale</footer>
   `;
 
@@ -1885,6 +1911,8 @@ document.querySelectorAll(".section-view").forEach(view => {
     if(sectionState[tipo].map){
       sectionState[tipo].map.removeLayer(sectionState[tipo].layer);
       sectionState[tipo].layer = addMarkers(sectionState[tipo].map, filtered);
+      // senza filtri: Alpi lombarde; con filtri (paese, regione, ricerca): sui risultati
+      if(paese!=="tutti" || regione!=="tutte" || q) fitMapToItems(sectionState[tipo].map, filtered); else vistaAlpiLombarde(sectionState[tipo].map);
     }
     document.getElementById(`result-count-${tipo}`).textContent = `${filtered.length} voc${filtered.length===1?"e":"i"}`;
     renderListByRegion(document.getElementById(`list-${tipo}`), filtered, `Nessuna voce in questa categoria. Cambia i filtri.`);
@@ -1906,7 +1934,6 @@ document.querySelectorAll(".trip-view").forEach(view => {
       <h1>${view.dataset.title}</h1>
       <p class="lead">${view.dataset.lead}</p>
     </div>
-    <div class="map-wrap"><div id="map-${viewId}"></div></div>
     <section class="controls">
       <select id="filter-tipo-${viewId}">
         <option value="tutti">Tutti i tipi</option>
@@ -1917,6 +1944,7 @@ document.querySelectorAll(".trip-view").forEach(view => {
       <span class="count-label" id="result-count-${viewId}"></span>
     </section>
     <section class="list" id="list-${viewId}"></section>
+    <div class="map-wrap map-below"><div id="map-${viewId}"></div></div>
     <footer>Attività Mauro — catalogo personale</footer>
   `;
 
