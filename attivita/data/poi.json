@@ -1,4 +1,7 @@
 {
+ "akaka falls": {
+  "nf": 1
+ },
  "albe buscagna": {
   "lat": 46.31003,
   "lng": 8.23031,
@@ -55,6 +58,9 @@
   "tipo": "peak",
   "comune": "Oltre il Colle",
   "man": 1
+ },
+ "awaawapuhi trail": {
+  "nf": 1
  },
  "baita alta del cardeto": {
   "lat": 46.0138,
@@ -238,6 +244,12 @@
   "comune": "Obergoms",
   "man": 1
  },
+ "bláhnúkur": {
+  "lat": 63.97677,
+  "lng": -19.06917,
+  "tipo": "peak",
+  "comune": ""
+ },
  "bocchetta acqua fredda": {
   "nf": 1
  },
@@ -271,11 +283,35 @@
  "breithorn occidentale": {
   "nf": 1
  },
+ "brennisteinsalda": {
+  "lat": 63.98089,
+  "lng": -19.09557,
+  "tipo": "peak",
+  "comune": ""
+ },
+ "bryce canyon (navajo & peekaboo trail)": {
+  "nf": 1
+ },
  "buco di viso": {
+  "nf": 1
+ },
+ "bøsdalafossur waterfall": {
   "nf": 1
  },
  "cabane du combal": {
   "nf": 1
+ },
+ "caldera de gayria": {
+  "nf": 1
+ },
+ "caldera e caldereta blanca": {
+  "nf": 1
+ },
+ "calderon hondo": {
+  "lat": 28.69858,
+  "lng": -13.92086,
+  "tipo": "volcano",
+  "comune": "La Oliva"
  },
  "campanile e forcella di val montanaia": {
   "nf": 1
@@ -685,13 +721,22 @@
   "tipo": "peak",
   "comune": "Braies"
  },
+ "diamond head": {
+  "nf": 1
+ },
  "diavolezza": {
   "lat": 46.4107,
   "lng": 9.96706,
   "tipo": "saddle",
   "comune": "Pontresina"
  },
+ "drangarnir & soltuvik viewpoint": {
+  "nf": 1
+ },
  "druogno hiking": {
+  "nf": 1
+ },
+ "eiðiskollur": {
   "nf": 1
  },
  "eyehorn": {
@@ -731,6 +776,12 @@
  "giro del sassolungo": {
   "nf": 1
  },
+ "gjógv trail": {
+  "nf": 1
+ },
+ "glomtinden": {
+  "nf": 1
+ },
  "gran paradiso": {
   "lat": 45.51782,
   "lng": 7.2672,
@@ -750,6 +801,33 @@
   "comune": "Castione della Presolana"
  },
  "gtc 30k": {
+  "nf": 1
+ },
+ "hoven": {
+  "nf": 1
+ },
+ "humu’ula trail": {
+  "nf": 1
+ },
+ "hveradalir loop": {
+  "nf": 1
+ },
+ "isla de lobos e caldera": {
+  "nf": 1
+ },
+ "kallur lighthouse": {
+  "nf": 1
+ },
+ "kilauea iki crater": {
+  "nf": 1
+ },
+ "klakkur": {
+  "nf": 1
+ },
+ "kluftáfossur": {
+  "nf": 1
+ },
+ "koko crater": {
   "nf": 1
  },
  "laghetti del venerocolo": {
@@ -997,17 +1075,38 @@
   "comune": "Lesachtal",
   "man": 1
  },
+ "lanikai pillbox": {
+  "nf": 1
+ },
  "lej languard": {
   "lat": 46.47525,
   "lng": 9.95364,
   "tipo": "lake",
   "comune": "Pontresina"
  },
+ "levada das 25 fontes & levada do risco": {
+  "nf": 1
+ },
+ "levada do caldeirao verde": {
+  "lat": 32.78079,
+  "lng": -16.91693,
+  "tipo": "drain",
+  "comune": "Santana"
+ },
+ "levada do rei": {
+  "lat": 32.81205,
+  "lng": -16.92911,
+  "tipo": "drain",
+  "comune": "São Jorge"
+ },
  "madonna delle nevi": {
   "lat": 45.86241,
   "lng": 10.07944,
   "tipo": "place_of_worship",
   "comune": "Costa Volpino"
+ },
+ "makapu’u head": {
+  "nf": 1
  },
  "malga bassa e alta di barbarossa": {
   "nf": 1
@@ -1023,6 +1122,15 @@
  },
  "malga langalm": {
   "nf": 1
+ },
+ "manoa falls & pauoa flats trail": {
+  "nf": 1
+ },
+ "may lake": {
+  "lat": 37.84738,
+  "lng": -119.49327,
+  "tipo": "lake",
+  "comune": ""
  },
  "milan trail running": {
   "lat": 45.45421,
@@ -1057,6 +1165,15 @@
   "lng": 9.9436,
   "tipo": "peak",
   "comune": "Gandino"
+ },
+ "montana bermeja": {
+  "nf": 1
+ },
+ "montaña roja": {
+  "lat": 28.02702,
+  "lng": -16.54907,
+  "tipo": "peak",
+  "comune": "Granadilla de Abona"
  },
  "monte alto": {
   "lat": 45.86759,
@@ -1514,6 +1631,9 @@
   "tipo": "peak",
   "comune": "Pontresina"
  },
+ "offersøykammen": {
+  "nf": 1
+ },
  "orestes hutte": {
   "lat": 45.87438,
   "lng": 7.85005,
@@ -1804,6 +1924,24 @@
   "tipo": "hamlet",
   "comune": "Barzio"
  },
+ "pico de la zarza": {
+  "lat": 28.10184,
+  "lng": -14.35554,
+  "tipo": "viewpoint",
+  "comune": "Cofete"
+ },
+ "pico do areeiro": {
+  "lat": 32.73573,
+  "lng": -16.92871,
+  "tipo": "viewpoint",
+  "comune": "São Roque do Faial"
+ },
+ "pico ruivo": {
+  "lat": 32.76032,
+  "lng": -16.94353,
+  "tipo": "camp_site",
+  "comune": "Faial"
+ },
  "piramide vincent": {
   "lat": 45.90811,
   "lng": 7.86131,
@@ -1980,6 +2118,9 @@
   "tipo": "peak",
   "comune": "Ponte di Legno"
  },
+ "punta di san lorenzo e ponta do forado": {
+  "nf": 1
+ },
  "punta di valrossa (rotentalhorn)": {
   "nf": 1
  },
@@ -2008,6 +2149,9 @@
   "comune": "Tires"
  },
  "re alberto e santner": {
+  "nf": 1
+ },
+ "reinebringen": {
   "nf": 1
  },
  "rifugio 3a": {
@@ -2998,6 +3142,9 @@
   "comune": "Formazza",
   "man": 1
  },
+ "ryten": {
+  "nf": 1
+ },
  "sasso basciotta": {
   "lat": 46.10978,
   "lng": 9.07796,
@@ -3049,13 +3196,28 @@
  "sentiero glaciologico alto dei forni": {
   "nf": 1
  },
+ "sentinel dome": {
+  "lat": 37.72298,
+  "lng": -119.58433,
+  "tipo": "peak",
+  "comune": "Curry Village"
+ },
  "signore dei ghiaioni": {
   "lat": 45.95058,
   "lng": 10.04618,
   "tipo": "wayside_cross",
   "comune": "Castione della Presolana"
  },
+ "skeggjanøvin": {
+  "nf": 1
+ },
+ "slættaratindur": {
+  "nf": 1
+ },
  "stralivigno": {
+  "nf": 1
+ },
+ "stùtur crater": {
   "nf": 1
  },
  "testa bernarda": {
@@ -3070,6 +3232,9 @@
   "tipo": "peak",
   "comune": "Courmayeur"
  },
+ "tjeldbergtind": {
+  "nf": 1
+ },
  "top dolomites 22k": {
   "nf": 1
  },
@@ -3081,6 +3246,21 @@
   "lng": 9.41142,
   "tipo": "guidepost",
   "comune": "Pasturo"
+ },
+ "trælanípa": {
+  "nf": 1
+ },
+ "tuolumne sequoia": {
+  "lat": 37.81196,
+  "lng": -119.93396,
+  "tipo": "summer_camp",
+  "comune": "Sequoia"
+ },
+ "upper yosemite falls": {
+  "lat": 37.75039,
+  "lng": -119.59866,
+  "tipo": "path",
+  "comune": "Yosemite Village"
  },
  "utlac 30k": {
   "nf": 1
@@ -3161,14 +3341,41 @@
  "verde e lago superiore del rutor": {
   "nf": 1
  },
+ "vereda do larano": {
+  "lat": 32.76167,
+  "lng": -16.80228,
+  "tipo": "track",
+  "comune": "Porto da Cruz"
+ },
+ "vernel & nevada falls": {
+  "nf": 1
+ },
  "via del latte": {
   "lat": 45.93583,
   "lng": 10.05958,
   "tipo": "track",
   "comune": "Castione della Presolana"
  },
+ "volcan de bayuyo": {
+  "lat": 28.70517,
+  "lng": -13.89874,
+  "tipo": "volcano",
+  "comune": "La Oliva"
+ },
+ "volcan de la arena": {
+  "nf": 1
+ },
+ "volcano de la corona": {
+  "nf": 1
+ },
  "vut 35k": {
   "nf": 1
+ },
+ "waimea canyon trail": {
+  "lat": 22.06421,
+  "lng": -159.64315,
+  "tipo": "track",
+  "comune": ""
  },
  "zucco del corvo": {
   "lat": 45.98899,
