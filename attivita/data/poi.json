@@ -2907,7 +2907,11 @@
   "comune": "Carona"
  },
  "rifugio terrerosse": {
-  "nf": 1
+  "lat": 46.03339,
+  "lng": 9.78571,
+  "tipo": "hotel",
+  "comune": "Carona",
+  "man": 1
  },
  "rifugio tissi": {
   "lat": 46.38809,
