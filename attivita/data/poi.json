@@ -1020,22 +1020,46 @@
   "man": 1
  },
  "hoven": {
-  "nf": 1
+  "lat": 68.33053,
+  "lng": 14.10579,
+  "tipo": "peak",
+  "comune": "Vågan",
+  "man": 1
  },
  "humu’ula trail": {
-  "nf": 1
+  "lat": 19.69825,
+  "lng": -155.49414,
+  "tipo": "saddle",
+  "comune": "",
+  "man": 1
  },
  "hveradalir loop": {
-  "nf": 1
+  "lat": 64.64396,
+  "lng": -19.27692,
+  "tipo": "valley",
+  "comune": "",
+  "man": 1
  },
  "isla de lobos e caldera": {
-  "nf": 1
+  "lat": 28.75094,
+  "lng": -13.8239,
+  "tipo": "island",
+  "comune": "La Oliva",
+  "man": 1
  },
  "kallur lighthouse": {
-  "nf": 1
+  "lat": 62.37179,
+  "lng": -6.8148,
+  "tipo": "locality",
+  "comune": "Trøllanes",
+  "man": 1
  },
  "kilauea iki crater": {
-  "nf": 1
+  "lat": 19.41566,
+  "lng": -155.24268,
+  "tipo": "viewpoint",
+  "comune": "Volcano",
+  "man": 1
  },
  "klakkur": {
   "nf": 1
