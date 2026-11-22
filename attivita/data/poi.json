@@ -1434,7 +1434,11 @@
   "comune": "Castione della Presolana"
  },
  "malga cornetto trail running": {
-  "nf": 1
+  "lat": 45.93544,
+  "lng": 10.05502,
+  "tipo": "path",
+  "comune": "Castione della Presolana",
+  "man": 1
  },
  "malga langalm": {
   "nf": 1
