@@ -337,13 +337,17 @@
   "man": 1
  },
  "buco di viso": {
-  "nf": 1
+  "lat": 44.71219,
+  "lng": 7.06647,
+  "tipo": "",
+  "comune": "Crissolo",
+  "man": 1
  },
  "bøsdalafossur waterfall": {
-  "lat": 62.02344,
-  "lng": -7.24023,
-  "tipo": "waterfall",
-  "comune": "Miðvágur",
+  "lat": 44.71219,
+  "lng": 7.06647,
+  "tipo": "",
+  "comune": "Crissolo",
   "man": 1
  },
  "cabane du combal": {
@@ -693,7 +697,11 @@
   "man": 1
  },
  "cima sodadura": {
-  "nf": 1
+  "lat": 45.94006,
+  "lng": 9.54712,
+  "tipo": "peak",
+  "comune": "Vedeseta",
+  "man": 1
  },
  "cima solda": {
   "lat": 46.46874,
@@ -717,7 +725,11 @@
   "comune": "Casargo"
  },
  "cmur 30k": {
-  "nf": 1
+  "lat": 45.94406,
+  "lng": 7.70851,
+  "tipo": "alpine_hut",
+  "comune": "Valtournenche",
+  "man": 1
  },
  "colle armoine": {
   "lat": 44.71558,
