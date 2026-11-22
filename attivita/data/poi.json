@@ -358,10 +358,18 @@
   "man": 1
  },
  "caldera de gayria": {
-  "nf": 1
+  "lat": 28.35134,
+  "lng": -14.03627,
+  "tipo": "residential",
+  "comune": "Tuineje",
+  "man": 1
  },
  "caldera e caldereta blanca": {
-  "nf": 1
+  "lat": 29.03441,
+  "lng": -13.73175,
+  "tipo": "peak",
+  "comune": "Tinajo",
+  "man": 1
  },
  "calderon hondo": {
   "lat": 28.69858,
