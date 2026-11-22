@@ -1122,10 +1122,18 @@
   "man": 1
  },
  "laghi di belle combe": {
-  "nf": 1
+  "lat": 45.86094,
+  "lng": 7.07714,
+  "tipo": "valley",
+  "comune": "Courmayeur",
+  "man": 1
  },
  "laghi di boden": {
-  "nf": 1
+  "lat": 46.44204,
+  "lng": 8.45337,
+  "tipo": "",
+  "comune": "Formazza",
+  "man": 1
  },
  "laghi di campagneda": {
   "lat": 46.29959,
