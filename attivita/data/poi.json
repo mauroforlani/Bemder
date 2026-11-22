@@ -792,7 +792,11 @@
   "comune": "Cogne"
  },
  "colle delle traversette": {
-  "nf": 1
+  "lat": 44.71362,
+  "lng": 7.06575,
+  "tipo": "",
+  "comune": "Crissolo",
+  "man": 1
  },
  "colle rosset": {
   "nf": 1
