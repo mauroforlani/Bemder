@@ -228,7 +228,11 @@
   "comune": "Albaredo per San Marco"
  },
  "bivacco m.a.g.a.": {
-  "nf": 1
+  "lat": 45.92402,
+  "lng": 9.75614,
+  "tipo": "wilderness_hut",
+  "comune": "Roncobello",
+  "man": 1
  },
  "bivacco mistri": {
   "lat": 45.90117,
