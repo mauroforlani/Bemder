@@ -946,7 +946,11 @@
   "comune": "Ardesio"
  },
  "fusky 30k": {
-  "nf": 1
+  "lat": 46.29119,
+  "lng": 11.46047,
+  "tipo": "administrative",
+  "comune": "Cavalese",
+  "man": 1
  },
  "ghiacciaio del ventina": {
   "nf": 1
