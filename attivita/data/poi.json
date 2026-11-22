@@ -452,10 +452,18 @@
   "nf": 1
  },
  "ceresole reale - lago serrù": {
-  "nf": 1
+  "lat": 45.45934,
+  "lng": 7.12605,
+  "tipo": "water",
+  "comune": "Ceresole Reale",
+  "man": 1
  },
  "cervino matterhorn ultra race 30k": {
-  "nf": 1
+  "lat": 45.94406,
+  "lng": 7.70851,
+  "tipo": "alpine_hut",
+  "comune": "Valtournenche",
+  "man": 1
  },
  "chalet dell'aquila": {
   "lat": 45.96857,
@@ -476,7 +484,11 @@
   "comune": "Pontresina"
  },
  "chamois trail running": {
-  "nf": 1
+  "lat": 45.83817,
+  "lng": 7.62023,
+  "tipo": "administrative",
+  "comune": "Chamois",
+  "man": 1
  },
  "cheneil": {
   "lat": 45.86426,
@@ -509,7 +521,11 @@
   "comune": "Rovetta"
  },
  "cima croz all'altissimo": {
-  "nf": 1
+  "lat": 46.16948,
+  "lng": 10.94133,
+  "tipo": "peak",
+  "comune": "Molveno",
+  "man": 1
  },
  "cima del costone": {
   "lat": 45.91237,
