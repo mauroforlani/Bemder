@@ -540,7 +540,11 @@
   "comune": "Valtorta"
  },
  "cima di barbignaga": {
-  "nf": 1
+  "lat": 46.04457,
+  "lng": 10.38434,
+  "tipo": "alpine_hut",
+  "comune": "Grevo",
+  "man": 1
  },
  "cima di croce": {
   "lat": 45.97668,
