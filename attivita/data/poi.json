@@ -874,10 +874,18 @@
   "man": 1
  },
  "croce di vareno": {
-  "nf": 1
+  "lat": 45.89635,
+  "lng": 10.10723,
+  "tipo": "chair_lift",
+  "comune": "Castione della Presolana",
+  "man": 1
  },
  "croce di zorzone": {
-  "nf": 1
+  "lat": 45.92348,
+  "lng": 9.75439,
+  "tipo": "peak",
+  "comune": "Serina",
+  "man": 1
  },
  "croda del becco": {
   "lat": 46.67542,
