@@ -835,7 +835,11 @@
   "nf": 1
  },
  "cristo dei ghiaioni": {
-  "nf": 1
+  "lat": 45.95058,
+  "lng": 10.04618,
+  "tipo": "wayside_cross",
+  "comune": "Castione della Presolana",
+  "man": 1
  },
  "croce di vareno": {
   "nf": 1
