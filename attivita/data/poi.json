@@ -1160,10 +1160,18 @@
   "comune": "Tartano"
  },
  "laghi sangiatto": {
-  "nf": 1
+  "lat": 46.3211,
+  "lng": 8.29157,
+  "tipo": "water",
+  "comune": "Baceno",
+  "man": 1
  },
  "lago basso del cardeto": {
-  "nf": 1
+  "lat": 46.0138,
+  "lng": 9.89852,
+  "tipo": "yes",
+  "comune": "Gandellino",
+  "man": 1
  },
  "lago bianco": {
   "lat": 46.28532,
@@ -1172,7 +1180,11 @@
   "comune": "Varzo"
  },
  "lago buscagna": {
-  "nf": 1
+  "lat": 46.29413,
+  "lng": 8.23131,
+  "tipo": "lake",
+  "comune": "Baceno",
+  "man": 1
  },
  "lago caldera": {
   "lat": 46.40524,
@@ -1199,7 +1211,11 @@
   "comune": "La Thuile"
  },
  "lago del becco": {
-  "nf": 1
+  "lat": 46.00362,
+  "lng": 9.79396,
+  "tipo": "",
+  "comune": "Branzi",
+  "man": 1
  },
  "lago del diavolo": {
   "lat": 46.04377,
