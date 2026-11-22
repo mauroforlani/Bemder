@@ -1388,7 +1388,11 @@
   "man": 1
  },
  "lanikai pillbox": {
-  "nf": 1
+  "lat": 21.3902,
+  "lng": -157.71947,
+  "tipo": "trailhead",
+  "comune": "Kailua",
+  "man": 1
  },
  "lej languard": {
   "lat": 46.47525,
