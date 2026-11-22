@@ -270,7 +270,11 @@
   "nf": 1
  },
  "bocchetta dei lupi": {
-  "nf": 1
+  "lat": 46.05894,
+  "lng": 9.7383,
+  "tipo": "yes",
+  "comune": "Tartano",
+  "man": 1
  },
  "bocchetta del torno": {
   "nf": 1
