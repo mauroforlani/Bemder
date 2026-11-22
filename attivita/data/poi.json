@@ -121,7 +121,11 @@
   "comune": "Dorga"
  },
  "baita corte alta": {
-  "nf": 1
+  "lat": 45.95778,
+  "lng": 9.82398,
+  "tipo": "alpine_hut",
+  "comune": "Ardesio",
+  "man": 1
  },
  "baita del camoscio": {
   "lat": 46.04485,
