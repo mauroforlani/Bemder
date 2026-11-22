@@ -280,7 +280,11 @@
   "nf": 1
  },
  "bocchetta di gelt": {
-  "nf": 1
+  "lat": 46.08649,
+  "lng": 10.06813,
+  "tipo": "lake",
+  "comune": "Valbondione",
+  "man": 1
  },
  "bocchetta di pesciola": {
   "lat": 45.95405,
@@ -301,7 +305,11 @@
   "comune": "Albavilla"
  },
  "breithorn occidentale": {
-  "nf": 1
+  "lat": 45.93877,
+  "lng": 7.75677,
+  "tipo": "peak",
+  "comune": "Ayas",
+  "man": 1
  },
  "brennisteinsalda": {
   "lat": 63.98089,
