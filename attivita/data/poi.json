@@ -960,7 +960,11 @@
   "man": 1
  },
  "giro dei laghi del cardeto": {
-  "nf": 1
+  "lat": 46.0138,
+  "lng": 9.89852,
+  "tipo": "yes",
+  "comune": "Gandellino",
+  "man": 1
  },
  "giro dei laghi di valgoglio": {
   "lat": 45.98342,
@@ -970,13 +974,25 @@
   "man": 1
  },
  "giro del sassolungo": {
-  "nf": 1
+  "lat": 46.52494,
+  "lng": 11.73531,
+  "tipo": "peak",
+  "comune": "Selva di Val Gardena",
+  "man": 1
  },
  "gjógv trail": {
-  "nf": 1
+  "lat": 62.32574,
+  "lng": -6.94303,
+  "tipo": "administrative",
+  "comune": "Gjógv",
+  "man": 1
  },
  "glomtinden": {
-  "nf": 1
+  "lat": 68.20342,
+  "lng": 14.31039,
+  "tipo": "peak",
+  "comune": "Vågan",
+  "man": 1
  },
  "gran paradiso": {
   "lat": 45.51782,
