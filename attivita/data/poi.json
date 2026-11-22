@@ -1013,7 +1013,11 @@
   "comune": "Castione della Presolana"
  },
  "gtc 30k": {
-  "nf": 1
+  "lat": 45.84691,
+  "lng": 7.03364,
+  "tipo": "alpine_hut",
+  "comune": "Courmayeur",
+  "man": 1
  },
  "hoven": {
   "nf": 1
