@@ -64,7 +64,11 @@
   "man": 1
  },
  "awaawapuhi trail": {
-  "nf": 1
+  "lat": 22.12937,
+  "lng": -159.64545,
+  "tipo": "nature_reserve",
+  "comune": "",
+  "man": 1
  },
  "baita alta del cardeto": {
   "lat": 46.0138,
@@ -151,7 +155,11 @@
   "man": 1
  },
  "becca della traversière": {
-  "nf": 1
+  "lat": 45.49737,
+  "lng": 7.04484,
+  "tipo": "peak",
+  "comune": "Rhêmes-Notre-Dame",
+  "man": 1
  },
  "becca di nona": {
   "lat": 45.68719,
