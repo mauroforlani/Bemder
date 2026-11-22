@@ -1230,7 +1230,11 @@
   "comune": "San Giacomo Filippo"
  },
  "lago delle foppe e delle trote": {
-  "nf": 1
+  "lat": 46.05557,
+  "lng": 9.78151,
+  "tipo": "water",
+  "comune": "Foppolo",
+  "man": 1
  },
  "lago delle locce": {
   "lat": 45.94356,
@@ -1263,10 +1267,18 @@
   "comune": "Borno"
  },
  "lago di malgina": {
-  "nf": 1
+  "lat": 46.08256,
+  "lng": 10.05945,
+  "tipo": "lake",
+  "comune": "Valbondione",
+  "man": 1
  },
  "lago di miage": {
-  "nf": 1
+  "lat": 45.77903,
+  "lng": 6.87017,
+  "tipo": "viewpoint",
+  "comune": "Courmayeur",
+  "man": 1
  },
  "lago di nambino": {
   "lat": 46.24219,
@@ -1281,7 +1293,11 @@
   "comune": "Introbio"
  },
  "lago di val viola": {
-  "nf": 1
+  "lat": 46.40426,
+  "lng": 10.13919,
+  "tipo": "water",
+  "comune": "Poschiavo",
+  "man": 1
  },
  "lago di varro": {
   "lat": 46.02879,
