@@ -3618,10 +3618,11 @@
   "comune": "Courmayeur"
  },
  "val fredda": {
-  "lat": 45.55602,
-  "lng": 10.26902,
+  "lat": 45.9331,
+  "lng": 10.40959,
   "tipo": "valley",
-  "comune": "Brescia"
+  "comune": "Breno",
+  "man": 1
  },
  "val grande": {
   "lat": 46.02186,
