@@ -1319,7 +1319,11 @@
   "man": 1
  },
  "lago e rifugio saoseo": {
-  "nf": 1
+  "lat": 46.39703,
+  "lng": 10.11864,
+  "tipo": "alpine_hut",
+  "comune": "Poschiavo",
+  "man": 1
  },
  "lago federa": {
   "lat": 46.48818,
@@ -1340,7 +1344,11 @@
   "comune": "La Thuile"
  },
  "lago lagazuolo": {
-  "nf": 1
+  "lat": 46.2953,
+  "lng": 9.81838,
+  "tipo": "lake",
+  "comune": "Chiesa in Valmalenco",
+  "man": 1
  },
  "lago malgina": {
   "lat": 46.08256,
