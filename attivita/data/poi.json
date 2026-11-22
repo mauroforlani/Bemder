@@ -271,7 +271,11 @@
   "comune": ""
  },
  "bocchetta acqua fredda": {
-  "nf": 1
+  "lat": 46.14489,
+  "lng": 10.70475,
+  "tipo": "alpine_hut",
+  "comune": "Spiazzo",
+  "man": 1
  },
  "bocchetta dei lupi": {
   "lat": 46.05894,
@@ -281,7 +285,11 @@
   "man": 1
  },
  "bocchetta del torno": {
-  "nf": 1
+  "lat": 46.30013,
+  "lng": 9.86829,
+  "tipo": "reservoir",
+  "comune": "Chiesa in Valmalenco",
+  "man": 1
  },
  "bocchetta di gelt": {
   "lat": 46.08649,
