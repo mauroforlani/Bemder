@@ -296,7 +296,11 @@
   "nf": 1
  },
  "bøsdalafossur waterfall": {
-  "nf": 1
+  "lat": 62.02344,
+  "lng": -7.24023,
+  "tipo": "waterfall",
+  "comune": "Miðvágur",
+  "man": 1
  },
  "cabane du combal": {
   "nf": 1
