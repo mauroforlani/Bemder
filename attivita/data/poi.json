@@ -792,14 +792,18 @@
   "comune": "Cogne"
  },
  "colle delle traversette": {
-  "lat": 44.71362,
-  "lng": 7.06575,
+  "lat": 44.71089,
+  "lng": 7.06634,
   "tipo": "",
-  "comune": "Crissolo",
+  "comune": "Abriès-Ristolas",
   "man": 1
  },
  "colle rosset": {
-  "nf": 1
+  "lat": 45.51065,
+  "lng": 7.12569,
+  "tipo": "yes",
+  "comune": "Ceresole Reale",
+  "man": 1
  },
  "colma di marucolo": {
   "lat": 45.80828,
@@ -856,7 +860,11 @@
   "comune": "Baceno"
  },
  "crandola valsassina trail running": {
-  "nf": 1
+  "lat": 46.02289,
+  "lng": 9.37876,
+  "tipo": "administrative",
+  "comune": "Crandola Valsassina",
+  "man": 1
  },
  "cristo dei ghiaioni": {
   "lat": 45.95058,
