@@ -894,7 +894,11 @@
   "comune": "Braies"
  },
  "diamond head": {
-  "nf": 1
+  "lat": 21.25975,
+  "lng": -157.81168,
+  "tipo": "peak",
+  "comune": "Honolulu",
+  "man": 1
  },
  "diavolezza": {
   "lat": 46.4107,
@@ -903,13 +907,25 @@
   "comune": "Pontresina"
  },
  "drangarnir & soltuvik viewpoint": {
-  "nf": 1
+  "lat": 62.0754,
+  "lng": -7.41443,
+  "tipo": "attraction",
+  "comune": "Bøur",
+  "man": 1
  },
  "druogno hiking": {
-  "nf": 1
+  "lat": 46.13512,
+  "lng": 8.4342,
+  "tipo": "administrative",
+  "comune": "Druogno",
+  "man": 1
  },
  "eiðiskollur": {
-  "nf": 1
+  "lat": 62.31893,
+  "lng": -7.1033,
+  "tipo": "peak",
+  "comune": "Eiði",
+  "man": 1
  },
  "eyehorn": {
   "lat": 45.94862,
