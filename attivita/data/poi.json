@@ -1062,13 +1062,25 @@
   "man": 1
  },
  "klakkur": {
-  "nf": 1
+  "lat": 62.23583,
+  "lng": -6.6166,
+  "tipo": "peak",
+  "comune": "Klaksvík",
+  "man": 1
  },
  "kluftáfossur": {
-  "nf": 1
+  "lat": 62.27668,
+  "lng": -7.10879,
+  "tipo": "waterfall",
+  "comune": "Haldórsvík",
+  "man": 1
  },
  "koko crater": {
-  "nf": 1
+  "lat": 21.28503,
+  "lng": -157.68631,
+  "tipo": "peak",
+  "comune": "East Honolulu",
+  "man": 1
  },
  "laghetti del venerocolo": {
   "lat": 46.05591,
@@ -1083,10 +1095,18 @@
   "comune": "Cusio"
  },
  "laghetti e forcella di montozzo": {
-  "nf": 1
+  "lat": 46.30638,
+  "lng": 10.57518,
+  "tipo": "yes",
+  "comune": "Ponte di Legno",
+  "man": 1
  },
  "laghetto e monte pietra quadra": {
-  "nf": 1
+  "lat": 45.97624,
+  "lng": 9.79088,
+  "tipo": "peak",
+  "comune": "Roncobello",
+  "man": 1
  },
  "laghi colbricon": {
   "lat": 46.2817,
@@ -1095,7 +1115,11 @@
   "comune": "San Martino di Castrozza"
  },
  "laghi del cardeto": {
-  "nf": 1
+  "lat": 46.0138,
+  "lng": 9.89852,
+  "tipo": "yes",
+  "comune": "Gandellino",
+  "man": 1
  },
  "laghi di belle combe": {
   "nf": 1
