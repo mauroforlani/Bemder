@@ -405,7 +405,11 @@
   "man": 1
  },
  "capanna carlo emilio": {
-  "nf": 1
+  "lat": 46.36413,
+  "lng": 9.31631,
+  "tipo": "reservoir",
+  "comune": "San Giacomo Filippo",
+  "man": 1
  },
  "capanna fassa": {
   "lat": 46.50895,
@@ -465,7 +469,11 @@
   "man": 1
  },
  "ceresole reale - cà bianca": {
-  "nf": 1
+  "lat": 45.43248,
+  "lng": 7.2324,
+  "tipo": "administrative",
+  "comune": "Ceresole Reale",
+  "man": 1
  },
  "ceresole reale - lago serrù": {
   "lat": 45.45934,
@@ -722,7 +730,11 @@
   "comune": "Valfurva"
  },
  "cima valsacco": {
-  "nf": 1
+  "lat": 45.92621,
+  "lng": 10.00815,
+  "tipo": "peak",
+  "comune": "Castione della Presolana",
+  "man": 1
  },
  "cima venina": {
   "lat": 46.04611,
