@@ -369,7 +369,11 @@
   "nf": 1
  },
  "campo dei fiori trail": {
-  "nf": 1
+  "lat": 45.84283,
+  "lng": 8.71767,
+  "tipo": "administrative",
+  "comune": "Gavirate",
+  "man": 1
  },
  "capanna 2000": {
   "lat": 45.78934,
@@ -401,7 +405,11 @@
   "man": 1
  },
  "capanna gries": {
-  "nf": 1
+  "lat": 46.44636,
+  "lng": 8.36817,
+  "tipo": "path",
+  "comune": "Formazza",
+  "man": 1
  },
  "capanna mara": {
   "lat": 45.84411,
