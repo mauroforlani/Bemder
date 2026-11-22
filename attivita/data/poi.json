@@ -347,7 +347,11 @@
   "man": 1
  },
  "cabane du combal": {
-  "nf": 1
+  "lat": 45.78551,
+  "lng": 6.89027,
+  "tipo": "water",
+  "comune": "Courmayeur",
+  "man": 1
  },
  "caldera de gayria": {
   "nf": 1
@@ -374,7 +378,11 @@
   "comune": "Costa Valle Imagna"
  },
  "capanna boval": {
-  "nf": 1
+  "lat": 46.41517,
+  "lng": 9.92505,
+  "tipo": "alpine_hut",
+  "comune": "Pontresina",
+  "man": 1
  },
  "capanna carlo emilio": {
   "nf": 1
