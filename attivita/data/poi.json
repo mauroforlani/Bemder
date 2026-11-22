@@ -600,7 +600,11 @@
   "man": 1
  },
  "cima e rifugio cavallone": {
-  "nf": 1
+  "lat": 46.00066,
+  "lng": 8.51928,
+  "tipo": "peak",
+  "comune": "Miazzina",
+  "man": 1
  },
  "cima foppazzi": {
   "lat": 45.91148,
