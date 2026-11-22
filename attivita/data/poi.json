@@ -623,10 +623,18 @@
   "comune": "Valbondione"
  },
  "cima montebello": {
-  "nf": 1
+  "lat": 46.04618,
+  "lng": 9.78247,
+  "tipo": "restaurant",
+  "comune": "Foppolo",
+  "man": 1
  },
  "cima papa giovanni ii": {
-  "nf": 1
+  "lat": 45.98718,
+  "lng": 9.80714,
+  "tipo": "reservoir",
+  "comune": "Branzi",
+  "man": 1
  },
  "cima papa giovanni paolo ii": {
   "lat": 45.97784,
@@ -635,7 +643,11 @@
   "comune": "Ardesio"
  },
  "cima papa giovanni xxiii": {
-  "nf": 1
+  "lat": 45.98718,
+  "lng": 9.80714,
+  "tipo": "reservoir",
+  "comune": "Branzi",
+  "man": 1
  },
  "cima paradiso": {
   "lat": 45.89101,
@@ -674,7 +686,11 @@
   "comune": "Primiero San Martino di Castrozza"
  },
  "cima rosetta (rosetta vertical)": {
-  "nf": 1
+  "lat": 46.26273,
+  "lng": 11.83121,
+  "tipo": "peak",
+  "comune": "Primiero San Martino di Castrozza",
+  "man": 1
  },
  "cima sodadura": {
   "nf": 1
