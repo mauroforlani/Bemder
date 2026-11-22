@@ -1,6 +1,10 @@
 {
  "akaka falls": {
-  "nf": 1
+  "lat": 19.85379,
+  "lng": -155.1541,
+  "tipo": "viewpoint",
+  "comune": "",
+  "man": 1
  },
  "albe buscagna": {
   "lat": 46.31003,
@@ -1994,7 +1998,11 @@
   "comune": "Vedeseta"
  },
  "pizzo cornagiera": {
-  "nf": 1
+  "lat": 46.02108,
+  "lng": 9.45783,
+  "tipo": "peak",
+  "comune": "Premana",
+  "man": 1
  },
  "pizzo corzene": {
   "lat": 45.94808,
@@ -3252,7 +3260,11 @@
   "comune": "Pasturo"
  },
  "trælanípa": {
-  "nf": 1
+  "lat": 62.0209,
+  "lng": -7.23009,
+  "tipo": "peak",
+  "comune": "Miðvágur",
+  "man": 1
  },
  "tuolumne sequoia": {
   "lat": 37.81196,
