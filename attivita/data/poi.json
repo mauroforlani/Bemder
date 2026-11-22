@@ -366,7 +366,11 @@
   "comune": "La Oliva"
  },
  "campanile e forcella di val montanaia": {
-  "nf": 1
+  "lat": 46.39521,
+  "lng": 12.48116,
+  "tipo": "peak",
+  "comune": "Cimolais",
+  "man": 1
  },
  "campo dei fiori trail": {
   "lat": 45.84283,
@@ -559,7 +563,11 @@
   "comune": "Valleve"
  },
  "cima di piazzi": {
-  "nf": 1
+  "lat": 45.9334,
+  "lng": 9.53284,
+  "tipo": "isolated_dwelling",
+  "comune": "Moggio",
+  "man": 1
  },
  "cima di piazzo": {
   "lat": 45.95109,
@@ -581,7 +589,11 @@
   "comune": "Crandola Valsassina"
  },
  "cima e croce montebello": {
-  "nf": 1
+  "lat": 46.04618,
+  "lng": 9.78247,
+  "tipo": "restaurant",
+  "comune": "Foppolo",
+  "man": 1
  },
  "cima e rifugio cavallone": {
   "nf": 1
