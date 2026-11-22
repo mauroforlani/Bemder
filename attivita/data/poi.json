@@ -318,7 +318,11 @@
   "comune": ""
  },
  "bryce canyon (navajo & peekaboo trail)": {
-  "nf": 1
+  "lat": 37.61841,
+  "lng": -112.14218,
+  "tipo": "valley",
+  "comune": "Tropic",
+  "man": 1
  },
  "buco di viso": {
   "nf": 1
