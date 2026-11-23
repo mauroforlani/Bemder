@@ -254,6 +254,7 @@ function render(){
   const groups = {};
   shown.forEach(c => { const z = zone(c), k = [z.country, z.region, z.province].join("\u0001"); (groups[k] ||= {z, items:[]}).items.push(c); });
   const ordered = Object.values(groups).sort((a,b) => cmpCountry(a.z.country,b.z.country) || cmp(a.z.region,b.z.region) || cmp(a.z.province,b.z.province));
+  ordered.forEach(gr => gr.items.sort((a,b) => (a.name || "").localeCompare(b.name || "", "it", {sensitivity:"base", numeric:true})));   // schede in ordine alfabetico
   const g = $("#grid"); g.innerHTML = "";
   ordered.forEach(gr => {
     if (ordered.length > 1){
