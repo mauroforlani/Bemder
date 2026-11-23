@@ -63,6 +63,16 @@
       ]
     },
     {
+      "name": "Webcam",
+      "url": "webcam/",
+      "icons": [
+        {
+          "src": "assets/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
       "name": "Budget",
       "url": "budget/",
       "icons": [
