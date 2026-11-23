@@ -19,6 +19,7 @@
     astrofoto: "astrofoto/data.json",
     luoghi: "attivita/data/luoghi.json",
     attivita: "attivita/data/attivita.json",
+    webcam: "webcam/webcams.json",
     budget: "budget/data.json",
     running: "running/data/runai-state.json"
   };
@@ -104,6 +105,18 @@
     });
   }
   function pendingRegistro() { var a = readJson("registro_extra_v1"); return a ? a.length : 0; }
+  // modifiche locali alle webcam non ancora nell'elenco su GitHub
+  function pendingWebcam(remote) {
+    var l = readJson("webcamLocal"); if (!l) return 0;
+    var key = function (c) { return c.id || (c.name + "|" + (c.image || c.embed || c.page || "")); };
+    var have = {}; (remote || []).forEach(function (c) { have[key(c)] = c; });
+    var n = 0;
+    (l.added || []).forEach(function (a) { if (!have[key(a)]) n++; });
+    Object.keys(l.edits || {}).forEach(function (k) { if (have[k]) n++; });
+    (l.deleted || []).forEach(function (k) { if (have[k]) n++; });
+    return n;
+  }
+  function pendingPoi() { var e = readJson("registro_poi_edits_v1"); return e ? Object.keys(e).length : 0; }
 
   function row(name, r) { return { name: name, st: r.st, msg: r.msg }; }
   function safe(name, p) {
@@ -118,6 +131,7 @@
     var when = function (k) { return dates[k] ? " Ultimo salvataggio su GitHub: " + dates[k] + "." : ""; };
 
     var pRun = pullRunning();                                                // da fare prima di leggere le date, indipendente
+    pRun.catch(function () {});                                              // l'errore viene mostrato più sotto: qui evito l'avviso di promessa non gestita
     var pSite = purgeSiteCaches();
     Promise.all([pDates, pSite.catch(function () {})]).then(function () {
       return Promise.all([
@@ -129,16 +143,22 @@
           return { st: "ok", msg: "Riletti " + nIt(Array.isArray(l) ? l.length : 0, "luogo", "luoghi") + "." + when("luoghi") };
         })),
         safe("Registro", siteJson(FILES.attivita).then(function (a) {
-          var p = pendingRegistro(), n = Array.isArray(a) ? a.length : 0;
+          var p = pendingRegistro(), n = Array.isArray(a) ? a.length : 0, pp = pendingPoi();
+          if (pp) return { st: "warn", msg: "Riletta la lista (" + n + " attività). " + nIt(pp, "luogo della mappa è stato modificato", "luoghi della mappa sono stati modificati") + " solo su questo dispositivo e non è su GitHub: apri il Registro e usa il pulsante in alto nella mappa." + when("attivita") };
           if (p) return { st: "warn", msg: "Rilette " + n + " attività. " + nIt(p, "modifica è salvata", "modifiche sono salvate") + " solo in questo browser: apri il Registro, “Importa attività da CSV” e premi “Salva ora su GitHub”." + when("attivita") };
           return { st: "ok", msg: "Rilette " + nIt(n, "attività", "attività") + "." + when("attivita") };
+        })),
+        safe("Webcam", siteJson(FILES.webcam).then(function (w) {
+          var n = Array.isArray(w) ? w.length : 0, p = pendingWebcam(w);
+          if (p) return { st: "warn", msg: "Rilette " + nIt(n, "webcam", "webcam") + ". " + nIt(p, "modifica è", "modifiche sono") + " solo su questo dispositivo e non su GitHub: apri Webcam e premi “GitHub”." + when("webcam") };
+          return { st: "ok", msg: "Rilette " + nIt(n, "webcam", "webcam") + "." + when("webcam") };
         })),
         safe("Budget", Promise.resolve({ st: "ok",
           msg: "Si rilegge da GitHub a ogni apertura." + (cfgBud.token ? "" : " Per salvare modifiche da questo dispositivo imposta il token dentro Budget.") + when("budget") })),
         safe("Running", pRun.then(function (r) { return { st: r.st, msg: r.msg + when("running") }; }))
       ]);
     }).then(function (rows) {
-      var order = ["Astrofotografia", "Attività", "Registro", "Budget", "Running"];
+      var order = ["Astrofotografia", "Attività", "Registro", "Webcam", "Budget", "Running"];
       rows.sort(function (a, b) { return order.indexOf(a.name) - order.indexOf(b.name); });
       var bad = rows.filter(function (r) { return r.st !== "ok"; }).length;
       out.innerHTML = '<div class="upd-box"><div class="upd-head">' + (bad ? "Aggiornamento terminato, con avvisi" : "Tutto aggiornato") +

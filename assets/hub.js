@@ -14,6 +14,7 @@
     { id: 'astrofoto', label: 'Astrofoto' },
     { id: 'attivita',  label: 'Attività' },
     { id: 'registro',  label: 'Registro' },
+    { id: 'webcam',    label: 'Webcam' },
     { id: 'budget',    label: 'Budget' },
     { id: 'running',   label: 'Running' }
   ];
@@ -39,6 +40,9 @@
   nav.innerHTML = html;
 
   document.body.insertBefore(nav, document.body.firstChild);
+  // con molte voci su schermo stretto: porta in vista la sezione corrente
+  var linksEl = nav.querySelector('.hub-links'), cur = nav.querySelector('.hub-link[aria-current="page"]');
+  if (linksEl && cur) linksEl.scrollLeft = Math.max(0, cur.offsetLeft - (linksEl.clientWidth - cur.offsetWidth) / 2);
 
   /* --- app installabile (Android/Chrome): service worker + pulsante "Installa" nella home --- */
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {

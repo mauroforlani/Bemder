@@ -10,11 +10,11 @@
   var FALLBACK = { owner: 'mauroforlani', repo: 'hub', branch: 'main' };
 
   // Cartelle delle sezioni: servono a distinguere "sito utente" da "sito progetto".
-  var APPS = ['astrofoto', 'attivita', 'registro', 'budget', 'running'];
+  var APPS = ['astrofoto', 'attivita', 'registro', 'webcam', 'budget', 'running'];
 
   // Nomi dei vecchi repository separati, usati per migrare le impostazioni
   // GitHub già salvate nel browser (vedi HUB.migrateGhConfig).
-  var OLD_REPOS = { astrofoto: 'astrofoto', attivita: 'attivita', budget: 'budget', running: 'running-ai' };
+  var OLD_REPOS = { astrofoto: 'astrofoto', attivita: 'attivita', budget: 'budget', running: 'running-ai', webcam: 'webcam' };
 
   var H = window.HUB = window.HUB || {};
   var owner = FALLBACK.owner, repo = FALLBACK.repo, detected = false;
@@ -44,7 +44,7 @@
      freschi) -> raw.githubusercontent.com (con parametro anti-cache) -> file del sito.
      Fuori da GitHub Pages (localhost, file locale) legge direttamente il sito. */
   H.token = function () {
-    var keys = ['runai-github', 'sentieri_gh_config_v1', 'finanze_gh_config_v1'];
+    var keys = ['runai-github', 'sentieri_gh_config_v1', 'finanze_gh_config_v1', 'ghSettings'];
     for (var i = 0; i < keys.length; i++) {
       try { var o = JSON.parse(localStorage.getItem(keys[i]) || 'null'); if (o && o.token) return o.token; } catch (e) {}
     }
