@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Rifugio Balicco",
+    "place": "Mezzoldo",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "https://foto.valbrembanaweb.com/webcam/webcam/Balicco.jpg?rand=1795344620",
+    "page": "https://orobiemeteo.com/webcam-vallebrembana-1/",
+    "source": ""
+  },
+  {
+    "name": "Rifugio Madonna delle Nevi",
+    "place": "Mezzoldo",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "https://foto.valbrembanaweb.com/webcam/madonnadellenevi.jpg?rand=1795344620",
+    "page": "https://orobiemeteo.com/webcam-vallebrembana-1/",
+    "source": ""
+  },
+  {
+    "name": "Carona",
+    "place": "Carona",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "https://foto.valbrembanaweb.com/webcam/carona/webcam/carona.jpg?rand=1795346491",
+    "page": "https://orobiemeteo.com/webcam-vallebrembana-1/",
+    "source": ""
+  },
+  {
+    "name": "Rifugio Benigni",
+    "place": "Cusio",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "https://foto.valbrembanaweb.com/webcam/webcam/CamBenigni/002.jpg?rand=1795346548",
+    "page": "https://orobiemeteo.com/benigni/",
+    "source": ""
+  },
+  {
+    "name": "Plateau Rosa",
+    "place": "Cervinia",
+    "region": "Valle d'Aosta",
+    "province": "Aosta",
+    "image": "",
+    "embed": "https://cervinia.panomax.com/plateau-rosa",
+    "page": "https://cervinia.panomax.com/plateau-rosa",
+    "source": ""
+  },
+  {
+    "name": "Monte Pora | Pian del Termen",
+    "place": "Monte Pora",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "",
+    "embed": "https://piandeltermen.panomax.com/",
+    "page": "https://piandeltermen.panomax.com/",
+    "source": ""
+  },
+  {
+    "name": "Passo del Tonale",
+    "place": "Ponte di Legno",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Brescia",
+    "image": "",
+    "embed": "https://pontedilegnotonale.panomax.com/passodeltonale",
+    "page": "",
+    "source": ""
+  },
+  {
+    "name": "Passo del Tonale",
+    "place": "Ponte di Legno",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Brescia",
+    "image": "",
+    "embed": "https://pontedilegnotonale.panomax.com/passodeltonale",
+    "page": "",
+    "source": ""
+  },
+  {
+    "name": "Montespluga",
+    "place": "Montespluga",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Sondrio",
+    "image": "",
+    "embed": "https://montespluga.panomax.com/",
+    "page": "",
+    "source": ""
+  }
+]

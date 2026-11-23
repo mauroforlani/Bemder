@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Webcam</title>
+<link rel="stylesheet" href="webcam.css">
+<link rel="manifest" href="../manifest.json">
+<link rel="icon" type="image/png" href="../assets/icon-192.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hub">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#12161c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="../assets/config.js"></script>
+<link rel="stylesheet" href="../assets/hub.css">
+</head>
+<body>
+<script src="../assets/hub.js" data-app="webcam"></script>
+<div class="wc">
+  <header class="wc-head">
+    <h1>Webcam</h1>
+    <p class="sub">Le mie webcam di montagna</p>
+  </header>
+  <nav id="nav" class="wc-nav" aria-label="Filtra per zona"></nav>
+    <div class="bar">
+      <input type="search" id="q" placeholder="Cerca per nome o località" aria-label="Cerca">
+      <select id="refresh" aria-label="Aggiornamento automatico">
+        <option value="0">Aggiornamento manuale</option>
+        <option value="60">Ogni minuto</option>
+        <option value="300" selected>Ogni 5 minuti</option>
+        <option value="600">Ogni 10 minuti</option>
+      </select>
+      <button class="btn" id="reload">Aggiorna ora</button>
+      <button class="btn" id="gh-open">GitHub</button>
+      <button class="btn" id="reset" title="Annulla le modifiche locali e torna all'elenco su GitHub">Ripristina elenco</button>
+      <button class="btn primary" id="add">Aggiungi webcam</button>
+    </div>
+    <p class="badge" id="ghstatus" role="status"></p>
+    <div id="grid"></div>
+    <p class="empty" id="empty" hidden>Nessuna webcam in questa selezione. Usa “Aggiungi webcam” per inserirne una.</p>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog" id="form">
+    <h2 id="dlg-title">Aggiungi webcam</h2>
+    <label for="f-name">Nome</label><input id="f-name" required>
+    <label for="f-place">Località</label><input id="f-place">
+    <label for="f-country">Stato</label>
+    <input id="f-country" list="dl-country" placeholder="Italia" autocomplete="off">
+    <label for="f-region">Regione / cantone</label>
+    <input id="f-region" list="dl-region" required autocomplete="off">
+    <label for="f-province">Provincia / zona (opzionale)</label>
+    <input id="f-province" list="dl-province" autocomplete="off">
+    <p class="hint">Scegli dai suggerimenti oppure scrivi un nome nuovo: i filtri in alto si creano da soli.</p>
+    <datalist id="dl-country"></datalist><datalist id="dl-region"></datalist><datalist id="dl-province"></datalist>
+    <label for="f-image">URL immagine (.jpg diretto)</label><input id="f-image" type="url" placeholder="https://…/webcam.jpg">
+    <label for="f-embed">Iframe (opzionale: incolla il codice <code>&lt;iframe…&gt;</code> o solo l'URL)</label><input id="f-embed" placeholder="https://…">
+    <p class="hint">Se compilato, al posto dell'immagine viene mostrato l'iframe.</p>
+    <label for="f-page">URL pagina originale</label><input id="f-page" type="url" placeholder="https://…">
+    <label for="f-source">Fonte</label><input id="f-source" placeholder="es. Comune, Orobie Meteo">
+    <p class="hint">Con GitHub collegato le modifiche si salvano da sole nel repository; altrimenti restano in questo browser. Con “Esporta JSON” puoi sempre scaricare l’elenco.</p>
+    <div class="row">
+      <button type="button" class="btn" id="export">Esporta JSON</button>
+      <button type="button" class="btn" id="cancel">Annulla</button>
+      <button class="btn primary" value="ok">Salva</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="gh">
+  <h2>Salvataggio su GitHub</h2>
+  <label for="g-owner">Utente GitHub</label><input id="g-owner" autocomplete="off">
+  <label for="g-repo">Repository</label><input id="g-repo" autocomplete="off">
+  <label for="g-branch">Branch</label><input id="g-branch" placeholder="main" autocomplete="off">
+  <label for="g-path">File</label><input id="g-path" placeholder="webcam/webcams.json" autocomplete="off">
+  <label for="g-token">Token di accesso (fine-grained)</label><input id="g-token" type="password" autocomplete="off">
+  <label style="display:flex;gap:8px;align-items:center;font-weight:400;margin-top:14px"><input type="checkbox" id="g-auto" style="width:auto"> Salva automaticamente a ogni modifica</label>
+  <p class="hint">Il token resta solo in questo browser, mai nel repository. Crealo su GitHub → Settings → Developer settings → Fine-grained tokens, limitato a questo repository con permesso <b>Contents: Read and write</b>. Non usarlo su dispositivi condivisi.</p>
+  <p class="hint" id="gh-msg" role="status"></p>
+  <div class="row">
+    <button type="button" class="btn" id="g-close">Chiudi</button>
+    <button type="button" class="btn" id="g-save">Salva impostazioni</button>
+    <button type="button" class="btn primary" id="g-push">Salva e invia ora</button>
+  </div>
+</dialog>
+
+<div id="lb" role="dialog" aria-label="Immagine a tutto schermo"><img alt=""><span class="cap"></span><button class="x" type="button">Chiudi</button></div>
+
+<script>
+// Suggerimenti per il modulo (puoi scrivere anche zone nuove: il menu si adatta ai dati)
+const SUGGEST = [
+  ["Italia","Lombardia",["Bergamo","Brescia","Como","Lecco","Sondrio","Varese"]],
+  ["Italia","Piemonte",["Biella","Cuneo","Novara","Torino","Verbano-Cusio-Ossola","Vercelli"]],
+  ["Italia","Valle d'Aosta",["Aosta"]],
+  ["Italia","Trentino-Alto Adige",["Bolzano","Trento"]],
+  ["Italia","Veneto",["Belluno"]],
+  ["Italia","Friuli-Venezia Giulia",["Udine","Pordenone"]],
+  ["Svizzera","Vallese",[]], ["Svizzera","Ticino",[]], ["Svizzera","Grigioni",[]],
+  ["Francia","Alta Savoia",[]], ["Austria","Tirolo",[]]
+];
+
+const $ = s => document.querySelector(s);
+let base = [], list = [], filter = {country:null, region:null, province:null}, timer = null, editing = null;
+let local = {added:[], edits:{}, deleted:[]};   // le tue modifiche, separate da webcams.json
+
+const parseEmbed = v => { const m = v.match(/src\s*=\s*["']([^"']+)["']/i); return (m ? m[1] : v).trim(); };
+const keyOf = c => c.id || (c.name + "|" + (c.image || c.embed || c.page || ""));
+const bust = u => u + (u.includes("?") ? "&" : "?") + "_=" + Date.now();
+const read = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e){ return null; } };
+const persist = () => { try { localStorage.setItem("webcamLocal", JSON.stringify(local)); } catch(e){} };
+let dirty = false;
+const save = () => { dirty = true; persist(); autoSync(); pendingNote(); };
+const clean = c => { const o = {...c}; delete o._src; delete o._key; delete o._ref; return o; };
+
+function compute(b){
+  return b.filter(x => !local.deleted.includes(keyOf(x)))
+    .map(x => ({...(local.edits[keyOf(x)] || x), _src:"base", _key:keyOf(x)}))
+    .concat(local.added.map(a => ({...a, _src:"added", _ref:a})));
+}
+function rebuild(){ list = compute(base); }
+
+// Quando webcams.json sul sito contiene già le modifiche, le togliamo dalla memoria locale
+function reconcile(){
+  const bk = base.map(keyOf); let ch = false;
+  local.added = local.added.filter(a => { const hit = bk.includes(keyOf(a)); if (hit) ch = true; return !hit; });
+  Object.keys(local.edits).forEach(k => {
+    const b = base.find(x => keyOf(x)===k);
+    if (!b || JSON.stringify(clean(local.edits[k]))===JSON.stringify(b)){ delete local.edits[k]; ch = true; }
+  });
+  local.deleted = local.deleted.filter(k => { const keep = bk.includes(k); if (!keep) ch = true; return keep; });
+  if (ch) persist();
+}
+
+// Recupera i dati salvati dalle versioni precedenti (le vecchie chiavi non vengono mai cancellate)
+function migrate(){
+  const baseKeys = base.map(keyOf);
+  const old1 = read("mieWebcam");      // prima versione: solo webcam aggiunte
+  const old2 = read("webcamList");     // seconda versione: elenco completo
+  const addIfNew = c => { const k = keyOf(c); if (!baseKeys.includes(k) && !local.added.some(x => keyOf(x)===k)) local.added.push(clean(c)); };
+  if (Array.isArray(old1)) old1.forEach(addIfNew);
+  if (Array.isArray(old2)){
+    old2.forEach(c => {
+      const k = keyOf(c), b = base.find(x => keyOf(x)===k);
+      if (!b) addIfNew(c);
+      else if (JSON.stringify(clean(c)) !== JSON.stringify(b)) local.edits[k] = clean(c);
+    });
+    baseKeys.forEach(k => { if (!old2.some(c => keyOf(c)===k)) local.deleted.push(k); });
+  }
+  persist();
+}
+
+async function load(){
+  const asList = t => { const a = JSON.parse(t); if (!Array.isArray(a)) throw new Error("non è un elenco"); return a; };
+  base = await HUB.fetchRepoText("webcam/webcams.json", "webcams.json").then(asList)
+    .catch(() => fetch("webcams.json?_=" + Date.now(), {cache:"no-store"}).then(r => r.text()).then(asList).catch(() => []));
+  const saved = read("webcamLocal");
+  if (saved && Array.isArray(saved.added)) local = {added:saved.added, edits:saved.edits||{}, deleted:saved.deleted||[]};
+  else migrate();
+  reconcile(); rebuild(); render();
+}
+
+const zone = c => ({country: c.country || "Italia", region: c.region || "", province: c.province || ""});
+const cmp = (x,y) => x.localeCompare(y,"it");
+const cmpCountry = (x,y) => x==="Italia" ? (y==="Italia"?0:-1) : y==="Italia" ? 1 : cmp(x,y);
+const matches = c => { const z = zone(c);
+  return (!filter.country || z.country===filter.country) && (!filter.region || z.region===filter.region) && (!filter.province || z.province===filter.province); };
+
+function renderNav(){
+  const nav = $("#nav"); nav.innerHTML = "";
+  const tree = {};
+  list.forEach(c => { const z = zone(c);
+    const co = tree[z.country] ||= {n:0, regs:{}}; co.n++;
+    const rg = co.regs[z.region] ||= {n:0, provs:{}}; rg.n++;
+    if (z.province) rg.provs[z.province] = (rg.provs[z.province]||0) + 1;
+  });
+  const mk = (label, count, co, r, p, cls) => {
+    const b = document.createElement("button"); b.className = cls;
+    b.innerHTML = `<span></span><span class="n">${count}</span>`; b.firstChild.textContent = label;
+    b.setAttribute("aria-pressed", filter.country===co && filter.region===r && filter.province===p);
+    b.onclick = () => { filter = {country:co, region:r, province:p}; render(); };
+    return b;
+  };
+  nav.append(mk("Tutte", list.length, null, null, null, "lv0"));
+  const countries = Object.keys(tree).sort(cmpCountry), multi = countries.length > 1;
+  countries.forEach(co => {
+    if (multi) nav.append(mk(co, tree[co].n, co, null, null, "lv1"));
+    Object.keys(tree[co].regs).sort(cmp).forEach(r => {
+      const rg = tree[co].regs[r];
+      nav.append(mk(r || "Senza regione", rg.n, co, r || null, null, multi ? "lv2" : "lv1"));
+      Object.keys(rg.provs).sort(cmp).forEach(p => nav.append(mk(p, rg.provs[p], co, r || null, p, "lv2")));
+    });
+  });
+}
+
+function card(c){
+  const el = document.createElement("article"); el.className = "cam" + (c.embed ? " wide" : "");
+  const shot = document.createElement("div"); shot.className = "shot";
+  if (c.embed){
+    const fr = document.createElement("iframe");
+    fr.src = c.embed; fr.title = c.name; fr.loading = "lazy"; fr.allowFullscreen = true;
+    fr.setAttribute("allow","fullscreen; autoplay");
+    shot.append(fr);
+  } else if (c.image){
+    shot.classList.add("click"); shot.tabIndex = 0; shot.setAttribute("role","button");
+    shot.setAttribute("aria-label","Apri a tutto schermo: " + c.name);
+    const img = new Image(); img.referrerPolicy = "no-referrer"; img.alt = c.name; img.loading = "lazy"; img.dataset.src = c.image; img.src = bust(c.image);
+    img.onerror = () => {
+      img.remove(); shot.classList.remove("click"); shot.onclick = null;
+      shot.insertAdjacentHTML("beforeend",'<div class="fallback">Immagine non incorporabile.<br>Apri la pagina originale.</div>');
+    };
+    shot.append(img);
+    const open = () => openLightbox(c);
+    shot.onclick = open;
+    shot.onkeydown = e => { if (e.key==="Enter" || e.key===" "){ e.preventDefault(); open(); } };
+  } else {
+    shot.innerHTML = '<div class="fallback">Nessuna immagine diretta.<br>Apri la pagina originale.</div>';
+  }
+  const meta = document.createElement("div"); meta.className = "meta";
+  const h = document.createElement("h3"); h.textContent = c.name;
+  const p = document.createElement("p"); p.textContent = [c.place, c.province, c.region].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i).join(", ");
+  meta.append(h, p);
+  if (c.source){ const b = document.createElement("span"); b.className = "badge"; b.textContent = "Fonte: " + c.source; meta.append(b); }
+  const acts = document.createElement("div"); acts.className = "acts";
+  if (c.page){ const a = document.createElement("a"); a.href = c.page; a.target = "_blank"; a.rel = "noopener noreferrer"; a.textContent = "Pagina originale"; acts.append(a); }
+  if (c.embed && shot.requestFullscreen){
+    const fs = document.createElement("button"); fs.textContent = "Schermo intero";
+    fs.onclick = () => shot.requestFullscreen().catch(() => {});
+    acts.append(fs);
+  }
+  const ed = document.createElement("button"); ed.className = "ed"; ed.textContent = "Modifica"; ed.onclick = () => openForm(c);
+  const del = document.createElement("button"); del.className = "del"; del.textContent = "Elimina";
+  del.onclick = () => {
+    if (!confirm("Eliminare «" + c.name + "»?")) return;
+    if (c._src==="added") local.added.splice(local.added.indexOf(c._ref),1);
+    else { local.deleted.push(c._key); delete local.edits[c._key]; }
+    save(); rebuild(); render();
+  };
+  acts.append(ed, del);
+  meta.append(acts); el.append(shot, meta);
+  return el;
+}
+
+function render(){
+  if ((filter.country||filter.region||filter.province) && !list.some(matches)) filter = {country:null, region:null, province:null};
+  renderNav();
+  const q = $("#q").value.trim().toLowerCase();
+  const shown = list.filter(c => matches(c) && (!q || (c.name+" "+(c.place||"")).toLowerCase().includes(q)));
+  const multiCountry = new Set(list.map(c => zone(c).country)).size > 1;
+  const groups = {};
+  shown.forEach(c => { const z = zone(c), k = [z.country, z.region, z.province].join("\u0001"); (groups[k] ||= {z, items:[]}).items.push(c); });
+  const ordered = Object.values(groups).sort((a,b) => cmpCountry(a.z.country,b.z.country) || cmp(a.z.region,b.z.region) || cmp(a.z.province,b.z.province));
+  const g = $("#grid"); g.innerHTML = "";
+  ordered.forEach(gr => {
+    if (ordered.length > 1){
+      const h = document.createElement("h2"); h.className = "zone";
+      const t = document.createElement("div");
+      t.textContent = [multiCountry ? gr.z.country : "", gr.z.region, gr.z.province].filter(Boolean).join(" · ") || "Altre";
+      const n = document.createElement("span"); n.textContent = gr.items.length;
+      h.append(t, n); g.append(h);
+    }
+    const grid = document.createElement("div"); grid.className = "grid";
+    gr.items.forEach(c => grid.append(card(c)));
+    g.append(grid);
+  });
+  $("#empty").hidden = shown.length > 0;
+}
+
+function refreshImages(){ document.querySelectorAll(".shot img").forEach(i => { i.src = bust(i.dataset.src); }); }
+function schedule(){ clearInterval(timer); const s = +$("#refresh").value; if (s) timer = setInterval(refreshImages, s*1000); }
+
+// Tutto schermo
+const lb = $("#lb"), lbImg = lb.querySelector("img"); lbImg.referrerPolicy = "no-referrer";
+function openLightbox(c){
+  lbImg.src = bust(c.image); lbImg.alt = c.name;
+  lb.querySelector(".cap").textContent = c.name + (c.place ? " – " + c.place : "");
+  lb.classList.add("on");
+  if (lb.requestFullscreen) lb.requestFullscreen().catch(() => {});
+}
+function closeLightbox(){
+  lb.classList.remove("on"); lbImg.removeAttribute("src");
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+}
+lb.onclick = closeLightbox;
+document.addEventListener("keydown", e => { if (e.key==="Escape" && lb.classList.contains("on")) closeLightbox(); });
+document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement && lb.classList.contains("on")) closeLightbox(); });
+
+// Form aggiungi / modifica
+const dlg = $("#dlg"), fc = $("#f-country"), fr = $("#f-region"), fp = $("#f-province");
+const opts = arr => [...new Set(arr.filter(Boolean))].sort(cmp).map(v => { const o = document.createElement("option"); o.value = v; return o; });
+function suggestions(){
+  const known = [...SUGGEST.map(([co,r,ps]) => ({country:co, region:r, provs:ps})), ...list.map(c => { const z = zone(c); return {country:z.country, region:z.region, provs:[z.province]}; })];
+  const co = fc.value.trim() || "Italia", r = fr.value.trim();
+  $("#dl-country").replaceChildren(...opts(known.map(k => k.country)));
+  $("#dl-region").replaceChildren(...opts(known.filter(k => k.country===co).map(k => k.region)));
+  $("#dl-province").replaceChildren(...opts(known.filter(k => k.country===co && (!r || k.region===r)).flatMap(k => k.provs)));
+}
+[fc, fr].forEach(el => el.addEventListener("input", suggestions));
+
+function openForm(c){
+  editing = c || null;
+  $("#dlg-title").textContent = c ? "Modifica webcam" : "Aggiungi webcam";
+  $("#f-name").value = c?.name || ""; $("#f-place").value = c?.place || "";
+  fc.value = c ? zone(c).country : (filter.country || "Italia");
+  fr.value = c?.region || filter.region || ""; fp.value = c?.province || filter.province || "";
+  suggestions();
+  $("#f-image").value = c?.image || ""; $("#f-embed").value = c?.embed || ""; $("#f-page").value = c?.page || ""; $("#f-source").value = c?.source || "";
+  dlg.showModal();
+}
+$("#add").onclick = () => openForm(null);
+$("#cancel").onclick = () => dlg.close();
+$("#form").addEventListener("submit", () => {
+  const data = {
+    name: $("#f-name").value.trim(), place: $("#f-place").value.trim(),
+    country: fc.value.trim() || "Italia", region: fr.value.trim(), province: fp.value.trim(),
+    image: $("#f-image").value.trim(), embed: parseEmbed($("#f-embed").value), page: $("#f-page").value.trim(), source: $("#f-source").value.trim()
+  };
+  if (!editing) local.added.push(data);
+  else if (editing._src==="added") Object.assign(editing._ref, data);
+  else local.edits[editing._key] = data;
+  editing = null; save(); rebuild(); render();
+});
+$("#export").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(list.map(clean), null, 2)], {type:"application/json"}));
+  a.download = "webcams.json"; a.click();
+};
+$("#reset").onclick = () => {
+  if (!confirm("Annullare TUTTE le modifiche fatte in questo browser (webcam aggiunte, modificate o eliminate)? Se vuoi tenerle, esporta prima il JSON.")) return;
+  local = {added:[], edits:{}, deleted:[]}; save(); rebuild(); render();
+};
+
+// ---------- Sincronizzazione con GitHub ----------
+// impostazioni coerenti col resto del sito: repository rilevato da solo, file in webcam/, token condiviso con le altre sezioni
+const ghGet = () => {
+  let s = HUB.migrateGhConfig(read("ghSettings") || {}, "webcam", "webcams.json");
+  return {branch:"main", path:"webcam/webcams.json", ...s, owner: s.owner || HUB.owner, repo: s.repo || HUB.repo,
+          token: s.token || HUB.token(), auto: s.auto === undefined ? true : s.auto};
+};
+const toB64 = str => { const by = new TextEncoder().encode(str); let bin = ""; for (let i=0;i<by.length;i+=0x8000) bin += String.fromCharCode.apply(null, by.subarray(i,i+0x8000)); return btoa(bin); };
+const fromB64 = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g,"")), c => c.charCodeAt(0)));
+function setStatus(t, err){
+  [$("#ghstatus"), $("#gh-msg")].forEach(el => { el.textContent = t; el.style.color = err ? "#a4281c" : ""; el.classList.remove("warn"); });
+}
+async function httpErr(r){
+  let m = ""; try { m = (await r.json()).message; } catch(e){}
+  const hints = {401:"Token non valido o scaduto", 403:"Token senza permessi (serve Contents: Read and write)", 404:"Repository non trovato: controlla utente, repository e token"};
+  return new Error((hints[r.status] || "Errore GitHub " + r.status) + (m ? " – " + m : ""));
+}
+let syncT = null, syncing = false;
+function autoSync(){ const g = ghGet(); if (!g.auto || !g.token) return; clearTimeout(syncT); syncT = setTimeout(pushToGitHub, 1500); }
+async function pushToGitHub(){
+  const g = ghGet();
+  if (!g.token || !g.owner || !g.repo){ setStatus("Configura prima GitHub (pulsante GitHub).", true); return false; }
+  if (syncing) return false;
+  syncing = true; setStatus("Salvataggio su GitHub…");
+  try {
+    const url = `https://api.github.com/repos/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}/contents/${g.path}`;
+    const H = {Authorization:"Bearer " + g.token, Accept:"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28"};
+    for (let i = 0; i < 2; i++){
+      const r = await fetch(url + "?ref=" + encodeURIComponent(g.branch), {headers:H, cache:"no-store"});
+      let sha, remote = [];
+      if (r.ok){
+        const j = await r.json(); sha = j.sha;
+        try { remote = JSON.parse(fromB64(j.content)); } catch(e){ throw new Error("Il file sul repository non è un JSON valido"); }
+      } else if (r.status !== 404) throw await httpErr(r);
+      const body = JSON.stringify(compute(remote).map(clean), null, 2) + "\n";
+      const p = await fetch(url, {method:"PUT", headers:{...H, "Content-Type":"application/json"},
+        body: JSON.stringify({message:"Aggiorna webcam dal sito", content:toB64(body), branch:g.branch, ...(sha ? {sha} : {})})});
+      if (p.ok){ dirty = false; setStatus("Salvato su GitHub ✓ – il sito si aggiorna in circa un minuto."); return true; }
+      if (p.status !== 409 && p.status !== 422) throw await httpErr(p);
+    }
+    throw new Error("Conflitto durante il salvataggio, riprova.");
+  } catch(e){ setStatus("GitHub: " + e.message, true); return false; }
+  finally { syncing = false; }
+}
+const ghDlg = $("#gh");
+function ghSave(){
+  const old = ghGet();
+  const g = {owner:$("#g-owner").value.trim(), repo:$("#g-repo").value.trim(), branch:$("#g-branch").value.trim() || "main",
+             path:$("#g-path").value.trim() || "webcam/webcams.json", token:$("#g-token").value.trim() || read("ghSettings")?.token || "", auto:$("#g-auto").checked};
+  try { localStorage.setItem("ghSettings", JSON.stringify(g)); } catch(e){}
+  return g;
+}
+$("#gh-open").onclick = () => {
+  const g = ghGet();
+  $("#g-owner").value = g.owner;
+  $("#g-repo").value = g.repo;
+  $("#g-branch").value = g.branch; $("#g-path").value = g.path;
+  $("#g-token").value = ""; $("#g-token").placeholder = g.token ? "•••• già salvato (lascia vuoto per mantenerlo)" : "github_pat_…";
+  $("#g-auto").checked = !!g.auto; $("#gh-msg").textContent = "";
+  ghDlg.showModal();
+};
+$("#g-close").onclick = () => ghDlg.close();
+$("#g-save").onclick = () => { ghSave(); setStatus("Impostazioni salvate in questo browser."); };
+$("#g-push").onclick = async () => { ghSave(); await pushToGitHub(); };
+
+$("#q").oninput = render;
+$("#refresh").onchange = schedule;
+$("#reload").onclick = refreshImages;
+// quante modifiche locali non sono ancora su GitHub (finché non sono salvate o riconosciute nell'elenco letto da GitHub)
+const pendingCount = () => local.added.length + Object.keys(local.edits).length + local.deleted.length;
+function pendingNote(){
+  const el = $("#ghstatus"), n = pendingCount(), g = ghGet();
+  if (!n || !dirty){ if (el.classList.contains("warn")){ el.textContent = ""; el.classList.remove("warn"); } return; }
+  if (g.token && g.auto) return;                       // si salvano da sole: parla già lo stato del salvataggio
+  el.classList.add("warn");
+  el.textContent = n + (n === 1 ? " modifica è solo" : " modifiche sono solo") + " su questo dispositivo, non su GitHub. " + (g.token ? "Premi “GitHub” e poi “Salva e invia ora”." : "Premi “GitHub” per collegare il salvataggio.");
+}
+document.addEventListener("visibilitychange", () => { if (document.hidden && dirty && pendingCount() && ghGet().token && ghGet().auto){ clearTimeout(syncT); pushToGitHub(); } });
+window.addEventListener("pagehide", () => { if (dirty && pendingCount() && ghGet().token && ghGet().auto) pushToGitHub(); });
+load().then(schedule).then(() => { dirty = pendingCount() > 0; pendingNote(); if (dirty && ghGet().token && ghGet().auto) autoSync(); });
+</script>
+</body>
+</html>
