@@ -23684,7 +23684,777 @@
       "stressLevel": "23"
     }
   ],
-  "piano": {},
+  "piano": {
+    "road": {
+      "settimane": [
+        {
+          "numero": 1,
+          "obiettivo": "Costruire la base aerobica e stabilizzare il volume a 30km settimanali con ritmi controllati",
+          "km_totali": 30,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Recupero attivo opzionale: stretching leggero o mobilità 10-15 min."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Facile",
+              "km": 8,
+              "durata": 46,
+              "passo": "5:45/km",
+              "descrizione": "Corsa facile a ritmo conversazionale. FC target sotto 145 bpm. Terreno pianeggiante."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Medio",
+              "km": 10,
+              "durata": 55,
+              "passo": "5:30/km",
+              "descrizione": "Riscaldamento: 2km @6:00/km. Struttura principale: 6km @5:10/km (passo medio sostenuto, FC 155-162 bpm). Defaticamento: 2km @6:00/km. Focus sul mantenere il ritmo in modo costante senza accelerazioni."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Eventuale mobilità delle anche e degli arti inferiori 10 min."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Tempo",
+              "km": 12,
+              "durata": 63,
+              "passo": "5:15/km",
+              "descrizione": "Riscaldamento: 2km @6:00/km. Struttura principale: 8km @5:00/km (ritmo soglia lattato, FC 162-168 bpm, sforzo moderato-alto, parola difficile ma possibile). Defaticamento: 2km @6:10/km. Mantieni il ritmo il più costante possibile lungo tutta la parte principale."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo. Preparati per l'uscita del weekend."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Uscita hiking/trail ~20km non conteggiata nel piano. Goditi il movimento a bassa intensità: beneficio aerobico e mentale senza stress da ritmo."
+            }
+          ]
+        },
+        {
+          "numero": 2,
+          "obiettivo": "Incrementare leggermente il volume e introdurre stimoli di qualità con i primi intervalli",
+          "km_totali": 32,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Stretching o foam rolling 10-15 min se presente indolenzimento dal weekend."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Intervalli",
+              "km": 10,
+              "durata": 55,
+              "passo": "5:00/km media",
+              "descrizione": "Riscaldamento: 2km @6:00/km + 4 strides di 80m. Struttura principale: 5×1km @4:45/km con recupero 90 secondi di camminata/jogging tra le ripetute. FC durante le ripetute: 165-172 bpm. Obiettivo: ritmo costante su ogni ripetuta, non partire troppo forte. Defaticamento: 2km @6:10/km."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Facile",
+              "km": 8,
+              "durata": 46,
+              "passo": "5:45/km",
+              "descrizione": "Corsa di recupero attivo dopo gli intervalli del martedì. Ritmo molto blando, FC sotto 145 bpm. Non forzare il passo."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Eventuale lavoro di mobilità: anche, polpacci, flessori."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Lungo",
+              "km": 14,
+              "durata": 80,
+              "passo": "5:40/km",
+              "descrizione": "Riscaldamento: primi 2km @6:00/km per entrare gradualmente in ritmo. Struttura principale: 10km @5:30/km (passo aerobico confortevole, FC 148-158 bpm). Defaticamento: ultimi 2km @5:50/km con progressiva riduzione dell'intensità. Idratarsi durante l'uscita. Questo è il long run settimanale anticipato al venerdì data la struttura dei giorni obbligatori: costruisce la resistenza di base per la maratona."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo. Recupero dopo il long run del venerdì."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Uscita hiking/trail ~20km non conteggiata nel piano. Mantieni intensità bassa, goditi il percorso. Il volume accumulato con il trail è un ottimo complemento aerobico."
+            }
+          ]
+        },
+        {
+          "numero": 3,
+          "obiettivo": "Consolidamento del volume a 28km, introduzione primo lavoro di qualità (Tempo Run), adattamento aerobico progressivo",
+          "km_totali": 28,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Recupero attivo consigliato: mobilità o stretching leggero 10-15 min."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Facile",
+              "km": 8,
+              "durata": 46,
+              "passo": "5:45/km",
+              "descrizione": "Corsa facile a passo controllato, FC sotto 145bpm. Mantieni conversazione fluida per tutta la durata."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Tempo",
+              "km": 10,
+              "durata": 55,
+              "passo": "5:05/km",
+              "descrizione": "Riscaldamento: 2km a 5:50/km. Struttura principale: 6km continui a passo Tempo @5:00-5:05/km (soglia lattato, sforzo controllato ma sostenuto, FC intorno 165-168bpm). Defaticamento: 2km a 5:50/km + allunghi facoltativi."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Recupero dopo il lavoro di soglia del mercoledì."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Medio",
+              "km": 10,
+              "durata": 54,
+              "passo": "5:20/km",
+              "descrizione": "Riscaldamento: 1.5km a 5:50/km. Struttura principale: 7km a passo medio aerobico sostenuto @5:15-5:20/km (FC 155-162bpm, sforzo moderato-alto). Defaticamento: 1.5km a 5:50/km. Focus sul mantenimento del passo costante senza accelerazioni."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Preparazione per l'uscita weekend."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Lungo",
+              "km": 20,
+              "durata": 150,
+              "passo": "7:30/km",
+              "descrizione": "Uscita hiking/trail running da ~20km come di consuetudine nel weekend. Sforzo aerobico basso-moderato (FC <150bpm). Considerato nel volume settimanale come sessione lunga a bassa intensità. Non forzare il passo, goditi il terreno."
+            }
+          ]
+        },
+        {
+          "numero": 4,
+          "obiettivo": "Primo picco di volume a 30km su running strutturato, introduzione lavoro a intervalli, consolidamento passo target maratona",
+          "km_totali": 30,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Recupero attivo: stretching, foam roller su gambe e polpacci 15 min."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Intervalli",
+              "km": 10,
+              "durata": 58,
+              "passo": "4:30/km",
+              "descrizione": "Riscaldamento: 2.5km progressivi da 5:50/km a 5:20/km + 4 strides da 20s. Struttura principale: 5×1000m @4:30-4:35/km con recupero 90s di cammino/jogging tra ogni ripetuta (FC in ripetuta ~172-176bpm). Defaticamento: 2.5km a 5:50/km. Obiettivo: stimolare la velocità supra-soglia per abbassare il passo target."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Facile",
+              "km": 8,
+              "durata": 46,
+              "passo": "5:45/km",
+              "descrizione": "Corsa di recupero attivo dopo gli intervalli del martedì. Passo completamente facile, FC sotto 142bpm. Nessuna pressione sul ritmo."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Giornata di recupero mid-week fondamentale prima del lavoro del venerdì."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Tempo",
+              "km": 12,
+              "durata": 65,
+              "passo": "5:00/km",
+              "descrizione": "Riscaldamento: 2km a 5:50/km. Struttura principale: 8km continui a passo Tempo @4:58-5:02/km (FC 165-170bpm, sforzo sostenuto al limite della soglia, respirazione controllata ma non facile). Defaticamento: 2km a 5:50/km. Questa sessione prepara il sistema aerobico al passo gara maratona e oltre."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Recupero prima dell'uscita lunga del weekend."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Lungo",
+              "km": 20,
+              "durata": 150,
+              "passo": "7:30/km",
+              "descrizione": "Uscita hiking/trail running da ~20km nel weekend. Sforzo aerobico basso (FC <148bpm). Terreno naturale e dislivello variabile contribuiscono alla forza muscolare specifica e alla resistenza aerobica di fondo. Mantieni idratazione adeguata e alimentazione durante l'uscita."
+            }
+          ]
+        },
+        {
+          "numero": 5,
+          "obiettivo": "Consolidamento del volume con introduzione del passo maratona sostenuto",
+          "km_totali": 33,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo o mobilità leggera 10 min. Recupero attivo dopo il weekend."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Medio",
+              "km": 10,
+              "durata": 54,
+              "passo": "5:24",
+              "descrizione": "Riscaldamento: 1.5km @5:50/km. Corpo centrale: 7km a passo medio progressivo, partendo da 5:30/km e scendendo a 5:10/km negli ultimi 2km. Defaticamento: 1.5km @5:50/km + allunghi 4×80m. Obiettivo FC: 155-165bpm."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Intervalli",
+              "km": 9,
+              "durata": 48,
+              "passo": "5:20 medio sessione",
+              "descrizione": "Riscaldamento: 2km @5:50/km. Struttura principale: 5×1200m @4:55/km con recupero 90s di cammino/jogging lento. Defaticamento: 1.5km @6:00/km. Focus: abituare il corpo al passo gara maratona."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Stretching statico 10-15 min se necessario."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Facile",
+              "km": 7,
+              "durata": 40,
+              "passo": "5:45",
+              "descrizione": "Corsa rigenerativa a passo completamente facile. FC sotto 150bpm. Nessuna pressione sul ritmo, gambe leggere in vista del weekend."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo. Preparazione logistica per l'uscita del weekend (trail/hiking ~20km)."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Hiking o trail running ~20km come da abitudine personale. Non conteggiato nel piano ma contribuisce al volume aerobico totale."
+            }
+          ]
+        },
+        {
+          "numero": 6,
+          "obiettivo": "Settimana di scarico: riduzione volume -20% per favorire adattamento e prevenire sovraccarico",
+          "km_totali": 27,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Settimana di scarico, priorità al recupero."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Facile",
+              "km": 8,
+              "durata": 46,
+              "passo": "5:45",
+              "descrizione": "Corsa facile a ritmo blando. FC sotto 150bpm per tutta la sessione. Nessun obiettivo di ritmo, solo mantenere il movimento delle gambe. Includeire 4×80m di allunghi finali."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Tempo",
+              "km": 9,
+              "durata": 47,
+              "passo": "5:12",
+              "descrizione": "Riscaldamento: 2km @5:50/km. Struttura principale: 5km continui a passo tempo @5:00/km (leggermente più lento del solito per rispettare la settimana di scarico). Defaticamento: 2km @6:00/km. Obiettivo FC: 160-168bpm. Sensazione: 'controllabilmente faticoso'."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Eventuale foam rolling su polpacci e quadricipiti."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Recupero",
+              "km": 6,
+              "durata": 36,
+              "passo": "6:00",
+              "descrizione": "Corsa di puro recupero. Passo libero e confortevole, FC massimo 148bpm. Chiusura mentale e fisica della settimana di scarico prima del weekend attivo."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo. Preparazione per l'uscita domenicale."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Hiking o trail running ~20km come da abitudine personale. Ottimo per il recupero attivo in settimana di scarico."
+            }
+          ]
+        },
+        {
+          "numero": 7,
+          "obiettivo": "Consolidamento volume con introduzione lavoro a ritmo maratona",
+          "km_totali": 32,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo o mobilità leggera 10 min"
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Medio",
+              "km": 10,
+              "durata": 55,
+              "passo": "5:10",
+              "descrizione": "Riscaldamento 1.5km @5:40/km. Corpo centrale: 7km @5:05/km (ritmo maratona target, stimolo aerobico sostenuto). Defaticamento 1.5km @5:50/km. FC attesa 150-158bpm."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Intervalli",
+              "km": 9,
+              "durata": 50,
+              "passo": "4:45",
+              "descrizione": "Riscaldamento 2km @5:40/km. Struttura principale: 5×1200m @4:50/km con recupero 90s di cammino/jogging lento tra le ripetute. Defaticamento 1.5km @5:50/km. Obiettivo: stimolare la velocità di gara e la soglia lattato."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Eventuale stretching o foam rolling 10-15 min."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Lungo",
+              "km": 13,
+              "durata": 72,
+              "passo": "5:30",
+              "descrizione": "Riscaldamento 1km @5:50/km. Corpo centrale: 11km progressivi partendo da 5:40/km e scendendo gradualmente a 5:15/km negli ultimi 3km. Defaticamento 1km @6:00/km. Focus su gestione dell'energia e forma tecnica a stanchezza."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo attivo. Preparazione per uscita weekend."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Hiking o trail running ~20km: attività a bassa intensità, passo libero, recupero attivo. Non conteggiato nel volume strutturato del piano."
+            }
+          ]
+        },
+        {
+          "numero": 8,
+          "obiettivo": "Picco di volume intermedio e consolidamento ritmo gara con uscita lunga progressiva",
+          "km_totali": 34,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Mobilità flessori dell'anca e polpacci consigliata dopo il weekend attivo."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Intervalli",
+              "km": 10,
+              "durata": 55,
+              "passo": "4:40",
+              "descrizione": "Riscaldamento 2km @5:40/km. Struttura principale: 6×1000m @4:45/km con recupero 90s jogging lento tra ogni ripetuta. Defaticamento 2km @5:50/km. Obiettivo: aumentare la densità del lavoro veloce mantenendo la qualità del passo. FC attesa durante le ripetute: 165-172bpm."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Medio",
+              "km": 10,
+              "durata": 54,
+              "passo": "5:05",
+              "descrizione": "Riscaldamento 1.5km @5:45/km. Corpo centrale: 7km @5:00/km (leggermente sotto ritmo maratona target, stimolo specifico). Defaticamento 1.5km @5:50/km. Focus su economia di corsa e postura. FC attesa 155-162bpm."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Idratazione e alimentazione curata in preparazione alla sessione lunga del venerdì."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Lungo",
+              "km": 14,
+              "durata": 78,
+              "passo": "5:30",
+              "descrizione": "Riscaldamento 1km @5:55/km. Corpo centrale: 12km con struttura mista — primi 6km @5:35/km (aerobico facile), successivi 4km @5:10/km (ritmo maratona), ultimi 2km @5:00/km (leggera accelerazione finale). Defaticamento 1km @6:00/km. Obiettivo: simulare la gestione della fatica nelle fasi finali della maratona. Portare acqua."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo attivo. Preparazione logistica e alimentare per uscita domenicale."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Hiking o trail running ~20km: passo libero e bassa intensità. Contribuisce al volume aerobico totale settimanale ma non stressante per l'adattamento specifico alla corsa su asfalto."
+            }
+          ]
+        },
+        {
+          "numero": 9,
+          "obiettivo": "Consolidamento del volume alto con introduzione al passo maratona sostenuto",
+          "km_totali": 37,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Recupero attivo: stretching leggero o mobilità 10 min se desiderato."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Intervalli",
+              "km": 11,
+              "durata": 65,
+              "passo": "4:30/km (ripetute)",
+              "descrizione": "Riscaldamento: 2km a 5:40/km + 4 strides. Struttura principale: 6×1200m @4:30/km con recupero 90s di corsa blanda tra le ripetute. Defaticamento: 2km a 5:50/km + stretching 5 min. Obiettivo: sviluppare la potenza aerobica al di sopra del passo maratona."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Medio",
+              "km": 12,
+              "durata": 68,
+              "passo": "5:05/km",
+              "descrizione": "Riscaldamento: 1.5km a 5:40/km. Struttura principale: 9km continui a 5:05/km (passo tra marathon pace e soglia, lavoro di qualità su stanchezza accumulata). Defaticamento: 1.5km a 5:50/km + stretching 5 min. Obiettivo: abituarsi a mantenere un passo sostenuto il giorno dopo le ripetute."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Idratazione e alimentazione curate in vista del lungo del weekend."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Lungo",
+              "km": 24,
+              "durata": 135,
+              "passo": "5:25/km",
+              "descrizione": "Riscaldamento: primi 2km a 5:40/km. Struttura principale: km 3-20 a 5:20/km (passo maratona target); km 21-22 a 4:55/km (inserimento al passo gara); ultimi 2km a 5:40/km come defaticamento integrato. Totale 24km. Gestire l'alimentazione ogni 45 min (gel o barretta). Obiettivo: simulare la seconda parte di gara su gambe affaticate dalla settimana."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Preparazione logistica per l'uscita domenicale."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Facile",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Uscita hiking/trail running ~20km a ritmo libero e basso. Non conteggiata nel volume strutturato del piano, ma contribuisce al volume totale settimanale. Mantieni FC < 140bpm e goditi il movimento."
+            }
+          ]
+        },
+        {
+          "numero": 10,
+          "obiettivo": "Picco di volume e simulazione di passo maratona prolungato — settimana chiave del piano",
+          "km_totali": 40,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Recupero post-domenica. Cura sonno e alimentazione proteica per il recupero muscolare."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Tempo",
+              "km": 13,
+              "durata": 72,
+              "passo": "4:50/km (blocco tempo)",
+              "descrizione": "Riscaldamento: 2km a 5:40/km + 4 accelerazioni progressive. Struttura principale: 10km continui a 4:50/km (leggermente sotto passo maratona target, lavoro di soglia prolungato). Defaticamento: 1km a 6:00/km. Totale 13km. Obiettivo: consolidare la capacità di correre sotto il passo target per periodi lunghi, migliorando l'economia di corsa."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Medio",
+              "km": 11,
+              "durata": 62,
+              "passo": "5:10/km",
+              "descrizione": "Riscaldamento: 1km a 5:50/km. Struttura principale: 3km a 5:20/km + 5km a 5:00/km + 2km a 5:20/km (fartlek strutturato intorno al passo maratona). Defaticamento: 1km a 5:50/km. Totale 12km. Obiettivo: variazione di ritmo attorno al passo gara per sviluppare la gestione della velocità in gara."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Preparazione mentale e logistica per il lungo più impegnativo del piano."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Lungo",
+              "km": 27,
+              "durata": 150,
+              "passo": "5:20/km",
+              "descrizione": "Riscaldamento: primi 2km a 5:45/km. Struttura principale: km 3-10 a 5:30/km (ingresso graduale); km 11-22 a 5:05/km (cuore del lungo a passo maratona sostenuto); km 23-25 a 4:55/km (simulazione finale di gara su stanchezza); km 26-27 a 5:50/km (defaticamento finale integrato). Rifornimento gel ogni 40-45 min a partire dal km 10. Obiettivo: massimo sforzo del piano, simulazione realistica della maratona nella seconda metà gara. FC attesa 155-162bpm nel blocco centrale."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Recupero prioritario dopo il lungo più lungo del piano. Alimentazione ricca di carboidrati e proteine."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Facile",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Uscita hiking/trail running ~20km a ritmo molto blando. Priorità al recupero attivo: se le gambe sono pesanti dopo il lungo del venerdì, riduci il dislivello e mantieni un'andatura molto conservativa. FC < 135bpm."
+            }
+          ]
+        },
+        {
+          "numero": 11,
+          "obiettivo": "Picco di volume pre-tapering: consolidare la resistenza aerobica con una settimana ad alto chilometraggio, simulando le condizioni di gara",
+          "km_totali": 38,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Recupero attivo: stretching leggero 10 min, idratazione e alimentazione curata."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Intervalli",
+              "km": 12,
+              "durata": 70,
+              "passo": "4:45/km (tratti veloci)",
+              "descrizione": "Riscaldamento: 2km @5:30/km + esercizi di attivazione (skip, calciata, affondi dinamici) 5 min. Struttura principale: 5×2km @4:50/km con recupero jogging 90s @6:00/km tra le ripetute. Obiettivo: mantenere il passo target maratona sotto sforzo accumulato. Defaticamento: 2km @6:00/km + stretching 8 min su quadricipiti, polpacci e flessori dell'anca."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Medio",
+              "km": 10,
+              "durata": 55,
+              "passo": "5:10/km",
+              "descrizione": "Riscaldamento: 1.5km @5:40/km. Struttura principale: 7km a ritmo medio-sostenuto @5:10/km mantenendo FC intorno a 160-165 bpm (zona 3-4). Lavoro sulla gestione del ritmo e dell'economia di corsa. Defaticamento: 1.5km @5:50/km + stretching 8 min focalizzato su catena posteriore."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo obbligatorio. Eventuale foam rolling su polpacci, ileotibiale e glutei per preparare il lungo del fine settimana."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Tempo",
+              "km": 8,
+              "durata": 42,
+              "passo": "4:55/km",
+              "descrizione": "Riscaldamento: 1.5km @5:40/km + 4×80m progressioni. Struttura principale: 5km in Tempo Run continuato @4:55/km (passo target maratona) — concentrarsi su fluidità del passo e respirazione ritmica. Defaticamento: 1.5km @6:00/km + stretching 10 min completo."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo. Preparazione logistica per l'uscita di trail/hiking del weekend: equipaggiamento, alimentazione e idratazione."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Lungo",
+              "km": 8,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Uscita di hiking/trail running da ~20km (non conteggiata nel km_totali settimanali in quanto attività complementare). Mantieni passo blando e goditi il movimento in natura. L'impatto su fondo naturale riduce lo stress sulle articolazioni rispetto all'asfalto. Porta snack energetici e almeno 1L di acqua."
+            }
+          ]
+        },
+        {
+          "numero": 12,
+          "obiettivo": "Tapering finale: riduzione del volume del 40% mantenendo alcune stimolazioni di qualità per arrivare freschi e pronti alla maratona",
+          "km_totali": 22,
+          "sessioni": [
+            {
+              "giorno": "Lunedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Focus su sonno, idratazione e alimentazione ricca di carboidrati complessi per iniziare il carico glicogeno."
+            },
+            {
+              "giorno": "Martedì",
+              "tipo": "Facile",
+              "km": 8,
+              "durata": 48,
+              "passo": "5:30/km",
+              "descrizione": "Corsa facile a bassa intensità per mantenere le gambe attive senza affaticarle. FC sotto 150 bpm. Aggiungi 4×100m a ritmo maratona verso la fine per ricordare al corpo il passo target."
+            },
+            {
+              "giorno": "Mercoledì",
+              "tipo": "Tempo",
+              "km": 7,
+              "durata": 38,
+              "passo": "4:55/km",
+              "descrizione": "Riscaldamento: 1.5km @5:40/km + mobilità articolare 5 min. Struttura principale: 4km @4:55/km (passo gara esatto) in un unico blocco — questo è l'ultimo stimolo di qualità prima della gara, deve sembrare controllato e fluido, non affannoso. Defaticamento: 1.5km @6:00/km + stretching leggero 10 min. Nota mentale: visualizza i km finali della maratona durante questo blocco."
+            },
+            {
+              "giorno": "Giovedì",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo. Carboloading: aumenta la quota di carboidrati a ogni pasto (pasta, riso, patate). Evita cibi pesanti o nuovi che potrebbero causare disturbi gastrointestinali."
+            },
+            {
+              "giorno": "Venerdì",
+              "tipo": "Recupero",
+              "km": 7,
+              "durata": 38,
+              "passo": "5:40/km",
+              "descrizione": "Corsa di recupero leggerissima per sciogliere le gambe. Ultimi 3×80m a passo gara per confermare le sensazioni. Nessuno sforzo, solo attivazione. Dopo: stretching lungo 15 min e riposo."
+            },
+            {
+              "giorno": "Sabato",
+              "tipo": "Riposo",
+              "km": null,
+              "durata": null,
+              "passo": null,
+              "descrizione": "Riposo completo pre-gara. Prepara tutto il necessario: abbigliamento, scarpe, gel/integratori, pettorale. Pasto serale leggero e ricco di carboidrati (pasta in bianco, riso). Vai a letto presto. Niente hiking o trail questa settimana — le gambe servono fresche domani."
+            },
+            {
+              "giorno": "Domenica",
+              "tipo": "Lungo",
+              "km": null,
+              "durata": null,
+              "passo": "4:55/km (target)",
+              "descrizione": "GIORNO DI GARA — MARATONA 42KM. Strategia: primi 10km @5:05/km (leggermente conservativo), km 10-30 @4:55/km (passo target), km 30-42 dai tutto. Gel/carboidrati ogni 30-40 min. Idratati a ogni ristoro senza esagerare. Fidati del tuo allenamento: sei pronto."
+            }
+          ]
+        }
+      ],
+      "consigli": [
+        "Carboloading efficace: nella settimana 12, aumenta l'apporto di carboidrati complessi al 65-70% delle calorie giornaliere a partire dal martedì, privilegiando pasta, riso, patate e pane. Evita fibre eccessive e cibi nuovi mai testati prima.",
+        "Gestione del passo in gara: il rischio principale nella maratona è partire troppo forte. Corri i primi 5-10km leggermente più lento del target (5:05-5:10/km) — il 'risparmio' si trasformerà in energia preziosa tra il km 30 e il 42.",
+        "Nutrizione in corsa: testa nella settimana 11 i gel o gli alimenti che userai in gara durante le sessioni lunghe. Assumi carboidrati ogni 30-40 minuti dall'inizio (non aspettare di sentire fame o stanchezza) e bevi circa 150-200ml a ogni ristoro.",
+        "Gestione del tapering mentale: è normale sentirsi 'pesanti' o affaticati nelle ultime 2 settimane nonostante il volume ridotto — è il corpo che si ripara e accumula glicogeno. Non aggiungere uscite extra per 'sentirsi meglio': il riposo è allenamento.",
+        "Trail/hiking del weekend: nella settimana 11 l'uscita è ancora consentita per mantenere il volume aerobico totale, ma nella settimana 12 è essenziale saltarla per arrivare con le gambe fresche alla gara. Il trail su terreno irregolare accumula fatica muscolare non sempre percepibile immediatamente."
+      ],
+      "distanza": "Maratona (42 km)",
+      "generatedAt": "2026-11-25T20:16:25.629Z"
+    }
+  },
   "pianoChecks": {},
   "pianoFeedback": {}
 }
