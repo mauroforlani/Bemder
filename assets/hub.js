@@ -15,6 +15,7 @@
     { id: 'attivita',  label: 'Attività' },
     { id: 'registro',  label: 'Registro' },
     { id: 'webcam',    label: 'Webcam' },
+    { id: 'escursioni', label: 'Escursioni' },
     { id: 'budget',    label: 'Budget' },
     { id: 'running',   label: 'Running' }
   ];

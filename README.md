@@ -8,6 +8,7 @@ Quattro strumenti in un unico sito, con una home da cui scegliere:
 | Attività | `attivita/` | escursioni, motogiri, punti di interesse, gare, registro |
 | Registro | `registro/` | archivio delle attività con statistiche (legge i dati di `attivita/data/`) |
 | Webcam | `webcam/` | webcam di montagna per zona, con aggiunta e modifica dal sito |
+| Escursioni | `escursioni/` | cime e rifugi più conosciuti di una zona, con sentieri e link alle relazioni (dati da OpenStreetMap, nessun salvataggio) |
 | Budget | `budget/` | finanze personali e portafoglio titoli |
 | Running | `running/` | allenamenti e analisi dello stato di forma |
 

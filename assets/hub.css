@@ -50,6 +50,7 @@ a, button, select, summary, label, input[type="checkbox"] { touch-action: manipu
   --hub-c-attivita: #c2410c;
   --hub-c-registro: #4d7c0f;
   --hub-c-webcam: #be185d;
+  --hub-c-escursioni: #a16207;
   --hub-c-budget: #0e6e5c;
   --hub-c-running: #1f8fc7;
   --hub-accent: var(--hub-ink);
@@ -58,6 +59,7 @@ body[data-app="astrofoto"] { --hub-accent: var(--hub-c-astrofoto); }
 body:is([data-app="attivita"], [data-app="registro"])  { --hub-accent: var(--hub-c-attivita); }
 body[data-app="registro"]  { --hub-accent: var(--hub-c-registro); }
 body[data-app="webcam"]    { --hub-accent: var(--hub-c-webcam); }
+body[data-app="escursioni"] { --hub-accent: var(--hub-c-escursioni); }
 body[data-app="budget"]    { --hub-accent: var(--hub-c-budget); }
 body[data-app="running"]   { --hub-accent: var(--hub-c-running); }
 
@@ -117,6 +119,7 @@ body[data-app="running"]   { --hub-accent: var(--hub-c-running); }
 .hub-link[data-s="attivita"]  .hub-dot { background: var(--hub-c-attivita); }
 .hub-link[data-s="registro"]  .hub-dot { background: var(--hub-c-registro); }
 .hub-link[data-s="webcam"]    .hub-dot { background: var(--hub-c-webcam); }
+.hub-link[data-s="escursioni"] .hub-dot { background: var(--hub-c-escursioni); }
 .hub-link[data-s="budget"]    .hub-dot { background: var(--hub-c-budget); }
 .hub-link[data-s="running"]   .hub-dot { background: var(--hub-c-running); }
 /* il pallino di Astrofoto su sfondo scuro ha bisogno di più luce */
@@ -150,7 +153,10 @@ body.hub-home {
 .home-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; }
 .home-grid .tile { grid-column: span 2; }
 @media (max-width: 980px) { .home-grid .tile { grid-column: span 3; } }
-@media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; gap: 14px; } .home-grid .tile { grid-column: auto; } .home-wrap { padding-top: 36px; } }
+/* ultima scheda sola sulla riga: centrata */
+.home-grid .tile:last-child:nth-child(3n+1) { grid-column: 3 / span 2; }
+@media (max-width: 980px) { .home-grid .tile:last-child:nth-child(3n+1) { grid-column: span 3; } }
+@media (max-width: 760px) { .home-grid { grid-template-columns: 1fr; gap: 14px; } .home-grid .tile, .home-grid .tile:last-child:nth-child(3n+1) { grid-column: auto; } .home-wrap { padding-top: 36px; } }
 
 .tile {
   --c: var(--hub-ink);
@@ -165,6 +171,7 @@ body.hub-home {
 .tile[data-app="attivita"]  { --c: var(--hub-c-attivita); }
 .tile[data-app="registro"]  { --c: var(--hub-c-registro); }
 .tile[data-app="webcam"]    { --c: var(--hub-c-webcam); }
+.tile[data-app="escursioni"] { --c: var(--hub-c-escursioni); }
 .tile[data-app="budget"]    { --c: var(--hub-c-budget); }
 .tile[data-app="running"]   { --c: var(--hub-c-running); }
 .tile:hover, .tile:focus-visible { border-color: var(--c); box-shadow: var(--hub-shadow); outline: none; }
