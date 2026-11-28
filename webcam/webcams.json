@@ -101,6 +101,28 @@
     "source": ""
   },
   {
+    "name": "Rifugio Curò",
+    "place": "Valbondione",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "https://www.caibergamo.it/sites/default/files/webcam/curo/curo1.jpg?t=1795858590665",
+    "embed": "",
+    "page": "",
+    "source": ""
+  },
+  {
+    "name": "Colma di Sormano",
+    "place": "Sormano",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Lecco",
+    "image": "https://cam.osservatoriosormano.it/OAS/OAS-nord.php",
+    "embed": "",
+    "page": "",
+    "source": ""
+  },
+  {
     "name": "Rifugio Ca San Marco 2000",
     "place": "Mezzoldo",
     "country": "Italia",
@@ -129,6 +151,17 @@
     "region": "Lombardia",
     "province": "Lecco",
     "image": "https://cam.osservatoriosormano.it/OAS/OAS-nord.php",
+    "embed": "",
+    "page": "",
+    "source": ""
+  },
+  {
+    "name": "Colma di Sormano",
+    "place": "Sormano",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Lecco",
+    "image": "https://cam.osservatoriosormano.it/OAS/OAS.php",
     "embed": "",
     "page": "",
     "source": ""
