@@ -110,5 +110,27 @@
     "embed": "",
     "page": "",
     "source": ""
+  },
+  {
+    "name": "Rifugio Laghi Gemelli",
+    "place": "Carona",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "https://webcam.rifugi.lombardia.it/rifugio/00003276/pictures/image__0.jpg",
+    "embed": "",
+    "page": "",
+    "source": ""
+  },
+  {
+    "name": "Rifugio Curò",
+    "place": "Valbondione",
+    "country": "Italia",
+    "region": "Lombardia",
+    "province": "Bergamo",
+    "image": "https://www.caibergamo.it/sites/default/files/webcam/curo/curo1.jpg?t=1795810916949",
+    "embed": "",
+    "page": "",
+    "source": ""
   }
 ]
